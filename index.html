@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lexora — AI-Powered Legal Intelligence for Modern Businesses</title>
+  <meta name="description" content="Lexora provides AI-assisted legal intelligence for startups and corporations. Simplify legal research, analyze contracts, and navigate compliance with grounded RAG technology.">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS with Official Typography Plugin via CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+
+  <!-- Tailwind Configuration for Custom Colors and Fonts -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              950: '#060b18',
+              900: '#091024',
+              800: '#0f1b38',
+              700: '#1b2a4e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Subtle star / grid pattern styling */
+    .bg-grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+  </style>
+</head>
+
+<body class="bg-navy-950 text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white min-h-screen relative overflow-x-hidden">
+
+  <!-- Ambient Glow Effects in Background -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[450px] bg-blue-600/10 blur-[130px] rounded-full pointer-events-none -z-10"></div>
+  <div class="absolute top-[40%] right-0 w-[500px] h-[500px] bg-sky-500/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+  <div class="absolute bottom-0 left-1/4 w-[600px] h-[400px] bg-blue-700/10 blur-[140px] rounded-full pointer-events-none -z-10"></div>
+
+  <!-- ========================================== -->
+  <!-- Navigation Header                          -->
+  <!-- ========================================== -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-navy-950/80 border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Lexora Brand Logo -->
+        <a href="#home" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-1">
+          <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform duration-200">
+            <!-- Justice Scales / AI Node SVG Icon -->
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-xl font-extrabold tracking-tight text-white group-hover:text-blue-400 transition-colors">Lexora</span>
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold -mt-1">Legal Intelligence</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center space-x-1 lg:space-x-2" aria-label="Main Navigation">
+          <a href="#home" class="px-3 py-2 text-sm font-medium text-slate-200 hover:text-blue-400 transition-colors rounded-md">Home</a>
+          <a href="#solutions" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors rounded-md">Solutions</a>
+          <a href="#ai-assistant" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors rounded-md">AI Assistant</a>
+          <a href="#why-lexora" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors rounded-md">Why Lexora</a>
+          <a href="#about" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors rounded-md">About</a>
+          <a href="#contact" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors rounded-md">Contact</a>
+        </nav>
+
+        <!-- Desktop Action Buttons -->
+        <div class="hidden md:flex items-center space-x-3">
+          <a href="#contact" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white border border-slate-700/80 hover:border-slate-500 rounded-full transition-colors">
+            Sign In
+          </a>
+          <a href="#contact" class="px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg shadow-blue-600/30 transition duration-200">
+            Get Started
+          </a>
+        </div>
+
+        <!-- Mobile Menu Hamburger Button -->
+        <div class="flex md:hidden">
+          <button id="mobile-menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle navigation menu" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-slate-800 bg-navy-900/95 px-4 pt-3 pb-6 space-y-2">
+      <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:bg-slate-800 hover:text-blue-400">Home</a>
+      <a href="#solutions" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-blue-400">Solutions</a>
+      <a href="#ai-assistant" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-blue-400">AI Assistant</a>
+      <a href="#why-lexora" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-blue-400">Why Lexora</a>
+      <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-blue-400">About</a>
+      <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-blue-400">Contact</a>
+      <div class="pt-4 flex flex-col gap-2">
+        <a href="#contact" class="w-full text-center px-4 py-2 text-sm font-medium text-slate-300 border border-slate-700 rounded-full hover:bg-slate-800">
+          Sign In
+        </a>
+        <a href="#contact" class="w-full text-center px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-md shadow-blue-600/30">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- Main Content Landmark                      -->
+  <!-- ========================================== -->
+  <main>
+
+    <!-- ========================================== -->
+    <!-- Hero Section                               -->
+    <!-- ========================================== -->
+    <section id="home" class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden bg-grid-pattern">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          
+          <!-- Hero Text Content -->
+          <div class="lg:col-span-7 text-center lg:text-left">
+            
+            <!-- Category Pill Badge -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-950/80 border border-blue-500/30 text-blue-300 text-xs sm:text-sm font-medium mb-6 shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+              AI-Powered Legal Consultancy Platform
+            </div>
+
+            <!-- Main Heading -->
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight mb-6">
+              AI-Powered Legal Intelligence <br class="hidden sm:inline">
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-cyan-300">
+                for Modern Businesses
+              </span>
+            </h1>
+
+            <!-- Supporting Paragraph -->
+            <p class="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-8">
+              Simplify legal research, understand regulations, analyze documents, and make better-informed business decisions with AI-assisted legal intelligence.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-10">
+              <a href="#ai-assistant" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-base shadow-xl shadow-blue-600/30 transition-all hover:scale-[1.02] focus:ring-2 focus:ring-blue-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Explore AI Assistant
+              </a>
+              
+              <a href="#solutions" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-navy-900 hover:bg-slate-800 text-slate-200 border border-slate-700/80 font-medium text-base transition-all hover:border-slate-500 focus:ring-2 focus:ring-slate-500">
+                Learn More
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </a>
+            </div>
+
+            <!-- Trust Bar / Feature Points -->
+            <div class="pt-6 border-t border-slate-800/80 text-xs sm:text-sm text-slate-400 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Grounded in Statutory Corpus
+              </span>
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Enterprise Security
+              </span>
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                AI Speed with Expert Oversight
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Hero LegalTech Visual Mockup (Crafted with Tailwind CSS) -->
+          <div class="lg:col-span-5">
+            <div class="relative mx-auto max-w-md lg:max-w-none">
+              
+              <!-- Outer glowing aura -->
+              <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+
+              <!-- Main Mock Card -->
+              <div class="relative rounded-2xl bg-navy-900 border border-slate-700/80 p-6 shadow-2xl backdrop-blur-xl">
+                
+                <!-- Card Header -->
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 class="text-sm font-semibold text-white">Legal Assistant Query</h2>
+                      <p class="text-xs text-slate-400">RAG Verification Active</p>
+                    </div>
+                  </div>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-500/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span>
+                    Verified Source
+                  </span>
+                </div>
+
+                <!-- Query Prompt Mock -->
+                <div class="bg-navy-950 rounded-xl p-3.5 border border-slate-800 mb-4 text-xs">
+                  <div class="text-slate-400 mb-1 flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <span>User Prompt:</span>
+                  </div>
+                  <p class="text-slate-200 font-medium italic">
+                    "Evaluate statutory compliance and liability clauses under Indian Companies Act 2013 for Series A investment."
+                  </p>
+                </div>
+
+                <!-- AI Response Summary -->
+                <div class="space-y-3 text-xs mb-4">
+                  <div class="flex items-center justify-between text-slate-400">
+                    <span class="font-medium text-slate-300 flex items-center gap-1.5">
+                      <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                      </svg>
+                      Retrieved Legal Precedents:
+                    </span>
+                    <span class="text-blue-400 font-semibold">99.4% Match</span>
+                  </div>
+
+                  <!-- Citation Badges -->
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800">
+                      <div class="text-[11px] font-semibold text-white">Section 42 &amp; 62</div>
+                      <div class="text-[10px] text-slate-400">Private Placement Rules</div>
+                    </div>
+                    <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800">
+                      <div class="text-[11px] font-semibold text-white">MCA Filings Form PAS-3</div>
+                      <div class="text-[10px] text-slate-400">Allotment of Securities</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Floating Confidence / Safety Footer inside card -->
+                <div class="p-3 rounded-xl bg-blue-950/40 border border-blue-500/20 flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
+                    <span class="text-xs text-slate-300">Grounding Confidence:</span>
+                  </div>
+                  <span class="text-xs font-bold text-cyan-300">High (Statutory Backed)</span>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- Solutions Section                          -->
+    <!-- ========================================== -->
+    <section id="solutions" class="py-20 bg-navy-950/60 border-t border-slate-800/80 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/30 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-4">
+            Platform Capabilities
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+            Built for Business Legal Needs
+          </h2>
+          <p class="text-slate-400 text-base sm:text-lg">
+            Empower your team with comprehensive, AI-driven legal intelligence engineered specifically to protect corporate interests and accelerate growth.
+          </p>
+        </div>
+
+        <!-- Solutions Grid (4 Semantic Cards) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          <!-- Card 1: AI Legal Research -->
+          <div class="group p-6 rounded-2xl bg-navy-900/80 border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-600/10 border border-blue-500/30 text-blue-400 flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                <!-- Search & Book SVG Icon -->
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2.5">AI Legal Research</h3>
+              <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                Search and understand relevant laws, sections, regulations, and legal information with citation-backed semantic retrieval.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-800/80 text-xs font-medium text-blue-400 flex items-center gap-1 group-hover:text-blue-300">
+              <span>Explore Research Engine</span>
+              <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 2: Contract Intelligence -->
+          <div class="group p-6 rounded-2xl bg-navy-900/80 border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-sky-600/10 border border-sky-500/30 text-sky-400 flex items-center justify-center mb-5 group-hover:bg-sky-500 group-hover:text-white transition-colors duration-300">
+                <!-- Contract / Document SVG Icon -->
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2.5">Contract Intelligence</h3>
+              <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                Analyze agreements and identify potentially important clauses, ambiguities, indemnification thresholds, and contractual risks.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-800/80 text-xs font-medium text-sky-400 flex items-center gap-1 group-hover:text-sky-300">
+              <span>View Clause Extraction</span>
+              <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 3: Compliance Intelligence -->
+          <div class="group p-6 rounded-2xl bg-navy-900/80 border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-cyan-600/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mb-5 group-hover:bg-cyan-500 group-hover:text-white transition-colors duration-300">
+                <!-- Shield / Compliance SVG Icon -->
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2.5">Compliance Intelligence</h3>
+              <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                Help businesses understand applicable regulatory changes, statutory filing duties, data privacy standards, and governance rules.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-800/80 text-xs font-medium text-cyan-400 flex items-center gap-1 group-hover:text-cyan-300">
+              <span>Track Regulatory Rules</span>
+              <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 4: Legal Decision Support -->
+          <div class="group p-6 rounded-2xl bg-navy-900/80 border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-indigo-600/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center mb-5 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
+                <!-- Decision Scales / Logic SVG Icon -->
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2.5">Legal Decision Support</h3>
+              <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                Use AI-assisted analysis to explore legally available options, risk assessments, and supporting legal precedents before taking action.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-slate-800/80 text-xs font-medium text-indigo-400 flex items-center gap-1 group-hover:text-indigo-300">
+              <span>Evaluate Case Pathways</span>
+              <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- AI & RAG Section (Tailwind Typography)      -->
+    <!-- ========================================== -->
+    <section id="ai-assistant" class="py-20 border-t border-slate-800/80 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Section Title Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/30 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-4">
+            RAG Technology Architecture
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+            Grounded in Legal Knowledge
+          </h2>
+          <p class="text-slate-400 text-base sm:text-lg">
+            How Lexora eliminates hallucination through strict Retrieval-Augmented Generation rooted in primary legal sources.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          
+          <!-- Demonstrating the Tailwind Typography Plugin inside an HTML5 <article> -->
+          <div class="lg:col-span-7 bg-navy-900/60 border border-slate-800 p-8 sm:p-10 rounded-3xl shadow-xl backdrop-blur-sm">
+            
+            <article class="prose prose-invert lg:prose-lg max-w-none">
+              <h3 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                Architected for Verifiable Legal Accuracy
+              </h3>
+
+              <p class="text-slate-300 leading-relaxed">
+                Lexora is designed to combine artificial intelligence with a structured legal knowledge base. Instead of relying only on an AI model's stored knowledge, the system can retrieve relevant legal provisions and supporting sources before generating a response.
+              </p>
+
+              <!-- Blockquote styled by Tailwind Typography -->
+              <blockquote class="border-l-4 border-blue-500 pl-4 py-1 text-slate-300 italic bg-blue-950/20 rounded-r-lg">
+                "Legal intelligence cannot rely on probabilistic guesswork. Every response must trace directly to recognized statutory provisions, regulatory gazettes, or binding case precedents."
+              </blockquote>
+
+              <h4 class="text-xl font-semibold text-white">How Retrieval-Augmented Generation (RAG) Works</h4>
+
+              <p class="text-slate-300 leading-relaxed">
+                When a legal query is processed, Lexora converts the question into a high-dimensional vector, searches indexed legal databases, extracts verified citations, and feeds that explicit context into our specialized language model.
+              </p>
+
+              <ul class="text-slate-300 space-y-1">
+                <li><strong class="text-white">Elimination of Hallucinations:</strong> Responses are bounded strictly within retrieved factual context.</li>
+                <li><strong class="text-white">Point-in-Time Relevance:</strong> Reflects the most recent statutory amendments and regulatory updates.</li>
+                <li><strong class="text-white">Source Traceability:</strong> Direct paragraph citations allow counsel to cross-examine outputs instantly.</li>
+              </ul>
+            </article>
+
+          </div>
+
+          <!-- Visual RAG Flow Representation -->
+          <div class="lg:col-span-5 flex flex-col justify-center">
+            
+            <div class="rounded-3xl bg-navy-900/80 border border-slate-800 p-6 sm:p-8 shadow-2xl relative">
+              <h3 class="text-base font-bold uppercase tracking-wider text-slate-400 mb-6 flex items-center justify-between">
+                <span>RAG Retrieval Pipeline</span>
+                <span class="text-xs text-blue-400 font-semibold px-2 py-0.5 rounded bg-blue-950 border border-blue-800">Deterministic</span>
+              </h3>
+
+              <!-- Flow Step 1 -->
+              <div class="flex items-center gap-4 group">
+                <div class="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-400 flex items-center justify-center font-bold text-sm shrink-0">
+                  01
+                </div>
+                <div class="flex-1 p-3.5 rounded-xl bg-navy-950 border border-slate-800">
+                  <div class="text-xs text-slate-400 font-medium">Input Stage</div>
+                  <div class="text-sm font-semibold text-white">Legal Sources</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5">Statutes, Acts, Court Judgments &amp; Filings</div>
+                </div>
+              </div>
+
+              <!-- Arrow -->
+              <div class="flex justify-center my-2 text-slate-600">
+                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+              </div>
+
+              <!-- Flow Step 2 -->
+              <div class="flex items-center gap-4 group">
+                <div class="w-10 h-10 rounded-xl bg-sky-600/20 border border-sky-500/40 text-sky-400 flex items-center justify-center font-bold text-sm shrink-0">
+                  02
+                </div>
+                <div class="flex-1 p-3.5 rounded-xl bg-navy-950 border border-slate-800">
+                  <div class="text-xs text-slate-400 font-medium">Vector Indexing</div>
+                  <div class="text-sm font-semibold text-white">Semantic Retrieval</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5">Dense vector matching across codified legal texts</div>
+                </div>
+              </div>
+
+              <!-- Arrow -->
+              <div class="flex justify-center my-2 text-slate-600">
+                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+              </div>
+
+              <!-- Flow Step 3 -->
+              <div class="flex items-center gap-4 group">
+                <div class="w-10 h-10 rounded-xl bg-cyan-600/20 border border-cyan-500/40 text-cyan-400 flex items-center justify-center font-bold text-sm shrink-0">
+                  03
+                </div>
+                <div class="flex-1 p-3.5 rounded-xl bg-navy-950 border border-slate-800">
+                  <div class="text-xs text-slate-400 font-medium">Context Assembly</div>
+                  <div class="text-sm font-semibold text-white">Relevant Context</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5">Top-k statutory passages &amp; precedent clauses</div>
+                </div>
+              </div>
+
+              <!-- Arrow -->
+              <div class="flex justify-center my-2 text-slate-600">
+                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+              </div>
+
+              <!-- Flow Step 4 -->
+              <div class="flex items-center gap-4 group">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center font-bold text-sm shrink-0">
+                  04
+                </div>
+                <div class="flex-1 p-3.5 rounded-xl bg-navy-950 border border-slate-800">
+                  <div class="text-xs text-slate-400 font-medium">Generation Engine</div>
+                  <div class="text-sm font-semibold text-white">Domain-Trained AI</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5">Synthesizes context with legal reasoning guidelines</div>
+                </div>
+              </div>
+
+              <!-- Arrow -->
+              <div class="flex justify-center my-2 text-slate-600">
+                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+              </div>
+
+              <!-- Flow Step 5 -->
+              <div class="flex items-center gap-4 group">
+                <div class="w-10 h-10 rounded-xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
+                  05
+                </div>
+                <div class="flex-1 p-3.5 rounded-xl bg-blue-950/40 border border-blue-500/30">
+                  <div class="text-xs text-emerald-400 font-semibold">Final Output</div>
+                  <div class="text-sm font-bold text-white">Cited &amp; Auditable Response</div>
+                  <div class="text-[11px] text-slate-300 mt-0.5">Full citation trail ready for counsel review</div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- Why Lexora Section                         -->
+    <!-- ========================================== -->
+    <section id="why-lexora" class="py-20 bg-navy-950/60 border-t border-slate-800/80 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/30 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-4">
+            The Lexora Advantage
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+            Why Lexora
+          </h2>
+          <p class="text-slate-400 text-base sm:text-lg">
+            Purpose-built for organizations that require speed without compromising on legal diligence and precision.
+          </p>
+        </div>
+
+        <!-- 4 Benefits Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          <!-- Benefit 1: Source Grounded -->
+          <div class="p-6 rounded-2xl bg-navy-900/60 border border-slate-800 hover:border-blue-500/40 transition duration-300">
+            <div class="w-10 h-10 rounded-lg bg-blue-600/10 border border-blue-500/20 text-blue-400 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Source Grounded</h3>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Every insight is anchored directly in authentic statutory text, official notifications, and verified case precedent.
+            </p>
+          </div>
+
+          <!-- Benefit 2: Business Focused -->
+          <div class="p-6 rounded-2xl bg-navy-900/60 border border-slate-800 hover:border-blue-500/40 transition duration-300">
+            <div class="w-10 h-10 rounded-lg bg-sky-600/10 border border-sky-500/20 text-sky-400 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Business Focused</h3>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Tailored specifically to help startups and corporate leadership navigate agreements, compliance, and enterprise risk.
+            </p>
+          </div>
+
+          <!-- Benefit 3: AI Assisted -->
+          <div class="p-6 rounded-2xl bg-navy-900/60 border border-slate-800 hover:border-blue-500/40 transition duration-300">
+            <div class="w-10 h-10 rounded-lg bg-cyan-600/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">AI Assisted</h3>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Accelerate hours of complex manual document discovery and clause comparison into instant, synthesizable answers.
+            </p>
+          </div>
+
+          <!-- Benefit 4: Clear & Accessible -->
+          <div class="p-6 rounded-2xl bg-navy-900/60 border border-slate-800 hover:border-blue-500/40 transition duration-300">
+            <div class="w-10 h-10 rounded-lg bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Clear &amp; Accessible</h3>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Demystify convoluted statutory provisions into plain, actionable language without sacrificing legal validity.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- Call to Action Section                     -->
+    <!-- ========================================== -->
+    <section id="contact" class="py-20 relative overflow-hidden">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="relative rounded-3xl bg-gradient-to-b from-blue-900/50 to-navy-900 border border-blue-500/30 p-8 sm:p-12 md:p-16 text-center shadow-2xl overflow-hidden">
+          
+          <!-- Background decorative glow -->
+          <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-500/20 blur-[90px] rounded-full pointer-events-none"></div>
+
+          <div class="relative z-10 max-w-2xl mx-auto">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-6">
+              Make Legal Research Smarter
+            </h2>
+            
+            <p class="text-base sm:text-lg text-slate-300 leading-relaxed mb-8">
+              Explore a new approach to legal intelligence designed for startups and growing businesses.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a href="#contact" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-base shadow-xl shadow-blue-600/40 hover:scale-105 transition-all duration-200 focus:ring-2 focus:ring-blue-400">
+                Get Started
+              </a>
+              <a href="#about" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-full bg-navy-950/80 hover:bg-slate-800 text-slate-200 border border-slate-700 font-medium text-base transition-colors">
+                Speak With Consultant
+              </a>
+            </div>
+
+            <p class="mt-6 text-xs text-slate-400">
+              No credit card required · Instant demo access · Enterprise compliance ready
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ========================================== -->
+  <!-- Semantic Footer                            -->
+  <!-- ========================================== -->
+  <footer id="about" class="border-t border-slate-800 bg-navy-950 pt-16 pb-12 text-slate-400 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800/80">
+        
+        <!-- Brand Summary Column -->
+        <div class="lg:col-span-2">
+          <a href="#home" class="flex items-center gap-3 mb-4">
+            <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/30">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
+              </svg>
+            </div>
+            <span class="text-xl font-extrabold text-white tracking-tight">Lexora</span>
+          </a>
+          <p class="text-slate-400 text-sm leading-relaxed max-w-sm mb-4">
+            AI-powered legal intelligence for modern businesses. Combining proprietary legal indexing with retrieval-augmented generation for verifiable decision support.
+          </p>
+          <div class="text-xs text-slate-400">
+            Built for startups, enterprises, and legal professionals.
+          </div>
+        </div>
+
+        <!-- Quick Links Column -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-4">Quick Links</h3>
+          <ul class="space-y-2.5">
+            <li><a href="#home" class="hover:text-blue-400 transition-colors">Home</a></li>
+            <li><a href="#solutions" class="hover:text-blue-400 transition-colors">Solutions</a></li>
+            <li><a href="#ai-assistant" class="hover:text-blue-400 transition-colors">AI Assistant</a></li>
+            <li><a href="#why-lexora" class="hover:text-blue-400 transition-colors">Why Lexora</a></li>
+            <li><a href="#contact" class="hover:text-blue-400 transition-colors">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Solutions Column -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-4">Solutions</h3>
+          <ul class="space-y-2.5">
+            <li><a href="#solutions" class="hover:text-blue-400 transition-colors">AI Legal Research</a></li>
+            <li><a href="#solutions" class="hover:text-blue-400 transition-colors">Contract Intelligence</a></li>
+            <li><a href="#solutions" class="hover:text-blue-400 transition-colors">Compliance Intelligence</a></li>
+            <li><a href="#solutions" class="hover:text-blue-400 transition-colors">Legal Decision Support</a></li>
+            <li><a href="#ai-assistant" class="hover:text-blue-400 transition-colors">RAG Pipeline</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Column -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-4">Contact</h3>
+          <ul class="space-y-2.5">
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              <span>contact@lexora.ai</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span>Bengaluru &amp; Delaware</span>
+            </li>
+            <li class="text-xs text-slate-400 pt-2">
+              Enterprise Consultation Available
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Copyright and Legal Disclaimer -->
+      <div class="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <div>
+          &copy; 2026 Lexora. AI-powered legal intelligence for businesses.
+        </div>
+        
+        <div class="max-w-md text-center md:text-right text-slate-400 font-normal">
+          <strong>Disclaimer:</strong> For informational and decision-support purposes. Not a substitute for professional legal advice.
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- ========================================== -->
+  <!-- Minimal Vanilla JavaScript for Mobile Menu -->
+  <!-- ========================================== -->
+  <script>
+    // Grab mobile navigation elements
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    // Toggle menu visibility when clicking hamburger button
+    mobileMenuBtn.addEventListener('click', () => {
+      const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+      mobileMenuBtn.setAttribute('aria-expanded', String(!isExpanded));
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close the mobile menu automatically whenever a navigation link is clicked
+    const navLinks = mobileMenu.querySelectorAll('a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
+
+</body>
+</html>
