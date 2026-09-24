@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Lexora Legal Intelligence</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            lexora: {
+              bg: '#070B14',
+              surface: '#0D1321',
+              card: '#111827',
+              border: '#1E293B',
+              text: '#F8FAFC',
+              muted: '#94A3B8',
+              accent: '#3B82F6',
+              accentHover: '#2563EB',
+              secondary: '#60A5FA',
+              darkBlue: '#0F172A'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body class="bg-[#070B14] text-[#F8FAFC] font-sans antialiased min-h-screen flex bg-grid-glow">
+
+  <!-- ==========================================================================
+       Sidebar Navigation
+       ========================================================================== -->
+  <aside id="app-sidebar" class="w-64 bg-[#0D1321] border-r border-[#1E293B] flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full md:translate-x-0">
+    
+    <!-- Sidebar Top -->
+    <div class="p-6 space-y-6">
+      
+      <!-- Brand Lockup -->
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/20">
+          L
+        </div>
+        <div>
+          <span class="text-lg font-extrabold text-white tracking-tight block">Lexora</span>
+          <span class="text-[10px] font-semibold uppercase tracking-widest text-blue-400 block -mt-1">Workspace</span>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="space-y-1.5 pt-2">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-xs transition-colors shadow-sm shadow-blue-600/30">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          Dashboard
+        </a>
+        <a href="assistant.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+          AI Assistant
+        </a>
+        <a href="documents.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          Documents
+        </a>
+        <a href="research.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          Legal Research
+        </a>
+        <a href="membership.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+          Membership
+        </a>
+        <a href="settings.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          Settings & APIs
+        </a>
+      </nav>
+    </div>
+
+    <!-- Sidebar Bottom Usage & Profile -->
+    <div class="p-4 m-4 rounded-2xl bg-[#111827] border border-[#1E293B] space-y-3 text-xs">
+      <div>
+        <div class="flex items-center justify-between text-[11px] mb-1">
+          <span class="text-slate-400 font-medium">Monthly AI Queries</span>
+          <span class="font-bold text-white"><span class="js-user-queries-used">420</span>/<span class="js-user-queries-limit">500</span></span>
+        </div>
+        <div class="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+          <div class="h-full bg-blue-500 rounded-full transition-all duration-500 js-user-queries-bar" style="width: 84%"></div>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5 overflow-hidden">
+          <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white text-xs shrink-0">
+            P
+          </div>
+          <div class="truncate">
+            <span class="font-bold text-white block truncate js-user-name">Prashant</span>
+            <span class="text-[10px] text-slate-400 block truncate js-user-org">Apex Enterprise Ltd</span>
+          </div>
+        </div>
+        <span class="js-user-plan-badge">Professional</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- Backdrop for mobile drawer -->
+  <div id="sidebar-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden"></div>
+
+  <!-- ==========================================================================
+       Main Workspace Content Area
+       ========================================================================== -->
+  <div class="flex-1 md:ml-64 flex flex-col min-h-screen">
+    
+    <!-- Topbar -->
+    <header class="h-16 border-b border-[#1E293B] bg-[#070B14]/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-20">
+      
+      <!-- Left: Mobile Menu Button + Search -->
+      <div class="flex items-center gap-4 flex-1 max-w-lg">
+        <button id="sidebar-toggle" class="md:hidden text-slate-400 hover:text-white p-1" aria-label="Toggle Sidebar">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+
+        <div class="relative w-full hidden sm:block">
+          <span class="absolute inset-y-0 left-3 flex items-center text-slate-500 text-xs">🔍</span>
+          <input 
+            type="text" 
+            placeholder="Search contracts, legal acts, or sections..." 
+            class="w-full pl-9 pr-4 py-1.5 rounded-xl bg-[#0D1321] border border-[#1E293B] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+          >
+        </div>
+      </div>
+
+      <!-- Right Topbar Controls -->
+      <div class="flex items-center gap-4">
+        
+        <!-- Live HTML5 Notification status badge -->
+        <button id="btn-request-notif" class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-[11px] font-medium text-slate-300 transition-colors" title="HTML5 Web Notification status">
+          <span>🔔</span>
+          <span>Web Notifications</span>
+        </button>
+
+        <!-- Entitlement Plan Badge -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400 hidden sm:inline">Active Plan:</span>
+          <span class="js-user-plan-badge">Professional</span>
+        </div>
+
+        <!-- User Profile Avatar -->
+        <a href="settings.html" class="w-8 h-8 rounded-xl bg-blue-600 hover:bg-blue-500 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-600/20 transition-all">
+          P
+        </a>
+      </div>
+
+    </header>
+
+    <!-- Main Dashboard View -->
+    <main class="flex-1 p-6 md:p-8 max-w-6xl w-full mx-auto space-y-8">
+      
+      <!-- Greeting & Heading Section -->
+      <div class="space-y-1.5">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          Good morning, <span class="js-user-name">Prashant</span>
+        </h1>
+        <p class="text-sm text-[#94A3B8]">
+          How can Lexora help you today?
+        </p>
+      </div>
+
+      <!-- Large Legal Question Input (Hero Action) -->
+      <div class="bg-[#111827] border border-[#1E293B] rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden space-y-5">
+        <div class="absolute -right-8 -top-8 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <form id="dashboard-ask-form" class="space-y-4">
+          <div class="relative">
+            <textarea 
+              id="dashboard-query-input"
+              rows="3" 
+              placeholder="Ask a legal question... (e.g. Can my company terminate an employment contract without severance under Indian law?)"
+              class="w-full px-5 py-4 rounded-2xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all resize-none"
+            ></textarea>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            
+            <!-- Quick prompt chips -->
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <span class="text-slate-500 text-[11px] font-semibold">Suggested:</span>
+              <button type="button" class="quick-chip px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-[#1E293B] text-slate-300 text-[11px] transition-colors" data-query="Are post-termination non-compete clauses enforceable under Section 27 of Indian Contract Act?">
+                Section 27 Non-compete
+              </button>
+              <button type="button" class="quick-chip px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-[#1E293B] text-slate-300 text-[11px] transition-colors" data-query="What approvals are required under Section 180 of Companies Act 2013 for debt financing?">
+                Section 180 Borrowing
+              </button>
+              <button type="button" class="quick-chip px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-[#1E293B] text-slate-300 text-[11px] transition-colors" data-query="What are the mandatory Data Fiduciary compliance requirements under DPDP Act 2023?">
+                DPDP Act 2023
+              </button>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold tracking-wide flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] ml-auto"
+            >
+              Ask Lexora →
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ======================================================================
+           "Choose your AI" Section — DYNAMICALLY GATED BY PLAN
+           ====================================================================== -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-bold text-white">Choose your AI</h2>
+            <p class="text-xs text-slate-400">Select an engine configured under your membership plan</p>
+          </div>
+          <a href="membership.html" class="text-xs font-semibold text-blue-400 hover:underline">
+            Manage Entitlements →
+          </a>
+        </div>
+
+        <!-- Dynamic Model Cards Container -->
+        <div id="models-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- Populated by JavaScript according to getUserAvailableModels() -->
+        </div>
+      </div>
+
+      <!-- Recent Activity & Quick Access Modules -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
+        
+        <!-- Recent Documents -->
+        <div class="lg:col-span-2 bg-[#111827] border border-[#1E293B] rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>📄</span> Recent Documents Diligence
+            </h3>
+            <a href="documents.html" class="text-xs font-semibold text-blue-400 hover:underline">
+              View All (3) →
+            </a>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            
+            <div class="flex items-center justify-between p-3.5 rounded-xl bg-[#0D1321] border border-[#1E293B] hover:border-slate-700 transition-colors">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-xs">
+                  DOC
+                </div>
+                <div>
+                  <span class="font-bold text-slate-200 block">Master_Services_Agreement_2026.docx</span>
+                  <span class="text-[11px] text-slate-500">18 clauses parsed • 3 attention points</span>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 font-semibold text-[10px] border border-amber-500/20">
+                Attention Required
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between p-3.5 rounded-xl bg-[#0D1321] border border-[#1E293B] hover:border-slate-700 transition-colors">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-xs">
+                  PDF
+                </div>
+                <div>
+                  <span class="font-bold text-slate-200 block">Founder_Reverse_Vesting_Agreement.pdf</span>
+                  <span class="text-[11px] text-slate-500">4-year vesting schedule • 1-year cliff validated</span>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold text-[10px] border border-emerald-500/20">
+                Verified Clean
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between p-3.5 rounded-xl bg-[#0D1321] border border-[#1E293B] hover:border-slate-700 transition-colors">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-xs">
+                  DOC
+                </div>
+                <div>
+                  <span class="font-bold text-slate-200 block">B2B_SaaS_Data_Processing_Addendum.docx</span>
+                  <span class="text-[11px] text-slate-500">DPDP Act 2023 Section 8 Data Fiduciary audit</span>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 font-semibold text-[10px] border border-blue-500/20">
+                Analysis Ready
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Saved Research Highlights (LocalStorage Sync) -->
+        <div class="bg-[#111827] border border-[#1E293B] rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>⚖</span> Saved Research
+            </h3>
+            <a href="research.html" class="text-xs font-semibold text-blue-400 hover:underline">
+              Search Acts →
+            </a>
+          </div>
+
+          <div id="dashboard-saved-research" class="space-y-3 text-xs">
+            <!-- Populated via LocalStorage -->
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/ambient.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Mobile Sidebar Toggle
+      const sidebar = document.getElementById("app-sidebar");
+      const toggleBtn = document.getElementById("sidebar-toggle");
+      const backdrop = document.getElementById("sidebar-backdrop");
+
+      if (toggleBtn && sidebar && backdrop) {
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("-translate-x-full");
+          backdrop.classList.toggle("hidden");
+        });
+        backdrop.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          backdrop.classList.add("hidden");
+        });
+      }
+
+      // 2. Notification Permission quick button
+      const notifBtn = document.getElementById("btn-request-notif");
+      if (notifBtn) {
+        notifBtn.addEventListener("click", () => {
+          requestNotificationPermission();
+        });
+      }
+
+      // 3. Quick Chips
+      document.querySelectorAll(".quick-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          const query = chip.getAttribute("data-query");
+          const input = document.getElementById("dashboard-query-input");
+          if (input) {
+            input.value = query;
+            input.focus();
+          }
+        });
+      });
+
+      // 4. Ask Form Submission
+      const askForm = document.getElementById("dashboard-ask-form");
+      if (askForm) {
+        askForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const query = document.getElementById("dashboard-query-input").value.trim();
+          if (query) {
+            // Save search to LocalStorage (HTML5 API)
+            StorageHelper.addRecentSearch(query);
+            // Route to assistant
+            window.location.href = `assistant.html?q=${encodeURIComponent(query)}`;
+          } else {
+            window.location.href = "assistant.html";
+          }
+        });
+      }
+
+      // 5. Render Dynamic "Choose your AI" cards based on active plan
+      function renderAIModelCards() {
+        const user = getCurrentUser();
+        const container = document.getElementById("models-grid");
+        if (!container) return;
+
+        container.innerHTML = "";
+
+        LEXORA_AI_MODELS.forEach(model => {
+          const isUnlocked = isModelUnlocked(model.id, user);
+
+          const card = document.createElement("div");
+          card.className = `p-5 rounded-2xl border transition-all duration-200 ${
+            isUnlocked 
+              ? "bg-[#0D1321] border-[#1E293B] hover:border-blue-500/50 hover:bg-[#111827] shadow-lg shadow-black/20" 
+              : "bg-[#0A0E18] border-slate-800/60 opacity-75"
+          }`;
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl ${isUnlocked ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-slate-800 text-slate-500'} flex items-center justify-center text-xl">
+                  ${model.icon}
+                </div>
+                <div>
+                  <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    ${model.name}
+                    ${isUnlocked ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span>' : ''}
+                  </h3>
+                  <span class="text-[11px] text-slate-400 font-medium">${model.badge} • ${model.speed} speed</span>
+                </div>
+              </div>
+
+              <div>
+                ${
+                  isUnlocked 
+                    ? `<a href="assistant.html?model=${model.id}" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-600/20 transition-colors">Select</a>` 
+                    : `<a href="membership.html" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 text-xs font-bold transition-colors flex items-center gap-1">🔒 Upgrade</a>`
+                }
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+              ${model.description}
+            </p>
+
+            <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
+              <span>Indexed Corpus: ${model.corpus}</span>
+              ${!isUnlocked ? '<span class="text-amber-400 font-semibold">Requires Professional Plan</span>' : '<span class="text-blue-400 font-semibold">Unlocked</span>'}
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+      }
+
+      // 6. Render Saved Research from LocalStorage (HTML5 API)
+      function renderSavedResearch() {
+        const container = document.getElementById("dashboard-saved-research");
+        if (!container) return;
+
+        const list = StorageHelper.getSavedResearch();
+        if (list.length === 0) {
+          container.innerHTML = `<p class="text-xs text-slate-500">No saved research yet. Search Indian Acts to bookmark citations.</p>`;
+          return;
+        }
+
+        container.innerHTML = list.slice(0, 3).map(item => `
+          <div class="p-3 rounded-xl bg-[#0D1321] border border-[#1E293B] space-y-1">
+            <span class="font-bold text-slate-200 block truncate">${item.title}</span>
+            <p class="text-[11px] text-slate-400 line-clamp-2">${item.summary}</p>
+            <div class="pt-1 flex items-center justify-between text-[10px] text-blue-400 font-semibold">
+              <span>${item.act}</span>
+              <a href="research.html" class="hover:underline">Read Section →</a>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      renderAIModelCards();
+      renderSavedResearch();
+
+      window.addEventListener("lexora:userChanged", () => {
+        renderAIModelCards();
+      });
+    });
+  </script>
+</body>
+</html>

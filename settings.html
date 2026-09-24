@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings & HTML5 APIs — Lexora Legal Intelligence</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            lexora: {
+              bg: '#070B14',
+              surface: '#0D1321',
+              card: '#111827',
+              border: '#1E293B',
+              text: '#F8FAFC',
+              muted: '#94A3B8',
+              accent: '#3B82F6',
+              accentHover: '#2563EB',
+              secondary: '#60A5FA',
+              darkBlue: '#0F172A'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body class="bg-[#070B14] text-[#F8FAFC] font-sans antialiased min-h-screen flex bg-grid-glow">
+
+  <!-- ==========================================================================
+       Sidebar Navigation
+       ========================================================================== -->
+  <aside id="app-sidebar" class="w-64 bg-[#0D1321] border-r border-[#1E293B] flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full md:translate-x-0">
+    
+    <div class="p-6 space-y-6">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-600/20">
+          L
+        </div>
+        <div>
+          <span class="text-lg font-extrabold text-white tracking-tight block">Lexora</span>
+          <span class="text-[10px] font-semibold uppercase tracking-widest text-blue-400 block -mt-1">Workspace</span>
+        </div>
+      </a>
+
+      <nav class="space-y-1.5 pt-2">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          Dashboard
+        </a>
+        <a href="assistant.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+          AI Assistant
+        </a>
+        <a href="documents.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          Documents
+        </a>
+        <a href="research.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          Legal Research
+        </a>
+        <a href="membership.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+          Membership
+        </a>
+        <a href="settings.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-xs transition-colors shadow-sm shadow-blue-600/30">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          Settings & APIs
+        </a>
+      </nav>
+    </div>
+
+    <div class="p-4 m-4 rounded-2xl bg-[#111827] border border-[#1E293B] space-y-3 text-xs">
+      <div class="flex items-center justify-between text-[11px]">
+        <span class="text-slate-400 font-medium">Monthly AI Queries</span>
+        <span class="font-bold text-white"><span class="js-user-queries-used">420</span>/<span class="js-user-queries-limit">500</span></span>
+      </div>
+      <div class="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+        <div class="h-full bg-blue-500 rounded-full js-user-queries-bar" style="width: 84%"></div>
+      </div>
+      <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2 truncate">
+          <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white text-xs shrink-0">P</div>
+          <span class="font-bold text-white text-xs truncate js-user-name">Prashant</span>
+        </div>
+        <span class="js-user-plan-badge">Professional</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <div id="sidebar-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden"></div>
+
+  <!-- ==========================================================================
+       Main Workspace
+       ========================================================================== -->
+  <div class="flex-1 md:ml-64 flex flex-col min-h-screen">
+    
+    <!-- Topbar -->
+    <header class="h-16 border-b border-[#1E293B] bg-[#070B14]/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-20">
+      <div class="flex items-center gap-4">
+        <button id="sidebar-toggle" class="md:hidden text-slate-400 hover:text-white p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <h1 class="text-sm font-bold text-white">Settings & Academic HTML5 APIs Diagnostic Panel</h1>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold">
+          HTML5 Browser APIs Showcase
+        </span>
+        <a href="settings.html" class="w-8 h-8 rounded-xl bg-blue-600 hover:bg-blue-500 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-600/20">
+          P
+        </a>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="flex-1 p-6 md:p-8 max-w-6xl w-full mx-auto space-y-10">
+      
+      <!-- Heading -->
+      <div class="space-y-1.5">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          User Settings & HTML5 APIs Integration
+        </h2>
+        <p class="text-sm text-[#94A3B8]">
+          Manage your profile and inspect the 5 native HTML5 browser APIs naturally embedded within the Lexora architecture.
+        </p>
+      </div>
+
+      <!-- ======================================================================
+           Section 1: User Profile Settings (LocalStorage Sync)
+           ====================================================================== -->
+      <div class="bg-[#111827] border border-[#1E293B] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-[#1E293B]">
+          <div>
+            <h3 class="text-base font-bold text-white">User Profile & Organization</h3>
+            <p class="text-xs text-slate-400">Updates are persisted directly into HTML5 LocalStorage</p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold js-user-plan-badge">
+            Professional
+          </span>
+        </div>
+
+        <form id="settings-profile-form" class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
+          <div class="space-y-1.5">
+            <label class="font-semibold text-slate-300">Full Name</label>
+            <input type="text" id="prof-name" class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] text-white text-xs outline-none focus:border-blue-500 transition-colors">
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="font-semibold text-slate-300">Work Email</label>
+            <input type="email" id="prof-email" class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] text-white text-xs outline-none focus:border-blue-500 transition-colors">
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="font-semibold text-slate-300">Organization / Firm</label>
+            <input type="text" id="prof-org" class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] text-white text-xs outline-none focus:border-blue-500 transition-colors">
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="font-semibold text-slate-300">Corporate Role</label>
+            <input type="text" id="prof-role" class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] text-white text-xs outline-none focus:border-blue-500 transition-colors">
+          </div>
+
+          <div class="md:col-span-2 pt-2 flex items-center justify-end gap-3">
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-all">
+              Save Profile Changes
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ======================================================================
+           Section 2: The 5 HTML5 Browser APIs Showcase Panel (ACADEMIC VIVA)
+           ====================================================================== -->
+      <div class="space-y-4">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold uppercase tracking-wider mb-1">
+            Academic Demonstration
+          </div>
+          <h3 class="text-xl font-extrabold text-white tracking-tight">
+            5 Native HTML5 Browser APIs Diagnostic Center
+          </h3>
+          <p class="text-xs text-slate-400">
+            Real browser APIs embedded within the Lexora LegalTech application without third-party libraries.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <!-- 1. File API Card -->
+          <div class="p-6 rounded-3xl bg-[#111827] border border-[#1E293B] space-y-4 flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">HTML5 API 01</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">Active</span>
+              </div>
+              <h4 class="text-base font-bold text-white">File API</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Extracts client-side file metadata (<code class="text-blue-300">name</code>, <code class="text-blue-300">size</code>, <code class="text-blue-300">type</code>, <code class="text-blue-300">lastModified</code>) when contracts are selected.
+              </p>
+              <div class="p-3 rounded-xl bg-[#070B14] border border-slate-800 text-[11px] font-mono text-slate-400">
+                getFileMetadata(file) → extracts formattedBytes & MIME
+              </div>
+            </div>
+            <a href="documents.html" class="block w-full py-2.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-center text-xs font-bold text-slate-200 transition-colors">
+              Test on Documents Page →
+            </a>
+          </div>
+
+          <!-- 2. Drag & Drop API Card -->
+          <div class="p-6 rounded-3xl bg-[#111827] border border-[#1E293B] space-y-4 flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">HTML5 API 02</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">Active</span>
+              </div>
+              <h4 class="text-base font-bold text-white">Drag and Drop API</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Native event listeners for <code class="text-blue-300">dragenter</code>, <code class="text-blue-300">dragover</code>, <code class="text-blue-300">dragleave</code>, and <code class="text-blue-300">drop</code> on contract upload targets.
+              </p>
+              <div class="p-3 rounded-xl bg-[#070B14] border border-slate-800 text-[11px] font-mono text-slate-400">
+                e.dataTransfer.files + .dropzone-active styles
+              </div>
+            </div>
+            <a href="documents.html" class="block w-full py-2.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-center text-xs font-bold text-slate-200 transition-colors">
+              Test Dropzone on Documents →
+            </a>
+          </div>
+
+          <!-- 3. LocalStorage API Card -->
+          <div class="p-6 rounded-3xl bg-[#111827] border border-[#1E293B] space-y-4 flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">HTML5 API 03</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">Active</span>
+              </div>
+              <h4 class="text-base font-bold text-white">Local Storage API</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Stores user profile state, active membership plan, recent searches, and saved statutory research notes across page reloads.
+              </p>
+              <div class="p-3 rounded-xl bg-[#070B14] border border-slate-800 text-[11px] font-mono text-slate-400">
+                localStorage.getItem("lexora_user")
+              </div>
+            </div>
+            <button id="btn-inspect-storage" class="block w-full py-2.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-center text-xs font-bold text-slate-200 transition-colors">
+              Inspect Raw Stored Data
+            </button>
+          </div>
+
+          <!-- 4. Clipboard API Card -->
+          <div class="p-6 rounded-3xl bg-[#111827] border border-[#1E293B] space-y-4 flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">HTML5 API 04</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">Active</span>
+              </div>
+              <h4 class="text-base font-bold text-white">Clipboard API</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Asynchronous programmatic copying of statutory provisions, clause redlines, and AI responses via <code class="text-blue-300">navigator.clipboard.writeText</code>.
+              </p>
+              <div class="p-3 rounded-xl bg-[#070B14] border border-slate-800 text-[11px] font-mono text-slate-400">
+                navigator.clipboard.writeText(text)
+              </div>
+            </div>
+            <button id="btn-test-clipboard" class="block w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-center text-xs font-bold text-white shadow-md shadow-blue-600/20 transition-all">
+              Test Copy Citation
+            </button>
+          </div>
+
+          <!-- 5. Web Notifications API Card -->
+          <div class="p-6 rounded-3xl bg-[#111827] border border-[#1E293B] space-y-4 flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">HTML5 API 05</span>
+                <span id="notif-permission-badge" class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-bold">Default</span>
+              </div>
+              <h4 class="text-base font-bold text-white">Web Notifications API</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Requests permission and delivers native OS system desktop notifications when asynchronous contract diligence finishes.
+              </p>
+              <div class="p-3 rounded-xl bg-[#070B14] border border-slate-800 text-[11px] font-mono text-slate-400">
+                new Notification("Lexora", { body })
+              </div>
+            </div>
+            <button id="btn-test-notification" class="block w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-center text-xs font-bold text-white shadow-md shadow-blue-600/20 transition-all">
+              Request & Fire Notification
+            </button>
+          </div>
+
+          <!-- Quick Reset Card -->
+          <div class="p-6 rounded-3xl bg-[#111827] border border-[#1E293B] space-y-4 flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-rose-400 uppercase tracking-wider">Storage Control</span>
+              </div>
+              <h4 class="text-base font-bold text-white">Reset Demo Environment</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Clears all LocalStorage entries (user state, saved citations, recent searches) and restores the initial default demo state.
+              </p>
+            </div>
+            <button id="btn-reset-storage" class="block w-full py-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-center text-xs font-bold text-rose-400 transition-colors">
+              Reset LocalStorage to Defaults
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Raw Storage Inspector Modal Box (Toggled by "Inspect Raw Stored Data") -->
+        <div id="storage-inspector-box" class="hidden p-6 rounded-3xl bg-[#070B14] border border-blue-500/30 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider">Raw LocalStorage State Viewer</h4>
+            <button id="btn-close-inspector" class="text-slate-400 hover:text-white text-xs font-bold">✕ Close</button>
+          </div>
+          <pre id="storage-dump-pre" class="p-4 rounded-xl bg-[#0D1321] border border-slate-800 text-emerald-400 text-xs font-mono overflow-x-auto max-h-64 leading-relaxed"></pre>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/ambient.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = getCurrentUser();
+      const profName = document.getElementById("prof-name");
+      const profEmail = document.getElementById("prof-email");
+      const profOrg = document.getElementById("prof-org");
+      const profRole = document.getElementById("prof-role");
+      const profileForm = document.getElementById("settings-profile-form");
+      const notifBadge = document.getElementById("notif-permission-badge");
+      const sidebar = document.getElementById("app-sidebar");
+      const toggleBtn = document.getElementById("sidebar-toggle");
+      const backdrop = document.getElementById("sidebar-backdrop");
+
+      // Sidebar mobile drawer
+      if (toggleBtn && sidebar && backdrop) {
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("-translate-x-full");
+          backdrop.classList.toggle("hidden");
+        });
+        backdrop.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          backdrop.classList.add("hidden");
+        });
+      }
+
+      // Populate form
+      profName.value = user.name || "";
+      profEmail.value = user.email || "";
+      profOrg.value = user.organization || "";
+      profRole.value = user.role || "";
+
+      // Profile Form Submission
+      profileForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        user.name = profName.value.trim() || user.name;
+        user.email = profEmail.value.trim() || user.email;
+        user.organization = profOrg.value.trim() || user.organization;
+        user.role = profRole.value.trim() || user.role;
+
+        setCurrentUser(user);
+        showToast("Profile successfully updated in LocalStorage!", "success");
+      });
+
+      // Update Notification Permission Badge
+      if ("Notification" in window) {
+        notifBadge.textContent = Notification.permission;
+        if (Notification.permission === "granted") {
+          notifBadge.className = "px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold";
+        }
+      }
+
+      // Test Notification
+      document.getElementById("btn-test-notification").addEventListener("click", async () => {
+        const perm = await requestNotificationPermission();
+        if (perm === "granted") {
+          sendAppNotification(
+            "Lexora Notification Demo", 
+            "Web Notifications API is functioning correctly on your browser!"
+          );
+        }
+        if ("Notification" in window) {
+          notifBadge.textContent = Notification.permission;
+        }
+      });
+
+      // Test Clipboard API
+      document.getElementById("btn-test-clipboard").addEventListener("click", (e) => {
+        const testText = "Section 27, Indian Contract Act 1872: Restraint of trade void ab initio (Supreme Court precedent Percept D'Mark, 2006).";
+        copyToClipboard(testText, e.currentTarget);
+      });
+
+      // Inspect Storage
+      const inspectorBox = document.getElementById("storage-inspector-box");
+      const dumpPre = document.getElementById("storage-dump-pre");
+      document.getElementById("btn-inspect-storage").addEventListener("click", () => {
+        const dump = {
+          lexora_user: JSON.parse(localStorage.getItem("lexora_user") || "{}"),
+          lexora_saved_research: JSON.parse(localStorage.getItem("lexora_saved_research") || "[]"),
+          lexora_recent_searches: JSON.parse(localStorage.getItem("lexora_recent_searches") || "[]")
+        };
+        dumpPre.textContent = JSON.stringify(dump, null, 2);
+        inspectorBox.classList.remove("hidden");
+        inspectorBox.scrollIntoView({ behavior: "smooth" });
+      });
+
+      document.getElementById("btn-close-inspector").addEventListener("click", () => {
+        inspectorBox.classList.add("hidden");
+      });
+
+      // Reset Storage
+      document.getElementById("btn-reset-storage").addEventListener("click", () => {
+        if (confirm("Reset all LocalStorage keys to factory demo state?")) {
+          localStorage.removeItem("lexora_user");
+          localStorage.removeItem("lexora_saved_research");
+          localStorage.removeItem("lexora_recent_searches");
+          setCurrentUser(DEFAULT_USER);
+          showToast("LocalStorage reset to initial defaults", "info");
+          setTimeout(() => location.reload(), 600);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,684 @@
+/* ==========================================================================
+   Lexora — Modern Dark LegalTech Custom Utilities
+   Color Palette:
+   - Background: #070B14
+   - Secondary background: #0D1321
+   - Cards: #111827
+   - Borders: #1E293B
+   - Text Primary: #F8FAFC
+   - Text Secondary: #94A3B8
+   - Accent Blue: #3B82F6
+   - Secondary Blue: #60A5FA
+   ========================================================================== */
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #070B14;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Background Subtle Gradients & Grid */
+.bg-grid-glow {
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 100% 40%, rgba(96, 165, 250, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 0% 80%, rgba(37, 99, 235, 0.06) 0%, transparent 50%);
+}
+
+.bg-dot-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+}
+
+.glass-card:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+/* Ambient Blue Glow Accent */
+.glow-accent {
+  box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.25);
+}
+
+.glow-accent-lg {
+  box-shadow: 0 0 50px -10px rgba(59, 130, 246, 0.35);
+}
+
+/* Drag and Drop Active Highlight State */
+.dropzone-active {
+  border-color: #3B82F6 !important;
+  background: rgba(59, 130, 246, 0.08) !important;
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.2) !important;
+  transform: scale(1.01);
+}
+
+/* Subtle Floating Animation */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+/* Subtle Pulse for Live Badges */
+@keyframes pulseDot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulseDot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Shimmer Bar for Loading / Analysis */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #1E293B 25%, #3B82F6 50%, #1E293B 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* ==========================================================================
+   Ambient Background Motion System
+   - Floating gradient orbs (GPU-accelerated, pointer-events: none)
+   - Luminous mouse-following glow
+   - Respects prefers-reduced-motion
+   ========================================================================== */
+
+/* Container for all ambient elements */
+.lexora-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Floating Gradient Orbs */
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.85;
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+}
+
+.ambient-orb--1 {
+  width: clamp(350px, 42vw, 750px);
+  height: clamp(350px, 42vw, 750px);
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.38) 0%, rgba(14, 165, 233, 0.22) 35%, rgba(30, 58, 138, 0.08) 65%, transparent 80%);
+  top: -10%;
+  left: -5%;
+  animation-name: orbDrift1;
+  animation-duration: 22s;
+}
+
+.ambient-orb--2 {
+  width: clamp(300px, 35vw, 650px);
+  height: clamp(300px, 35vw, 650px);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.34) 0%, rgba(139, 92, 246, 0.20) 40%, rgba(37, 99, 235, 0.06) 65%, transparent 80%);
+  bottom: 5%;
+  right: -5%;
+  animation-name: orbDrift2;
+  animation-duration: 28s;
+}
+
+.ambient-orb--3 {
+  width: clamp(280px, 30vw, 550px);
+  height: clamp(280px, 30vw, 550px);
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.28) 0%, rgba(59, 130, 246, 0.18) 45%, transparent 75%);
+  top: 45%;
+  left: 40%;
+  animation-name: orbDrift3;
+  animation-duration: 32s;
+}
+
+/* Orb Drift Keyframes — slow, organic, looping paths */
+@keyframes orbDrift1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(10vw, 8vh) scale(1.12);
+  }
+  50% {
+    transform: translate(4vw, 16vh) scale(0.92);
+  }
+  75% {
+    transform: translate(-5vw, 7vh) scale(1.06);
+  }
+}
+
+@keyframes orbDrift2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(-9vw, -7vh) scale(1.1);
+  }
+  50% {
+    transform: translate(-3vw, -15vh) scale(0.9);
+  }
+  75% {
+    transform: translate(7vw, -5vh) scale(1.05);
+  }
+}
+
+@keyframes orbDrift3 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(-7vw, 9vh) scale(1.14);
+  }
+  66% {
+    transform: translate(8vw, -9vh) scale(0.88);
+  }
+}
+
+/* Mouse-Following Glow Spotlight */
+.ambient-mouse-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(99, 102, 241, 0.08) 35%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  will-change: transform;
+}
+
+.ambient-mouse-glow.active {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   1. HERO MESH GRADIENT BACKGROUND
+   Smooth multi-color aurora glow without harsh clipping boundaries
+   ========================================================================== */
+
+.hero-mesh {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mesh-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  will-change: transform;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.mesh-blob--1 {
+  width: 50vw;
+  height: 50vw;
+  max-width: 650px;
+  max-height: 650px;
+  top: -15%;
+  left: 15%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, rgba(37, 99, 235, 0.10) 45%, transparent 70%);
+  animation: meshMorph1 20s infinite;
+}
+
+.mesh-blob--2 {
+  width: 45vw;
+  height: 45vw;
+  max-width: 580px;
+  max-height: 580px;
+  top: 10%;
+  right: 12%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.22) 0%, rgba(139, 92, 246, 0.08) 50%, transparent 70%);
+  animation: meshMorph2 24s infinite;
+}
+
+.mesh-blob--3 {
+  width: 40vw;
+  height: 40vw;
+  max-width: 500px;
+  max-height: 500px;
+  bottom: -5%;
+  left: 30%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, rgba(56, 189, 248, 0.06) 50%, transparent 70%);
+  animation: meshMorph3 28s infinite;
+}
+
+.mesh-blob--4 {
+  width: 35vw;
+  height: 35vw;
+  max-width: 450px;
+  max-height: 450px;
+  top: 30%;
+  left: 50%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.05) 50%, transparent 70%);
+  animation: meshMorph4 22s infinite;
+}
+
+@keyframes meshMorph1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(5vw, 4vh) scale(1.1); }
+  66% { transform: translate(-3vw, 7vh) scale(0.92); }
+}
+
+@keyframes meshMorph2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-4vw, 5vh) scale(1.08); }
+  66% { transform: translate(3vw, -4vh) scale(0.9); }
+}
+
+@keyframes meshMorph3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(4vw, -5vh) scale(1.12); }
+  66% { transform: translate(-4vw, 3vh) scale(0.92); }
+}
+
+@keyframes meshMorph4 {
+  0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate(-3vw, 4vh) scale(1.1) rotate(20deg); }
+}
+
+
+/* ==========================================================================
+   2. MARQUEE TICKER STRIP
+   Infinite horizontal scrolling keyword strip
+   ========================================================================== */
+
+.marquee-strip {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+.marquee-strip::before,
+.marquee-strip::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marquee-strip::before {
+  left: 0;
+  background: linear-gradient(to right, #070B14, transparent);
+}
+
+.marquee-strip::after {
+  right: 0;
+  background: linear-gradient(to left, #070B14, transparent);
+}
+
+.marquee-track {
+  display: inline-flex;
+  animation: marqueeScroll 35s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(203, 213, 225, 0.75);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.marquee-item .marquee-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.4);
+  flex-shrink: 0;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+
+/* ==========================================================================
+   3. BENTO CARD — GLASSMORPHISM + ANIMATED GRADIENT BORDER
+   Frosted glass cards with rotating conic-gradient border on hover
+   ========================================================================== */
+
+.bento-card {
+  position: relative;
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Card Cursor Spotlight on Hover */
+.bento-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    450px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(59, 130, 246, 0.18),
+    transparent 60%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.bento-card:hover::after {
+  opacity: 1;
+}
+
+.bento-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Animated gradient border pseudo-element */
+.bento-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    transparent 40%,
+    rgba(59, 130, 246, 0.6) 50%,
+    rgba(99, 102, 241, 0.5) 55%,
+    transparent 65%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.bento-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.18), 0 0 35px -5px rgba(59, 130, 246, 0.12);
+}
+
+.bento-card:hover::before {
+  opacity: 1;
+  animation: rotateBorder 4s linear infinite;
+}
+
+@keyframes rotateBorder {
+  to { --border-angle: 360deg; }
+}
+
+/* Register the custom property for animation */
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+
+/* ==========================================================================
+   4. SCROLL-TRIGGERED REVEAL ANIMATIONS
+   Progressive enhancement: Visible by default, animated when JS is active
+   ========================================================================== */
+
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-child {
+  opacity: 1;
+  transform: none;
+}
+
+/* Active animation state when JS IntersectionObserver is running */
+.js-reveal-active .reveal:not(.visible) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.js-reveal-active .reveal {
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.js-reveal-active .reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-reveal-active .reveal:not(.visible) .reveal-child {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.js-reveal-active .reveal.visible .reveal-child,
+.js-reveal-active .reveal-child.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--reveal-i, 0) * 0.08s);
+}
+
+
+/* ==========================================================================
+   5. PRICING TOGGLE
+   Monthly/Annual pill switch with save badge
+   ========================================================================== */
+
+.pricing-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem;
+  border-radius: 9999px;
+  background: #0D1321;
+  border: 1px solid #1E293B;
+}
+
+.pricing-toggle-btn {
+  padding: 0.6rem 1.4rem;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #94A3B8;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: all 0.25s ease;
+}
+
+.pricing-toggle-btn.active {
+  background: #3B82F6;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+}
+
+.pricing-toggle-btn:hover:not(.active) {
+  color: #F8FAFC;
+}
+
+.save-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34D399;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.save-badge.hidden {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+}
+
+/* Price value transition */
+.price-value {
+  display: inline-block;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.price-value.switching {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+
+/* ==========================================================================
+   6. PARALLAX DEPTH LAYERS
+   ========================================================================== */
+
+.parallax-layer {
+  will-change: transform;
+  transition: transform 0.05s linear;
+}
+
+
+/* ==========================================================================
+   7. SCROLL-DRIVEN UI ENHANCEMENTS
+   - Dynamic elevated sticky navbar
+   - Nav link active scrollspy indicators
+   - Back to top floating button
+   ========================================================================== */
+
+header.nav-scrolled {
+  background: rgba(7, 11, 20, 0.94) !important;
+  border-bottom-color: rgba(59, 130, 246, 0.35) !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8),
+              0 0 25px -5px rgba(59, 130, 246, 0.2);
+}
+
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.nav-link.active {
+  color: #60A5FA !important;
+  text-shadow: 0 0 12px rgba(96, 165, 250, 0.6);
+}
+
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3B82F6, #60A5FA);
+  border-radius: 9999px;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
+}
+
+/* Back to Top Floating Button */
+#back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+#back-to-top {
+  transform: translateY(12px);
+}
+
+/* ==========================================================================
+   Prefers Reduced Motion — disable ALL animations
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-orb,
+  .ambient-mouse-glow,
+  .animate-float,
+  .animate-pulse-dot,
+  .mesh-blob,
+  .marquee-track,
+  .bento-card::before,
+  .reveal,
+  .reveal-child,
+  .price-value,
+  .parallax-layer {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .reveal,
+  .reveal-child {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .ambient-orb,
+  .ambient-mouse-glow {
+    opacity: 0 !important;
+  }
+}

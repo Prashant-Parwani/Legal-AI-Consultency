@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Assistant — Lexora Legal Intelligence</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            lexora: {
+              bg: '#070B14',
+              surface: '#0D1321',
+              card: '#111827',
+              border: '#1E293B',
+              text: '#F8FAFC',
+              muted: '#94A3B8',
+              accent: '#3B82F6',
+              accentHover: '#2563EB',
+              secondary: '#60A5FA',
+              darkBlue: '#0F172A'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body class="bg-[#070B14] text-[#F8FAFC] font-sans antialiased h-screen flex overflow-hidden">
+
+  <!-- ==========================================================================
+       1. Left Sidebar: Navigation & Conversation History
+       ========================================================================== -->
+  <aside id="assistant-sidebar" class="w-72 bg-[#0D1321] border-r border-[#1E293B] flex flex-col justify-between shrink-0 fixed md:static inset-y-0 left-0 z-40 transition-transform -translate-x-full md:translate-x-0">
+    
+    <!-- Top Branding & Back -->
+    <div class="p-4 border-b border-[#1E293B] flex items-center justify-between">
+      <a href="dashboard.html" class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-600/20">
+          L
+        </div>
+        <span class="font-extrabold text-white text-sm">Lexora Assistant</span>
+      </a>
+      <a href="dashboard.html" class="text-xs text-slate-400 hover:text-white p-1" title="Back to Dashboard">
+        ✕
+      </a>
+    </div>
+
+    <!-- New Chat & Conversation History -->
+    <div class="p-4 flex-1 flex flex-col min-h-0 space-y-4">
+      
+      <!-- New Chat Button -->
+      <button id="btn-new-chat" class="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/25 transition-all">
+        <span>+</span>
+        <span>New Legal Inquiry</span>
+      </button>
+
+      <!-- History Section Header -->
+      <div class="flex items-center justify-between text-[11px] text-slate-400 font-semibold uppercase tracking-wider px-1 pt-2">
+        <span>Recent Inquiries</span>
+        <span class="text-[10px] text-blue-400">LocalStorage</span>
+      </div>
+
+      <!-- History List -->
+      <div id="chat-history-list" class="flex-1 overflow-y-auto space-y-1.5 pr-1">
+        <button class="w-full text-left p-2.5 rounded-xl bg-[#111827] border border-blue-500/30 text-white text-xs font-semibold block truncate">
+          Termination of Employment Contract
+        </button>
+        <button class="w-full text-left p-2.5 rounded-xl hover:bg-[#111827] text-slate-400 hover:text-slate-200 text-xs font-medium block truncate transition-colors">
+          Section 27 Non-compete enforceability
+        </button>
+        <button class="w-full text-left p-2.5 rounded-xl hover:bg-[#111827] text-slate-400 hover:text-slate-200 text-xs font-medium block truncate transition-colors">
+          Section 180(1)(c) Borrowing resolution
+        </button>
+        <button class="w-full text-left p-2.5 rounded-xl hover:bg-[#111827] text-slate-400 hover:text-slate-200 text-xs font-medium block truncate transition-colors">
+          DPDP 2023 Consent Notice Requirements
+        </button>
+        <button class="w-full text-left p-2.5 rounded-xl hover:bg-[#111827] text-slate-400 hover:text-slate-200 text-xs font-medium block truncate transition-colors">
+          Reverse vesting founder agreement
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Bottom Navigation Links -->
+    <div class="p-4 border-t border-[#1E293B] space-y-2 bg-[#0A0F1B] text-xs">
+      <div class="flex items-center justify-between text-[11px]">
+        <span class="text-slate-400">Active Plan:</span>
+        <span class="js-user-plan-badge">Professional</span>
+      </div>
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <a href="documents.html" class="py-1.5 px-2.5 rounded-lg bg-[#111827] hover:bg-slate-800 text-slate-300 text-[11px] text-center transition-colors">
+          Documents
+        </a>
+        <a href="research.html" class="py-1.5 px-2.5 rounded-lg bg-[#111827] hover:bg-slate-800 text-slate-300 text-[11px] text-center transition-colors">
+          Research
+        </a>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- Mobile Backdrop -->
+  <div id="assistant-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden"></div>
+
+  <!-- ==========================================================================
+       2. Main Chat Area
+       ========================================================================== -->
+  <div class="flex-1 flex flex-col h-screen min-w-0">
+    
+    <!-- Chat Header with Model Selector -->
+    <header class="h-16 border-b border-[#1E293B] bg-[#070B14]/90 backdrop-blur-md px-6 flex items-center justify-between shrink-0">
+      
+      <div class="flex items-center gap-3">
+        <button id="btn-toggle-assistant-nav" class="md:hidden text-slate-400 hover:text-white p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+
+        <!-- Active Model Dropdown Selector (Dynamically Populated) -->
+        <div class="flex items-center gap-2">
+          <label for="chat-model-select" class="text-xs text-slate-400 hidden sm:inline">Engine:</label>
+          <select 
+            id="chat-model-select" 
+            class="px-3 py-1.5 rounded-xl bg-[#0D1321] border border-[#1E293B] text-xs font-semibold text-white focus:outline-none focus:border-blue-500 transition-colors"
+          >
+            <!-- Populated via JavaScript according to plan -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center gap-3">
+        <span class="text-xs text-emerald-400 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse-dot"></span>
+          <span class="hidden sm:inline">Grounded Indian Corpus</span>
+        </span>
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg bg-[#0D1321] border border-[#1E293B] hover:border-slate-600 text-slate-300 text-xs font-semibold transition-colors">
+          Dashboard →
+        </a>
+      </div>
+
+    </header>
+
+    <!-- Chat Stream Message Container -->
+    <div id="chat-stream" class="flex-1 overflow-y-auto p-6 space-y-6 max-w-4xl w-full mx-auto">
+      
+      <!-- Sample Initial Conversation -->
+      <!-- Message 1: User -->
+      <div class="flex items-start justify-end gap-3">
+        <div class="bg-blue-600/20 border border-blue-500/30 text-white rounded-2xl rounded-tr-none px-5 py-3.5 max-w-[85%] sm:max-w-[75%] text-sm shadow-sm space-y-1">
+          <p class="font-medium text-slate-100">Can my company terminate this employment contract?</p>
+          <p class="text-xs text-blue-300/80">Employee has been with us for 14 months, agreement specifies 30 days notice or pay in lieu. Are there statutory severance mandates under Indian Law?</p>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-300 shrink-0">
+          You
+        </div>
+      </div>
+
+      <!-- Message 2: Lexora AI Response -->
+      <div class="flex items-start gap-3">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-xs font-extrabold text-white shrink-0 shadow-md shadow-blue-500/30">
+          L
+        </div>
+        <div class="bg-[#111827] border border-[#1E293B] rounded-2xl rounded-tl-none p-5 max-w-[95%] sm:max-w-[85%] space-y-4 text-sm shadow-xl">
+          
+          <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-3">
+            <span class="font-bold text-blue-400 flex items-center gap-1.5">
+              <span>🧠</span> Lexora Preliminary Legal Memorandum
+            </span>
+            <div class="flex items-center gap-2">
+              <button class="btn-copy-response px-2.5 py-1 rounded-md bg-[#0D1321] border border-slate-800 hover:border-slate-700 text-[11px] font-semibold text-slate-300 transition-colors flex items-center gap-1" title="Copy response to clipboard via HTML5 Clipboard API">
+                <span>📋</span> Copy
+              </button>
+            </div>
+          </div>
+
+          <div class="chat-response-content space-y-3 text-slate-200 leading-relaxed text-xs sm:text-sm">
+            <p>
+              Based on the contractual context provided and codified Indian employment statutes, several key aspects of the termination must be evaluated:
+            </p>
+
+            <div class="space-y-2.5 pt-1">
+              <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
+                <span class="font-bold text-white block">1. Notice Period vs. Pay in Lieu (Contractual Clause)</span>
+                <p class="text-xs text-slate-400">
+                  If the contract stipulates 30 days' written notice or salary in lieu thereof, exercising termination for convenience requires paying gross salary (basic + allowances) for the 30-day period immediately on or before the effective relief date.
+                </p>
+              </div>
+
+              <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
+                <span class="font-bold text-white block">2. Applicability of Industrial Disputes Act, 1947</span>
+                <p class="text-xs text-slate-400">
+                  If the employee falls under the definition of a <em>"workman"</em> (non-managerial / non-supervisory capacity earning below statutory thresholds), Section 25F mandates: (a) 1 month's notice in writing or wages in lieu; and (b) Retrenchment compensation equivalent to 15 days' average pay for every completed year of continuous service.
+                </p>
+              </div>
+
+              <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
+                <span class="font-bold text-white block">3. State Shops and Commercial Establishments Act</span>
+                <p class="text-xs text-slate-400">
+                  Local state legislation (e.g. Karnataka, Maharashtra, Delhi) governs severance rules. In Delhi, Section 30 requires 1 month's notice or wages for employees with more than 3 months of service, except in cases of proven misconduct after inquiry.
+                </p>
+              </div>
+            </div>
+
+            <p class="pt-1 text-slate-300">
+              <strong>Next Steps for Company:</strong> Prepare a formal termination notice citing the contractual convenience clause, calculate full and final settlement (including accrued unavailed leave and pro-rata bonus), and require execution of a standard release and non-disparagement acknowledgement.
+            </p>
+          </div>
+
+          <!-- Grounded Sources Citation Box -->
+          <div class="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="font-bold text-slate-400">Sources:</span>
+              <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Indian Contract Act 1872 Sec 73</span>
+              <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Industrial Disputes Act 1947 Sec 25F</span>
+              <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Delhi Shops & Establishments Act Sec 30</span>
+            </div>
+            <a href="research.html" class="text-blue-400 font-semibold hover:underline">
+              Research Sections →
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Input Area -->
+    <div class="p-4 sm:p-6 border-t border-[#1E293B] bg-[#070B14] shrink-0">
+      <div class="max-w-4xl mx-auto space-y-3">
+        
+        <!-- Prompt Suggestion Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+          <span class="text-slate-500 text-[11px] font-semibold shrink-0">Suggestions:</span>
+          <button type="button" class="assistant-chip px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-[#1E293B] text-slate-300 text-[11px] whitespace-nowrap transition-colors" data-prompt="What are the essential liability limitation clauses for a B2B SaaS Master Services Agreement under Indian law?">
+            B2B SaaS Liability Clauses
+          </button>
+          <button type="button" class="assistant-chip px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-[#1E293B] text-slate-300 text-[11px] whitespace-nowrap transition-colors" data-prompt="Under Section 180(1)(c) Companies Act 2013, how is debt threshold calculated for special resolution?">
+            Section 180 Debt Threshold
+          </button>
+          <button type="button" class="assistant-chip px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-[#1E293B] text-slate-300 text-[11px] whitespace-nowrap transition-colors" data-prompt="How must Data Fiduciary consent notices be formatted under Digital Personal Data Protection Act 2023?">
+            DPDP 2023 Consent Notice
+          </button>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form id="assistant-form" class="flex items-center gap-3">
+          <div class="relative flex-1">
+            <textarea 
+              id="assistant-input"
+              rows="1" 
+              placeholder="Ask a legal question or describe a business situation..."
+              class="w-full px-4 py-3 rounded-xl bg-[#0D1321] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all resize-none max-h-32"
+            ></textarea>
+          </div>
+          <button 
+            type="submit" 
+            class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-600/30 transition-all hover:scale-105 shrink-0 flex items-center gap-1.5"
+          >
+            <span>Ask</span>
+            <span>→</span>
+          </button>
+        </form>
+
+        <div class="flex items-center justify-between text-[11px] text-slate-500 px-1">
+          <span>AI-generated insight is grounded in statutory Indian sources for research purposes.</span>
+          <span class="hidden sm:inline">Shift + Enter for new line</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/ambient.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = getCurrentUser();
+      const modelSelect = document.getElementById("chat-model-select");
+      const chatStream = document.getElementById("chat-stream");
+      const assistantForm = document.getElementById("assistant-form");
+      const assistantInput = document.getElementById("assistant-input");
+      const sidebar = document.getElementById("assistant-sidebar");
+      const toggleNav = document.getElementById("btn-toggle-assistant-nav");
+      const backdrop = document.getElementById("assistant-backdrop");
+
+      // 1. Mobile Sidebar Toggle
+      if (toggleNav && sidebar && backdrop) {
+        toggleNav.addEventListener("click", () => {
+          sidebar.classList.toggle("-translate-x-full");
+          backdrop.classList.toggle("hidden");
+        });
+        backdrop.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          backdrop.classList.add("hidden");
+        });
+      }
+
+      // 2. Populate Model Selector based on Entitlement System
+      function populateModelSelector() {
+        if (!modelSelect) return;
+        modelSelect.innerHTML = "";
+
+        const availableModels = getUserAvailableModels(user);
+
+        LEXORA_AI_MODELS.forEach(m => {
+          const opt = document.createElement("option");
+          opt.value = m.id;
+          const isAllowed = isModelUnlocked(m.id, user);
+          opt.textContent = isAllowed ? `${m.name} (${m.badge})` : `🔒 ${m.name} (Upgrade required)`;
+          opt.disabled = !isAllowed;
+          if (isAllowed) {
+            opt.selected = true;
+          }
+          modelSelect.appendChild(opt);
+        });
+      }
+      populateModelSelector();
+
+      // 3. Setup Clipboard API for existing response cards
+      document.querySelectorAll(".btn-copy-response").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const card = btn.closest(".bg-\\[\\#111827\\]");
+          const textContent = card ? card.querySelector(".chat-response-content").innerText : "";
+          copyToClipboard(textContent, btn);
+        });
+      });
+
+      // 4. Quick prompt suggestions
+      document.querySelectorAll(".assistant-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          const prompt = chip.getAttribute("data-prompt");
+          if (assistantInput) {
+            assistantInput.value = prompt;
+            assistantInput.focus();
+          }
+        });
+      });
+
+      // 5. Auto-load query from URL parameter if passed from Dashboard
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialQuery = urlParams.get("q");
+      if (initialQuery) {
+        assistantInput.value = initialQuery;
+        // Trigger simulated generation
+        handleSendMessage(initialQuery);
+      }
+
+      // 6. Handle Form Submit
+      assistantForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const msg = assistantInput.value.trim();
+        if (!msg) return;
+        assistantInput.value = "";
+        handleSendMessage(msg);
+      });
+
+      function handleSendMessage(userText) {
+        // Append User Message to Stream
+        const userDiv = document.createElement("div");
+        userDiv.className = "flex items-start justify-end gap-3";
+        userDiv.innerHTML = `
+          <div class="bg-blue-600/20 border border-blue-500/30 text-white rounded-2xl rounded-tr-none px-5 py-3.5 max-w-[85%] sm:max-w-[75%] text-sm shadow-sm">
+            <p class="font-medium text-slate-100">${userText}</p>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-300 shrink-0">
+            You
+          </div>
+        `;
+        chatStream.appendChild(userDiv);
+        chatStream.scrollTop = chatStream.scrollHeight;
+
+        // Simulate AI Thinking / Analysis
+        const loadingDiv = document.createElement("div");
+        loadingDiv.className = "flex items-start gap-3";
+        loadingDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white shrink-0">L</div>
+          <div class="bg-[#111827] border border-[#1E293B] rounded-2xl rounded-tl-none p-4 text-xs text-blue-400 font-semibold flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
+            Synthesizing statutory Indian sources & precedent paragraphs...
+          </div>
+        `;
+        chatStream.appendChild(loadingDiv);
+        chatStream.scrollTop = chatStream.scrollHeight;
+
+        // Generate response after realistic inference delay
+        setTimeout(() => {
+          chatStream.removeChild(loadingDiv);
+
+          // Update query usage in user profile
+          user.queriesUsed = Math.min(user.queriesLimit, user.queriesUsed + 1);
+          setCurrentUser(user);
+
+          const responseData = generateSimulatedLegalMemo(userText);
+
+          const aiDiv = document.createElement("div");
+          aiDiv.className = "flex items-start gap-3";
+          aiDiv.innerHTML = `
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-xs font-extrabold text-white shrink-0 shadow-md shadow-blue-500/30">
+              L
+            </div>
+            <div class="bg-[#111827] border border-[#1E293B] rounded-2xl rounded-tl-none p-5 max-w-[95%] sm:max-w-[85%] space-y-4 text-sm shadow-xl">
+              <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-3">
+                <span class="font-bold text-blue-400 flex items-center gap-1.5">
+                  <span>🧠</span> ${responseData.title}
+                </span>
+                <button class="btn-copy-response px-2.5 py-1 rounded-md bg-[#0D1321] border border-slate-800 hover:border-slate-700 text-[11px] font-semibold text-slate-300 transition-colors flex items-center gap-1">
+                  <span>📋</span> Copy
+                </button>
+              </div>
+
+              <div class="chat-response-content space-y-3 text-slate-200 leading-relaxed text-xs sm:text-sm">
+                ${responseData.body}
+              </div>
+
+              <div class="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="font-bold text-slate-400">Sources:</span>
+                  ${responseData.sources.map(s => `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">${s}</span>`).join(" ")}
+                </div>
+                <a href="research.html" class="text-blue-400 font-semibold hover:underline">
+                  Research Sections →
+                </a>
+              </div>
+            </div>
+          `;
+
+          chatStream.appendChild(aiDiv);
+          chatStream.scrollTop = chatStream.scrollHeight;
+
+          // Wire up copy button on new message via HTML5 Clipboard API
+          const newCopyBtn = aiDiv.querySelector(".btn-copy-response");
+          if (newCopyBtn) {
+            newCopyBtn.addEventListener("click", () => {
+              const content = aiDiv.querySelector(".chat-response-content").innerText;
+              copyToClipboard(content, newCopyBtn);
+            });
+          }
+
+          // HTML5 Web Notification demonstration if user asked for a document check
+          sendAppNotification("Lexora Legal Intelligence", `Legal response generated for: "${userText.slice(0, 45)}..."`);
+
+        }, 1200);
+      }
+
+      function generateSimulatedLegalMemo(prompt) {
+        const lower = prompt.toLowerCase();
+
+        if (lower.includes("terminate") || lower.includes("severance") || lower.includes("employment")) {
+          return {
+            title: "Employment Law: Restrictive Covenants & Statutory Severance",
+            body: `<p>Under Section 27 of the Indian Contract Act 1872, restrictive covenants post-termination restraining lawful trade or profession are void ab initio (<em>Percept D'Mark v. Zaheer Khan (2006) 4 SCC 227</em>). Contractual in-term restrictions remain binding.</p>
+            <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 text-xs">
+              <strong>Mandatory Compliance:</strong> Calculate accrued leave encashment, gratuity if tenure exceeds 5 years under Payment of Gratuity Act 1972, and deliver formal release documentation upon full and final settlement.
+            </div>`,
+            sources: ["Indian Contract Act 1872 Sec 27", "Industrial Disputes Act 1947 Sec 25F", "Payment of Gratuity Act 1972"]
+          };
+        }
+
+        if (lower.includes("borrow") || lower.includes("debt") || lower.includes("company") || lower.includes("180")) {
+          return {
+            title: "Corporate Law: Section 180 Borrowing Limits & MCA Compliance",
+            body: `<p>Section 180(1)(c) of the Companies Act 2013 stipulates that borrowing money where the aggregate debt exceeds paid-up capital + free reserves + securities premium requires a prior Special Resolution passed by shareholders in general meeting.</p>
+            <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 text-xs">
+              <strong>MCA Filing Requirement:</strong> File copy of the Special Resolution on Form MGT-14 with the Registrar of Companies (ROC) within 30 days of passage to avoid penalty sanctions.
+            </div>`,
+            sources: ["Companies Act 2013 Sec 180(1)(c)", "Companies (Management and Administration) Rules 2014", "MCA Form MGT-14"]
+          };
+        }
+
+        if (lower.includes("dpdp") || lower.includes("data") || lower.includes("privacy")) {
+          return {
+            title: "Data Privacy: Data Fiduciary Obligations under DPDP Act 2023",
+            body: `<p>Under Section 8 of the Digital Personal Data Protection Act 2023, a Data Fiduciary must obtain prior verifiable consent through an itemised notice in English or any 8th Schedule constitutional language before processing personal data.</p>
+            <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 text-xs">
+              <strong>Breach Protocols:</strong> Implement reasonable security safeguards. In the event of a breach, immediate notification to the Data Protection Board of India and affected data principals is mandatory under Section 8(6).
+            </div>`,
+            sources: ["DPDP Act 2023 Sec 8", "DPDP Act 2023 Sec 16 Cross-Border Rules", "CERT-In Directions 2022"]
+          };
+        }
+
+        return {
+          title: "Lexora Statutory Synthesis Memo",
+          body: `<p>Lexora has analyzed your inquiry against indexed Indian statutory frameworks. Relevant statutory provisions have been evaluated with deterministic commercial constraints.</p>
+          <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 text-xs">
+            <strong>Key Consideration:</strong> Review the explicit terms of your commercial agreement against standard Indian contract risk allocations, ensuring mutual liability caps and clear dispute resolution via the Arbitration & Conciliation Act 1996.
+          </div>`,
+          sources: ["Indian Contract Act 1872", "Arbitration & Conciliation Act 1996 Sec 7", "Commercial Courts Act 2015"]
+        };
+      }
+    });
+  </script>
+</body>
+</html>

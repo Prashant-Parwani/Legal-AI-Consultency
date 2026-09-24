@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Diligence — Lexora Legal Intelligence</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            lexora: {
+              bg: '#070B14',
+              surface: '#0D1321',
+              card: '#111827',
+              border: '#1E293B',
+              text: '#F8FAFC',
+              muted: '#94A3B8',
+              accent: '#3B82F6',
+              accentHover: '#2563EB',
+              secondary: '#60A5FA',
+              darkBlue: '#0F172A'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body class="bg-[#070B14] text-[#F8FAFC] font-sans antialiased min-h-screen flex bg-grid-glow">
+
+  <!-- ==========================================================================
+       Sidebar Navigation
+       ========================================================================== -->
+  <aside id="app-sidebar" class="w-64 bg-[#0D1321] border-r border-[#1E293B] flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full md:translate-x-0">
+    
+    <div class="p-6 space-y-6">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-600/20">
+          L
+        </div>
+        <div>
+          <span class="text-lg font-extrabold text-white tracking-tight block">Lexora</span>
+          <span class="text-[10px] font-semibold uppercase tracking-widest text-blue-400 block -mt-1">Workspace</span>
+        </div>
+      </a>
+
+      <nav class="space-y-1.5 pt-2">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          Dashboard
+        </a>
+        <a href="assistant.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+          AI Assistant
+        </a>
+        <a href="documents.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-xs transition-colors shadow-sm shadow-blue-600/30">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          Documents
+        </a>
+        <a href="research.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          Legal Research
+        </a>
+        <a href="membership.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+          Membership
+        </a>
+        <a href="settings.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          Settings & APIs
+        </a>
+      </nav>
+    </div>
+
+    <div class="p-4 m-4 rounded-2xl bg-[#111827] border border-[#1E293B] space-y-3 text-xs">
+      <div class="flex items-center justify-between text-[11px]">
+        <span class="text-slate-400 font-medium">Monthly AI Queries</span>
+        <span class="font-bold text-white"><span class="js-user-queries-used">420</span>/<span class="js-user-queries-limit">500</span></span>
+      </div>
+      <div class="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+        <div class="h-full bg-blue-500 rounded-full js-user-queries-bar" style="width: 84%"></div>
+      </div>
+      <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2 truncate">
+          <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white text-xs shrink-0">P</div>
+          <span class="font-bold text-white text-xs truncate js-user-name">Prashant</span>
+        </div>
+        <span class="js-user-plan-badge">Professional</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <div id="sidebar-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden"></div>
+
+  <!-- ==========================================================================
+       Main Workspace
+       ========================================================================== -->
+  <div class="flex-1 md:ml-64 flex flex-col min-h-screen">
+    
+    <!-- Topbar -->
+    <header class="h-16 border-b border-[#1E293B] bg-[#070B14]/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-20">
+      <div class="flex items-center gap-4">
+        <button id="sidebar-toggle" class="md:hidden text-slate-400 hover:text-white p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <h1 class="text-sm font-bold text-white">Document Diligence & Clause Analysis</h1>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold">
+          HTML5 Drag & Drop + File API
+        </span>
+        <a href="settings.html" class="w-8 h-8 rounded-xl bg-blue-600 hover:bg-blue-500 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-600/20">
+          P
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 md:p-8 max-w-6xl w-full mx-auto space-y-8">
+      
+      <!-- Header Banner -->
+      <div class="space-y-1.5">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          Contract Diligence & Risk Inspection
+        </h2>
+        <p class="text-sm text-[#94A3B8]">
+          Upload or drag-and-drop commercial contracts to evaluate asymmetrical clauses, uncapped indemnities, and statutory misalignments.
+        </p>
+      </div>
+
+      <!-- ======================================================================
+           HTML5 File API + Drag and Drop API Dropzone
+           ====================================================================== -->
+      <div class="bg-[#111827] border border-[#1E293B] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+        
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-bold text-slate-300 flex items-center gap-2">
+            <span>📥</span> Document Upload Engine
+          </span>
+          <span class="text-slate-500">Supports PDF, DOCX, TXT (Demonstrating HTML5 File API)</span>
+        </div>
+
+        <!-- Dropzone Box -->
+        <div 
+          id="contract-dropzone" 
+          class="border-2 border-dashed border-slate-700 hover:border-blue-500 rounded-2xl p-8 sm:p-12 text-center bg-[#0D1321] transition-all duration-200 cursor-pointer space-y-3 group"
+        >
+          <input type="file" id="file-input" class="hidden" accept=".docx,.pdf,.txt,.doc">
+          
+          <div class="w-16 h-16 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 mx-auto flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+            📄
+          </div>
+
+          <div class="space-y-1">
+            <p class="text-sm font-bold text-white">
+              Drag and drop your contract here, or <span class="text-blue-400 underline">browse files</span>
+            </p>
+            <p class="text-xs text-slate-400">
+              Master Services Agreements, Non-Disclosure Agreements, Founder Vesting, DPDP DPAs
+            </p>
+          </div>
+
+          <div class="inline-block pt-1">
+            <span class="text-[11px] font-semibold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+              Drag & Drop API Active
+            </span>
+          </div>
+        </div>
+
+        <!-- File API Extracted Metadata Preview Card (Hidden by default, shown when file selected) -->
+        <div id="file-metadata-card" class="hidden p-5 rounded-2xl bg-[#070B14] border border-blue-500/30 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold text-sm">
+                <span id="meta-ext">DOCX</span>
+              </div>
+              <div>
+                <h4 id="meta-name" class="text-sm font-bold text-white truncate max-w-sm">Contract_Draft.docx</h4>
+                <p class="text-xs text-slate-400">
+                  Size: <span id="meta-size" class="font-semibold text-slate-300">142 KB</span> • 
+                  Type: <span id="meta-type" class="text-slate-300">application/vnd</span> • 
+                  Modified: <span id="meta-date" class="text-slate-300">Today</span>
+                </p>
+              </div>
+            </div>
+
+            <button id="btn-run-analysis" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/25 transition-all flex items-center gap-2">
+              <span>⚡</span> Start AI Diligence
+            </button>
+          </div>
+
+          <!-- Analysis Progress Bar -->
+          <div id="analysis-progress-container" class="hidden space-y-2 pt-2 border-t border-slate-800">
+            <div class="flex items-center justify-between text-xs">
+              <span id="analysis-status-text" class="text-blue-400 font-semibold animate-pulse">Extracting statutory clauses...</span>
+              <span id="analysis-percentage" class="text-slate-400 font-mono">0%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div id="analysis-progress-bar" class="h-full bg-blue-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ======================================================================
+           Analyzed Sample Contract: Live Clause Viewer & Redline Inspector
+           ====================================================================== -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-bold text-white">Active Document Diligence Workspace</h3>
+            <p class="text-xs text-slate-400">Master_Services_Agreement_Enterprise_Draft_v2.docx (Indian Law Diligence)</p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold">
+            3 Attention Points Detected
+          </span>
+        </div>
+
+        <!-- SaaS Split View Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#111827] border border-[#1E293B] rounded-3xl p-6 sm:p-8">
+          
+          <!-- Left: Clause Viewer (8 cols) -->
+          <div class="lg:col-span-7 space-y-4 pr-0 lg:pr-4 border-b lg:border-b-0 lg:border-r border-[#1E293B] pb-6 lg:pb-0">
+            <div class="flex items-center justify-between text-xs pb-3 border-b border-[#1E293B]">
+              <span class="font-bold text-slate-400 uppercase tracking-wider text-[11px]">Contract Clauses</span>
+              <span class="text-slate-500 text-[11px]">18 Total Clauses Detected</span>
+            </div>
+
+            <div class="space-y-4 text-xs text-slate-300 leading-relaxed font-mono">
+              
+              <!-- Clause 11.1 -->
+              <div class="p-3.5 rounded-xl bg-[#0D1321] border border-slate-800">
+                <span class="font-bold text-white block mb-1">11.1 Term:</span>
+                This Agreement shall commence on the Effective Date and continue for an initial term of two (2) years unless terminated earlier in accordance with the provisions herein.
+              </div>
+
+              <!-- Clause 11.2 (High Attention) -->
+              <div class="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 space-y-1.5">
+                <div class="flex items-center justify-between font-sans">
+                  <span class="font-bold text-rose-300">11.2 Termination for Convenience:</span>
+                  <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 text-[10px] font-bold">High Attention</span>
+                </div>
+                <p class="text-slate-200">
+                  "Customer may terminate this Agreement at any time without cause upon thirty (30) days written notice. Supplier shall immediately refund all unearned prepaid fees."
+                </p>
+                <p class="font-sans text-[11px] text-rose-400 font-semibold pt-1">
+                  ▲ Risk: Asymmetrical termination rights; no reciprocal exit right or break-fee for Supplier.
+                </p>
+              </div>
+
+              <!-- Clause 14.2 (Medium Attention) -->
+              <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1.5">
+                <div class="flex items-center justify-between font-sans">
+                  <span class="font-bold text-amber-300">14.2 Indemnification & Liability:</span>
+                  <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-bold">Medium Attention</span>
+                </div>
+                <p class="text-slate-200">
+                  "Supplier shall indemnify, defend and hold harmless Customer without limitation against any third-party claims, consequential damages, lost profits, and incidental operational losses..."
+                </p>
+                <p class="font-sans text-[11px] text-amber-400 font-semibold pt-1">
+                  ▲ Risk: Uncapped consequential liability; conflicts with Section 73 of Indian Contract Act 1872.
+                </p>
+              </div>
+
+              <!-- Clause 18.1 (DPDP Review) -->
+              <div class="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30 space-y-1.5">
+                <div class="flex items-center justify-between font-sans">
+                  <span class="font-bold text-blue-300">18.1 Data Privacy & Security:</span>
+                  <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[10px] font-bold">Review</span>
+                </div>
+                <p class="text-slate-200">
+                  "Parties shall safeguard proprietary information and comply with Indian data regulations during the term."
+                </p>
+                <p class="font-sans text-[11px] text-blue-400 font-semibold pt-1">
+                  ℹ Compliance: Requires explicit Data Fiduciary / Processor clauses as mandated under Section 8 of DPDP Act 2023.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right: AI Redline Assessment Panel (5 cols) -->
+          <div class="lg:col-span-5 space-y-5">
+            <div class="text-xs pb-3 border-b border-[#1E293B]">
+              <span class="font-bold text-slate-400 uppercase tracking-wider text-[11px]">Recommended Commercial Redlines</span>
+            </div>
+
+            <!-- Redline 1 -->
+            <div class="p-4 rounded-2xl bg-[#0D1321] border border-slate-800 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-white">Clause 14.2 — Liability Cap Redline</span>
+                <button class="btn-copy-redline px-2 py-1 rounded bg-[#111827] hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-300 transition-colors flex items-center gap-1" data-redline="Supplier's aggregate liability under Section 14.2 shall be strictly capped at total fees paid during preceding 12 months, excluding speculative or consequential damages.">
+                  <span>📋</span> Copy
+                </button>
+              </div>
+              <div class="p-2.5 rounded-lg bg-[#070B14] border border-slate-800/80 text-[11px] text-emerald-400 font-mono leading-relaxed">
+                "Supplier's aggregate liability under Section 14.2 shall be strictly capped at total fees paid during preceding 12 months, excluding speculative or consequential damages."
+              </div>
+              <p class="text-[11px] text-slate-400 leading-snug">
+                Protects enterprise against open-ended liability. Aligns with standard Indian B2B SaaS norms.
+              </p>
+            </div>
+
+            <!-- Redline 2 -->
+            <div class="p-4 rounded-2xl bg-[#0D1321] border border-slate-800 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-white">Clause 11.2 — Reciprocal Notice Exit</span>
+                <button class="btn-copy-redline px-2 py-1 rounded bg-[#111827] hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-300 transition-colors flex items-center gap-1" data-redline="Either party may terminate this Agreement for convenience upon sixty (60) days prior written notice, subject to settlement of outstanding invoices.">
+                  <span>📋</span> Copy
+                </button>
+              </div>
+              <div class="p-2.5 rounded-lg bg-[#070B14] border border-slate-800/80 text-[11px] text-emerald-400 font-mono leading-relaxed">
+                "Either party may terminate this Agreement for convenience upon sixty (60) days prior written notice, subject to settlement of outstanding invoices."
+              </div>
+              <p class="text-[11px] text-slate-400 leading-snug">
+                Establishes bilateral exit reciprocity and prevents stranded infrastructure costs.
+              </p>
+            </div>
+
+            <!-- Action: Route to Assistant -->
+            <div class="p-4 rounded-2xl bg-blue-950/30 border border-blue-500/30 space-y-2">
+              <span class="text-xs font-bold text-blue-300 block">Need custom negotiation strategy?</span>
+              <p class="text-[11px] text-slate-400">Discuss these redlines with the Lexora AI Assistant to tailor counter-proposals.</p>
+              <a href="assistant.html?q=Help%20me%20draft%20a%20balanced%20liability%20clause%20under%20Indian%20Contract%20Act" class="block w-full py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-center text-xs font-bold text-white transition-colors">
+                Discuss Redlines in Assistant →
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/ambient.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const dropzone = document.getElementById("contract-dropzone");
+      const fileInput = document.getElementById("file-input");
+      const metadataCard = document.getElementById("file-metadata-card");
+      const metaName = document.getElementById("meta-name");
+      const metaSize = document.getElementById("meta-size");
+      const metaType = document.getElementById("meta-type");
+      const metaDate = document.getElementById("meta-date");
+      const metaExt = document.getElementById("meta-ext");
+      const runBtn = document.getElementById("btn-run-analysis");
+      const progressContainer = document.getElementById("analysis-progress-container");
+      const progressBar = document.getElementById("analysis-progress-bar");
+      const statusText = document.getElementById("analysis-status-text");
+      const percentText = document.getElementById("analysis-percentage");
+      const sidebar = document.getElementById("app-sidebar");
+      const toggleBtn = document.getElementById("sidebar-toggle");
+      const backdrop = document.getElementById("sidebar-backdrop");
+
+      // Sidebar mobile drawer
+      if (toggleBtn && sidebar && backdrop) {
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("-translate-x-full");
+          backdrop.classList.toggle("hidden");
+        });
+        backdrop.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          backdrop.classList.add("hidden");
+        });
+      }
+
+      // 1. Setup Drag and Drop API
+      setupDropzone(dropzone, (files) => {
+        if (files && files.length > 0) {
+          handleFileSelected(files[0]);
+        }
+      });
+
+      // 2. Setup File Input Click
+      dropzone.addEventListener("click", () => {
+        fileInput.click();
+      });
+
+      fileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          handleFileSelected(e.target.files[0]);
+        }
+      });
+
+      // 3. Process File via File API
+      function handleFileSelected(file) {
+        const meta = getFileMetadata(file);
+        if (!meta) return;
+
+        metaName.textContent = meta.name;
+        metaSize.textContent = meta.formattedSize;
+        metaType.textContent = meta.type;
+        metaDate.textContent = meta.lastModified;
+        metaExt.textContent = meta.extension;
+
+        metadataCard.classList.remove("hidden");
+        showToast(`Loaded: ${meta.name} (${meta.formattedSize}) via File API`, "success");
+      }
+
+      // 4. Simulated Analysis with Web Notifications API
+      runBtn.addEventListener("click", () => {
+        runBtn.disabled = true;
+        progressContainer.classList.remove("hidden");
+
+        const steps = [
+          { pct: 25, text: "Parsing contractual clauses and definitions..." },
+          { pct: 50, text: "Scanning liability caps against Indian Contract Act 1872..." },
+          { pct: 75, text: "Checking Data Fiduciary clauses for DPDP Act 2023..." },
+          { pct: 100, text: "Diligence complete! 3 attention points isolated." }
+        ];
+
+        let stepIndex = 0;
+        const interval = setInterval(() => {
+          const s = steps[stepIndex];
+          progressBar.style.width = `${s.pct}%`;
+          percentText.textContent = `${s.pct}%`;
+          statusText.textContent = s.text;
+
+          stepIndex++;
+          if (stepIndex >= steps.length) {
+            clearInterval(interval);
+            runBtn.disabled = false;
+            runBtn.textContent = "✓ Re-run Analysis";
+
+            // Fire Web Notifications API
+            sendAppNotification(
+              "Lexora Document Diligence Complete", 
+              `Analyzed ${metaName.textContent}. 3 attention points identified.`
+            );
+            showToast("Document Diligence completed!", "success");
+          }
+        }, 600);
+      });
+
+      // 5. Copy Redlines via Clipboard API
+      document.querySelectorAll(".btn-copy-redline").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const redlineText = btn.getAttribute("data-redline");
+          copyToClipboard(redlineText, btn);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

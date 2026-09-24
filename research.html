@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legal Research — Lexora Legal Intelligence</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            lexora: {
+              bg: '#070B14',
+              surface: '#0D1321',
+              card: '#111827',
+              border: '#1E293B',
+              text: '#F8FAFC',
+              muted: '#94A3B8',
+              accent: '#3B82F6',
+              accentHover: '#2563EB',
+              secondary: '#60A5FA',
+              darkBlue: '#0F172A'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body class="bg-[#070B14] text-[#F8FAFC] font-sans antialiased min-h-screen flex bg-grid-glow">
+
+  <!-- ==========================================================================
+       Sidebar Navigation
+       ========================================================================== -->
+  <aside id="app-sidebar" class="w-64 bg-[#0D1321] border-r border-[#1E293B] flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-40 transition-transform -translate-x-full md:translate-x-0">
+    
+    <div class="p-6 space-y-6">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-600/20">
+          L
+        </div>
+        <div>
+          <span class="text-lg font-extrabold text-white tracking-tight block">Lexora</span>
+          <span class="text-[10px] font-semibold uppercase tracking-widest text-blue-400 block -mt-1">Workspace</span>
+        </div>
+      </a>
+
+      <nav class="space-y-1.5 pt-2">
+        <a href="dashboard.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          Dashboard
+        </a>
+        <a href="assistant.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+          AI Assistant
+        </a>
+        <a href="documents.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          Documents
+        </a>
+        <a href="research.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-xs transition-colors shadow-sm shadow-blue-600/30">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          Legal Research
+        </a>
+        <a href="membership.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+          Membership
+        </a>
+        <a href="settings.html" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#111827] font-medium text-xs transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          Settings & APIs
+        </a>
+      </nav>
+    </div>
+
+    <div class="p-4 m-4 rounded-2xl bg-[#111827] border border-[#1E293B] space-y-3 text-xs">
+      <div class="flex items-center justify-between text-[11px]">
+        <span class="text-slate-400 font-medium">Monthly AI Queries</span>
+        <span class="font-bold text-white"><span class="js-user-queries-used">420</span>/<span class="js-user-queries-limit">500</span></span>
+      </div>
+      <div class="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+        <div class="h-full bg-blue-500 rounded-full js-user-queries-bar" style="width: 84%"></div>
+      </div>
+      <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2 truncate">
+          <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white text-xs shrink-0">P</div>
+          <span class="font-bold text-white text-xs truncate js-user-name">Prashant</span>
+        </div>
+        <span class="js-user-plan-badge">Professional</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <div id="sidebar-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden"></div>
+
+  <!-- ==========================================================================
+       Main Research Workspace
+       ========================================================================== -->
+  <div class="flex-1 md:ml-64 flex flex-col min-h-screen">
+    
+    <!-- Topbar -->
+    <header class="h-16 border-b border-[#1E293B] bg-[#070B14]/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-20">
+      <div class="flex items-center gap-4">
+        <button id="sidebar-toggle" class="md:hidden text-slate-400 hover:text-white p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <h1 class="text-sm font-bold text-white">Indian Statutory & Precedent Research</h1>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold">
+          HTML5 LocalStorage + Clipboard API
+        </span>
+        <a href="settings.html" class="w-8 h-8 rounded-xl bg-blue-600 hover:bg-blue-500 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-600/20">
+          P
+        </a>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="flex-1 p-6 md:p-8 max-w-6xl w-full mx-auto space-y-8">
+      
+      <!-- Heading -->
+      <div class="space-y-1.5">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          Statutory Search & Precedent Citations
+        </h2>
+        <p class="text-sm text-[#94A3B8]">
+          Lookup Indian Central Bare Acts, sections, MCA notifications, and binding Supreme Court commercial rulings.
+        </p>
+      </div>
+
+      <!-- Search Input & Act Filters -->
+      <div class="bg-[#111827] border border-[#1E293B] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
+        
+        <form id="research-search-form" class="relative">
+          <span class="absolute inset-y-0 left-4 flex items-center text-slate-500 text-sm">🔍</span>
+          <input 
+            type="text" 
+            id="research-search-input"
+            placeholder="Search by topic, statutory Act, or Section number (e.g. Section 27, DPDP Act consent, debt borrowing)..."
+            class="w-full pl-11 pr-32 py-3.5 rounded-2xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all"
+          >
+          <button 
+            type="submit" 
+            class="absolute right-2 top-2 bottom-2 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-all flex items-center gap-1"
+          >
+            Search
+          </button>
+        </form>
+
+        <!-- Central Act Filter Chips -->
+        <div class="space-y-2">
+          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Filter By Central Act:</div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" class="act-filter-btn px-3 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-bold border border-blue-500 shadow-sm" data-act="all">
+              All Acts
+            </button>
+            <button type="button" class="act-filter-btn px-3 py-1.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 text-slate-300 text-xs font-medium border border-[#1E293B] transition-colors" data-act="contract">
+              Indian Contract Act, 1872
+            </button>
+            <button type="button" class="act-filter-btn px-3 py-1.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 text-slate-300 text-xs font-medium border border-[#1E293B] transition-colors" data-act="companies">
+              Companies Act, 2013
+            </button>
+            <button type="button" class="act-filter-btn px-3 py-1.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 text-slate-300 text-xs font-medium border border-[#1E293B] transition-colors" data-act="dpdp">
+              DPDP Act, 2023
+            </button>
+            <button type="button" class="act-filter-btn px-3 py-1.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 text-slate-300 text-xs font-medium border border-[#1E293B] transition-colors" data-act="arbitration">
+              Arbitration Act, 1996
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Two Column Layout: Search Results (Left) vs Saved Research (Right) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Results Column (8 cols) -->
+        <div class="lg:col-span-8 space-y-5">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider text-xs">
+              Statutory Provisions & Doctrines (<span id="results-count">4</span>)
+            </h3>
+            <span class="text-xs text-slate-500">Plain English Synthesis + Bare Act Text</span>
+          </div>
+
+          <!-- Results Container -->
+          <div id="research-results-container" class="space-y-4">
+            
+            <!-- Result Item 1 -->
+            <div class="p-6 rounded-2xl bg-[#111827] border border-[#1E293B] hover:border-slate-700 transition-all space-y-3" data-act-type="contract">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider block">Indian Contract Act, 1872</span>
+                  <h4 class="text-base font-bold text-white mt-0.5">Section 27 — Agreement in Restraint of Trade Void</h4>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="btn-save-research px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors flex items-center gap-1.5" data-id="act-sec-27" data-title="Section 27 Contract Act — Restraint of Trade" data-act="Indian Contract Act, 1872" data-summary="Non-competes post-termination are void ab initio. Sale of goodwill exception only.">
+                    <span>⭐</span> Save
+                  </button>
+                  <button class="btn-copy-citation px-2.5 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors" data-text="Section 27, Indian Contract Act 1872: Every agreement by which any one is restrained from exercising a lawful profession, trade or business of any kind, is to that extent void. Exception: One who sells the goodwill of a business may agree with the buyer to refrain from carrying on a similar business within specified local limits.">
+                    📋 Copy
+                  </button>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-[#070B14] border border-slate-800 text-xs text-slate-300 font-mono leading-relaxed">
+                "Every agreement by which any one is restrained from exercising a lawful profession, trade or business of any kind, is to that extent void."
+              </div>
+
+              <div class="space-y-1 text-xs text-slate-300 leading-relaxed">
+                <strong class="text-white">Commercial Takeaway:</strong> Post-termination non-compete clauses cannot be enforced against employees or founders in India, regardless of geographic reasonableness or duration.
+                <div class="text-[11px] text-slate-500 pt-1">
+                  <strong>Landmark Precedent:</strong> <em>Percept D'Mark (India) (P) Ltd. v. Zaheer Khan, (2006) 4 SCC 227</em>.
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span class="text-slate-500 text-[11px]">Chapter II: Of Contracts, Voidable Contracts & Void Agreements</span>
+                <a href="assistant.html?q=Can%20I%20enforce%20a%20non-compete%20under%20Section%2027%20Indian%20Contract%20Act" class="text-blue-400 font-semibold hover:underline">
+                  Inquire with Assistant →
+                </a>
+              </div>
+            </div>
+
+            <!-- Result Item 2 -->
+            <div class="p-6 rounded-2xl bg-[#111827] border border-[#1E293B] hover:border-slate-700 transition-all space-y-3" data-act-type="companies">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider block">Companies Act, 2013</span>
+                  <h4 class="text-base font-bold text-white mt-0.5">Section 180(1)(c) — Restrictions on Powers of Board (Borrowing Limits)</h4>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="btn-save-research px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors flex items-center gap-1.5" data-id="act-sec-180" data-title="Section 180(1)(c) Companies Act — Borrowing Powers" data-act="Companies Act, 2013" data-summary="Special resolution mandatory if debt exceeds paid-up capital + free reserves.">
+                    <span>⭐</span> Save
+                  </button>
+                  <button class="btn-copy-citation px-2.5 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors" data-text="Section 180(1)(c), Companies Act 2013: The Board of Directors shall not borrow money exceeding aggregate of paid-up share capital, free reserves and securities premium without prior shareholder Special Resolution.">
+                    📋 Copy
+                  </button>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-[#070B14] border border-slate-800 text-xs text-slate-300 font-mono leading-relaxed">
+                "The Board of Directors of a company shall exercise the power to borrow money, where the money to be borrowed, together with the money already borrowed by the company will exceed aggregate of its paid-up share capital, free reserves and securities premium, only with the consent of the company by a special resolution."
+              </div>
+
+              <div class="space-y-1 text-xs text-slate-300 leading-relaxed">
+                <strong class="text-white">Commercial Takeaway:</strong> Venture debt, bank facilities, and convertible notes exceeding capital buffers must be ratified via general meeting and filed on MCA Form MGT-14.
+              </div>
+
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span class="text-slate-500 text-[11px]">Chapter XII: Meetings of Board and Its Powers</span>
+                <a href="assistant.html?q=Explain%20Section%20180%20Companies%20Act%20borrowing%20requirements" class="text-blue-400 font-semibold hover:underline">
+                  Inquire with Assistant →
+                </a>
+              </div>
+            </div>
+
+            <!-- Result Item 3 -->
+            <div class="p-6 rounded-2xl bg-[#111827] border border-[#1E293B] hover:border-slate-700 transition-all space-y-3" data-act-type="dpdp">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider block">Digital Personal Data Protection Act, 2023</span>
+                  <h4 class="text-base font-bold text-white mt-0.5">Section 8 — General Obligations of Data Fiduciary</h4>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="btn-save-research px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors flex items-center gap-1.5" data-id="act-dpdp-8" data-title="Section 8 DPDP Act 2023 — Data Fiduciary Obligations" data-act="DPDP Act, 2023" data-summary="Mandatory security safeguards, personal data breach notification, and deletion on consent withdrawal.">
+                    <span>⭐</span> Save
+                  </button>
+                  <button class="btn-copy-citation px-2.5 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors" data-text="Section 8, DPDP Act 2023: A Data Fiduciary shall implement appropriate technical and organisational measures to ensure effective adherence with the provisions of this Act. In the event of a personal data breach, give the Board and each affected Data Principal intimation of such breach.">
+                    📋 Copy
+                  </button>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-[#070B14] border border-slate-800 text-xs text-slate-300 font-mono leading-relaxed">
+                "A Data Fiduciary shall implement reasonable security safeguards to prevent personal data breach; and in the event of a personal data breach, give the Board and each affected Data Principal intimation of such breach in such form and manner as may be prescribed."
+              </div>
+
+              <div class="space-y-1 text-xs text-slate-300 leading-relaxed">
+                <strong class="text-white">Commercial Takeaway:</strong> Data processors operate strictly on Data Fiduciary contracts. Incident notifications are statutory, not discretionary.
+              </div>
+
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span class="text-slate-500 text-[11px]">Chapter II: Obligations of Data Fiduciary</span>
+                <a href="assistant.html?q=What%20are%20Section%208%20DPDP%20compliance%20obligations" class="text-blue-400 font-semibold hover:underline">
+                  Inquire with Assistant →
+                </a>
+              </div>
+            </div>
+
+            <!-- Result Item 4 -->
+            <div class="p-6 rounded-2xl bg-[#111827] border border-[#1E293B] hover:border-slate-700 transition-all space-y-3" data-act-type="arbitration">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider block">Arbitration & Conciliation Act, 1996</span>
+                  <h4 class="text-base font-bold text-white mt-0.5">Section 7 — Arbitration Agreement</h4>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="btn-save-research px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors flex items-center gap-1.5" data-id="act-arb-7" data-title="Section 7 Arbitration Act — Arbitration Clause" data-act="Arbitration & Conciliation Act, 1996" data-summary="Agreement must be in writing. Can be in clause or separate agreement.">
+                    <span>⭐</span> Save
+                  </button>
+                  <button class="btn-copy-citation px-2.5 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors" data-text="Section 7, Arbitration & Conciliation Act 1996: An arbitration agreement shall be in writing. An arbitration agreement is in writing if it is contained in a document signed by the parties or an exchange of letters, telex, telegrams or other means of telecommunication.">
+                    📋 Copy
+                  </button>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-[#070B14] border border-slate-800 text-xs text-slate-300 font-mono leading-relaxed">
+                "An arbitration agreement shall be in writing. An arbitration agreement is in writing if it is contained in a document signed by the parties or in an exchange of letters or electronic communication."
+              </div>
+
+              <div class="space-y-1 text-xs text-slate-300 leading-relaxed">
+                <strong class="text-white">Commercial Takeaway:</strong> Electronic assent in SaaS agreements is legally recognized as a written arbitration clause in India.
+              </div>
+
+              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span class="text-slate-500 text-[11px]">Part I: Arbitration — General Provisions</span>
+                <a href="assistant.html?q=How%20to%20draft%20an%20arbitration%20clause%20under%20Section%207" class="text-blue-400 font-semibold hover:underline">
+                  Inquire with Assistant →
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Saved Research Workspace (Right Column, 4 cols) -->
+        <div class="lg:col-span-4 bg-[#111827] border border-[#1E293B] rounded-3xl p-6 space-y-4 sticky top-24">
+          <div class="flex items-center justify-between pb-3 border-b border-[#1E293B]">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <span>⭐</span> Saved Research
+              </h3>
+              <span class="text-[11px] text-slate-500">Persisted in HTML5 LocalStorage</span>
+            </div>
+            <span id="saved-count-badge" class="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold">2</span>
+          </div>
+
+          <!-- Dynamic Saved List -->
+          <div id="saved-research-list" class="space-y-3 text-xs max-h-[500px] overflow-y-auto pr-1">
+            <!-- Populated via LocalStorage API -->
+          </div>
+
+          <div class="pt-3 border-t border-slate-800 text-[11px] text-slate-500">
+            Click "Save" on any section card above to persist statutory citations for your team's upcoming contract negotiation.
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/ambient.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchForm = document.getElementById("research-search-form");
+      const searchInput = document.getElementById("research-search-input");
+      const filterBtns = document.querySelectorAll(".act-filter-btn");
+      const resultsContainer = document.getElementById("research-results-container");
+      const savedContainer = document.getElementById("saved-research-list");
+      const savedCountBadge = document.getElementById("saved-count-badge");
+      const resultsCount = document.getElementById("results-count");
+      const sidebar = document.getElementById("app-sidebar");
+      const toggleBtn = document.getElementById("sidebar-toggle");
+      const backdrop = document.getElementById("sidebar-backdrop");
+
+      // Sidebar mobile drawer
+      if (toggleBtn && sidebar && backdrop) {
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("-translate-x-full");
+          backdrop.classList.toggle("hidden");
+        });
+        backdrop.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          backdrop.classList.add("hidden");
+        });
+      }
+
+      // 1. Render Saved Research from LocalStorage (HTML5 LocalStorage API)
+      function renderSavedResearch() {
+        const list = StorageHelper.getSavedResearch();
+        savedCountBadge.textContent = list.length;
+
+        if (list.length === 0) {
+          savedContainer.innerHTML = `
+            <div class="p-4 rounded-xl bg-[#0D1321] border border-slate-800 text-center text-slate-500">
+              No saved research. Click "Save" on any statutory card to bookmark it.
+            </div>
+          `;
+          return;
+        }
+
+        savedContainer.innerHTML = list.map(item => `
+          <div class="p-3.5 rounded-xl bg-[#0D1321] border border-slate-800 hover:border-slate-700 space-y-1.5 transition-colors">
+            <div class="flex items-start justify-between gap-2">
+              <span class="font-bold text-white block text-xs truncate">${item.title}</span>
+              <button class="btn-remove-saved text-slate-500 hover:text-rose-400 text-xs p-0.5" data-id="${item.id}" title="Remove from LocalStorage">
+                ✕
+              </button>
+            </div>
+            <p class="text-[11px] text-slate-400 line-clamp-2">${item.summary}</p>
+            <div class="flex items-center justify-between text-[10px] text-blue-400 font-semibold pt-1">
+              <span>${item.act}</span>
+              <a href="assistant.html?q=${encodeURIComponent(item.title)}" class="hover:underline">Ask Assistant →</a>
+            </div>
+          </div>
+        `).join("");
+
+        // Wire remove buttons
+        document.querySelectorAll(".btn-remove-saved").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const id = btn.getAttribute("data-id");
+            StorageHelper.removeSavedResearch(id);
+            renderSavedResearch();
+          });
+        });
+      }
+
+      // 2. Wire "Save to Research" Buttons
+      document.querySelectorAll(".btn-save-research").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const item = {
+            id: btn.getAttribute("data-id"),
+            title: btn.getAttribute("data-title"),
+            act: btn.getAttribute("data-act"),
+            summary: btn.getAttribute("data-summary"),
+            date: new Date().toISOString().split("T")[0]
+          };
+          StorageHelper.saveResearchItem(item);
+          renderSavedResearch();
+        });
+      });
+
+      // 3. Wire "Copy Citation" Buttons (HTML5 Clipboard API)
+      document.querySelectorAll(".btn-copy-citation").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const text = btn.getAttribute("data-text");
+          copyToClipboard(text, btn);
+        });
+      });
+
+      // 4. Act Filter Buttons
+      filterBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          filterBtns.forEach(b => {
+            b.className = "act-filter-btn px-3 py-1.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 text-slate-300 text-xs font-medium border border-[#1E293B] transition-colors";
+          });
+          btn.className = "act-filter-btn px-3 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-bold border border-blue-500 shadow-sm";
+
+          const actFilter = btn.getAttribute("data-act");
+          const cards = resultsContainer.querySelectorAll("[data-act-type]");
+          let visibleCount = 0;
+
+          cards.forEach(card => {
+            const type = card.getAttribute("data-act-type");
+            if (actFilter === "all" || type === actFilter) {
+              card.classList.remove("hidden");
+              visibleCount++;
+            } else {
+              card.classList.add("hidden");
+            }
+          });
+          resultsCount.textContent = visibleCount;
+        });
+      });
+
+      // 5. Search Filtering
+      searchForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const term = searchInput.value.trim().toLowerCase();
+        if (!term) return;
+
+        StorageHelper.addRecentSearch(term);
+        const cards = resultsContainer.querySelectorAll("[data-act-type]");
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const text = card.innerText.toLowerCase();
+          if (text.includes(term)) {
+            card.classList.remove("hidden");
+            visibleCount++;
+          } else {
+            card.classList.add("hidden");
+          }
+        });
+
+        resultsCount.textContent = visibleCount;
+        showToast(`Found ${visibleCount} statutory results for "${term}"`, "info");
+      });
+
+      renderSavedResearch();
+    });
+  </script>
+</body>
+</html>

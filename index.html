@@ -1,285 +1,430 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lexora — AI-Powered Legal Intelligence for Modern Businesses</title>
-  <meta name="description" content="Lexora provides AI-assisted legal intelligence for startups and corporations. Simplify legal research, analyze contracts, and navigate compliance with grounded RAG technology.">
+  <meta name="description" content="Get clear answers to legal questions, analyse documents, research Indian law, and make informed business decisions — all in one place.">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
 
-  <!-- Google Fonts: Inter -->
+  <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS with Official Typography Plugin via CDN -->
-  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-
-  <!-- Tailwind Configuration for Custom Colors and Fonts -->
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-          },
           colors: {
-            navy: {
-              950: '#060b18',
-              900: '#091024',
-              800: '#0f1b38',
-              700: '#1b2a4e',
+            lexora: {
+              bg: '#070B14',
+              surface: '#0D1321',
+              card: '#111827',
+              border: '#1E293B',
+              text: '#F8FAFC',
+              muted: '#94A3B8',
+              accent: '#3B82F6',
+              accentHover: '#2563EB',
+              secondary: '#60A5FA',
+              darkBlue: '#0F172A'
             }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif']
           }
         }
       }
     }
   </script>
 
-  <style>
-    /* Subtle star / grid pattern styling */
-    .bg-grid-pattern {
-      background-size: 40px 40px;
-      background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    }
-  </style>
+  <!-- Custom Utilities & Dark Mode Styling -->
+  <link rel="stylesheet" href="css/custom.css">
 </head>
+<body class="bg-[#070B14] text-[#F8FAFC] font-sans antialiased selection:bg-blue-600 selection:text-white relative overflow-x-hidden">
 
-<body class="bg-navy-950 text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white min-h-screen relative overflow-x-hidden">
+  <!-- Real-time Scroll Progress Bar -->
+  <div id="scroll-progress" class="fixed top-0 left-0 h-[3px] z-50 bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 shadow-[0_0_12px_rgba(59,130,246,0.9)] transition-all duration-75" style="width: 0%;"></div>
 
-  <!-- Ambient Glow Effects in Background -->
-  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[450px] bg-blue-600/10 blur-[130px] rounded-full pointer-events-none -z-10"></div>
-  <div class="absolute top-[40%] right-0 w-[500px] h-[500px] bg-sky-500/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
-  <div class="absolute bottom-0 left-1/4 w-[600px] h-[400px] bg-blue-700/10 blur-[140px] rounded-full pointer-events-none -z-10"></div>
+  <!-- Ambient Glow Background -->
+  <div class="fixed inset-0 pointer-events-none bg-grid-glow bg-dot-pattern z-0"></div>
 
-  <!-- ========================================== -->
-  <!-- Navigation Header                          -->
-  <!-- ========================================== -->
-  <header class="sticky top-0 z-50 backdrop-blur-md bg-navy-950/80 border-b border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
-        
-        <!-- Lexora Brand Logo -->
-        <a href="#home" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-1">
-          <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform duration-200">
-            <!-- Justice Scales / AI Node SVG Icon -->
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
-            </svg>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-xl font-extrabold tracking-tight text-white group-hover:text-blue-400 transition-colors">Lexora</span>
-            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold -mt-1">Legal Intelligence</span>
-          </div>
-        </a>
-
-        <!-- Desktop Navigation Links -->
-        <nav class="hidden md:flex items-center space-x-1 lg:space-x-2" aria-label="Main Navigation">
-          <a href="#home" class="px-3 py-2 text-sm font-medium text-slate-200 hover:text-blue-400 transition-colors rounded-md">Home</a>
-          <a href="#solutions" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors rounded-md">Solutions</a>
-          <a href="#ai-assistant" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors rounded-md">AI Assistant</a>
-          <a href="#why-lexora" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors rounded-md">Why Lexora</a>
-          <a href="#about" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors rounded-md">About</a>
-          <a href="#contact" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors rounded-md">Contact</a>
-        </nav>
-
-        <!-- Desktop Action Buttons -->
-        <div class="hidden md:flex items-center space-x-3">
-          <a href="#contact" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white border border-slate-700/80 hover:border-slate-500 rounded-full transition-colors">
-            Sign In
-          </a>
-          <a href="#contact" class="px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg shadow-blue-600/30 transition duration-200">
-            Get Started
-          </a>
+  <!-- ==========================================================================
+       1. Top Navbar
+       ========================================================================== -->
+  <header id="main-navbar" class="sticky top-0 z-40 backdrop-blur-xl bg-[#070B14]/80 border-b border-[#1E293B] transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 group" aria-label="Lexora Home">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center font-bold text-white text-lg shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
+          L
         </div>
-
-        <!-- Mobile Menu Hamburger Button -->
-        <div class="flex md:hidden">
-          <button id="mobile-menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle navigation menu" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight text-white block">Lexora</span>
+          <span class="text-[10px] font-semibold uppercase tracking-widest text-blue-400 block -mt-1">Legal Intelligence</span>
         </div>
+      </a>
 
-      </div>
-    </div>
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#solutions" class="nav-link text-base font-medium text-slate-300 hover:text-white transition-colors">Solutions</a>
+        <a href="#how-it-works" class="nav-link text-base font-medium text-slate-300 hover:text-white transition-colors">How It Works</a>
+        <a href="#for-businesses" class="nav-link text-base font-medium text-slate-300 hover:text-white transition-colors">For Businesses</a>
+        <a href="#pricing" class="nav-link text-base font-medium text-slate-300 hover:text-white transition-colors">Pricing</a>
+      </nav>
 
-    <!-- Mobile Navigation Dropdown Menu -->
-    <div id="mobile-menu" class="hidden md:hidden border-t border-slate-800 bg-navy-900/95 px-4 pt-3 pb-6 space-y-2">
-      <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-slate-200 hover:bg-slate-800 hover:text-blue-400">Home</a>
-      <a href="#solutions" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-blue-400">Solutions</a>
-      <a href="#ai-assistant" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-blue-400">AI Assistant</a>
-      <a href="#why-lexora" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-blue-400">Why Lexora</a>
-      <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-blue-400">About</a>
-      <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-blue-400">Contact</a>
-      <div class="pt-4 flex flex-col gap-2">
-        <a href="#contact" class="w-full text-center px-4 py-2 text-sm font-medium text-slate-300 border border-slate-700 rounded-full hover:bg-slate-800">
-          Sign In
+      <!-- Right CTAs -->
+      <div class="hidden md:flex items-center gap-5">
+        <a href="login.html" class="text-base font-semibold text-slate-300 hover:text-white px-3 py-2 transition-colors">
+          Log In
         </a>
-        <a href="#contact" class="w-full text-center px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-md shadow-blue-600/30">
+        <a href="login.html" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-base font-semibold transition-all shadow-lg shadow-blue-600/25 hover:shadow-blue-500/35 hover:-translate-y-0.5">
           Get Started
         </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-btn" type="button" class="md:hidden text-slate-300 hover:text-white p-2" aria-label="Toggle Navigation">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div id="mobile-drawer" class="hidden md:hidden border-b border-[#1E293B] bg-[#0D1321] px-6 py-5 space-y-4">
+      <a href="#solutions" class="block text-base font-medium text-slate-300 hover:text-white">Solutions</a>
+      <a href="#how-it-works" class="block text-base font-medium text-slate-300 hover:text-white">How It Works</a>
+      <a href="#for-businesses" class="block text-base font-medium text-slate-300 hover:text-white">For Businesses</a>
+      <a href="#pricing" class="block text-base font-medium text-slate-300 hover:text-white">Pricing</a>
+      <div class="pt-4 border-t border-[#1E293B] flex flex-col gap-3">
+        <a href="login.html" class="text-center py-2 text-base font-semibold text-slate-300 hover:text-white">Log In</a>
+        <a href="login.html" class="text-center py-2.5 rounded-xl bg-blue-600 text-white text-base font-semibold">Get Started</a>
       </div>
     </div>
   </header>
 
-  <!-- ========================================== -->
-  <!-- Main Content Landmark                      -->
-  <!-- ========================================== -->
-  <main>
+  <!-- ==========================================================================
+       2. Hero Section
+       ========================================================================== -->
+  <main class="relative z-10">
+    <section class="relative pt-20 pb-24 md:pt-28 md:pb-32 w-full overflow-hidden">
+      
+      <!-- Full-Width Hero Mesh Gradient Background (Aurora Glow) -->
+      <div class="hero-mesh parallax-layer absolute inset-0 w-full h-full pointer-events-none" data-parallax="0.3">
+        <div class="mesh-blob mesh-blob--1"></div>
+        <div class="mesh-blob mesh-blob--2"></div>
+        <div class="mesh-blob mesh-blob--3"></div>
+        <div class="mesh-blob mesh-blob--4"></div>
+      </div>
 
-    <!-- ========================================== -->
-    <!-- Hero Section                               -->
-    <!-- ========================================== -->
-    <section id="home" class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden bg-grid-pattern">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-5xl mx-auto px-6 flex flex-col items-center text-center space-y-9 relative z-10">
         
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <!-- Small Label Badge -->
+        <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-blue-500/40 bg-blue-500/10 text-blue-400 text-sm font-bold tracking-wider uppercase shadow-[0_0_20px_rgba(59,130,246,0.25)]">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse-dot"></span>
+          AI-POWERED LEGAL INTELLIGENCE
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.14] text-white max-w-4xl">
+          AI-Powered Legal Solutions for <span class="bg-gradient-to-r from-blue-400 via-blue-300 to-indigo-300 bg-clip-text text-transparent">Modern Businesses</span>
+        </h1>
+
+        <!-- Supporting Text -->
+        <p class="text-xl md:text-2xl text-slate-300 leading-relaxed max-w-3xl font-normal">
+          Get clear answers to legal questions, analyse documents, research Indian law, and make informed business decisions — all in one place.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+          <a href="login.html" class="px-9 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg flex items-center justify-center gap-2 shadow-xl shadow-blue-600/30 hover:shadow-blue-500/40 transition-all hover:-translate-y-0.5">
+            Ask Lexora →
+          </a>
+          <a href="#solutions" class="px-9 py-4 rounded-xl border border-[#1E293B] hover:border-slate-600 bg-[#0D1321]/80 hover:bg-[#111827] text-slate-200 font-bold text-lg text-center transition-all">
+            Explore Solutions
+          </a>
+        </div>
+
+        <!-- Trust & Value Proof -->
+        <div class="pt-7 border-t border-[#1E293B]/80 flex flex-wrap justify-center gap-x-10 gap-y-3.5 text-sm sm:text-base font-medium text-slate-300">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+            Indian Law Focused
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            Built for Business Teams
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+            Source-Grounded Guidance
+          </div>
+        </div>
+
+        <!-- High-Trust Metric Counter Bar -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl mx-auto pt-6">
+          <div class="text-center p-5 rounded-2xl bg-[#0D1321]/70 border border-[#1E293B] backdrop-blur-md">
+            <div class="text-3xl sm:text-4xl font-extrabold text-blue-400">50,000+</div>
+            <div class="text-sm sm:text-base text-slate-300 mt-1.5 font-medium">Bare Act Sections Codified</div>
+          </div>
+          <div class="text-center p-5 rounded-2xl bg-[#0D1321]/70 border border-[#1E293B] backdrop-blur-md">
+            <div class="text-3xl sm:text-4xl font-extrabold text-indigo-400">&lt; 1.5s</div>
+            <div class="text-sm sm:text-base text-slate-300 mt-1.5 font-medium">Statutory Retrieval Speed</div>
+          </div>
+          <div class="text-center p-5 rounded-2xl bg-[#0D1321]/70 border border-[#1E293B] backdrop-blur-md">
+            <div class="text-3xl sm:text-4xl font-extrabold text-emerald-400">100%</div>
+            <div class="text-sm sm:text-base text-slate-300 mt-1.5 font-medium">Indian Law Grounded</div>
+          </div>
+          <div class="text-center p-5 rounded-2xl bg-[#0D1321]/70 border border-[#1E293B] backdrop-blur-md">
+            <div class="text-3xl sm:text-4xl font-extrabold text-purple-400">DPDP 2023</div>
+            <div class="text-sm sm:text-base text-slate-300 mt-1.5 font-medium">Compliance Framework</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Marquee Ticker Strip
+         ====================================================================== -->
+    <div class="marquee-strip border-y border-[#1E293B]/60 py-5 bg-[#070B14]">
+      <div class="marquee-track">
+        <span class="marquee-item"><span class="marquee-dot"></span>Contract Analysis</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Legal Research</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>DPDP Compliance</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>AI Assistant</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Risk Scoring</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Statutory Citations</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Document Diligence</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Clause Redlining</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Precedent Mapping</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Regulatory Alerts</span>
+        <!-- Duplicate for seamless loop -->
+        <span class="marquee-item"><span class="marquee-dot"></span>Contract Analysis</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Legal Research</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>DPDP Compliance</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>AI Assistant</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Risk Scoring</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Statutory Citations</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Document Diligence</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Clause Redlining</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Precedent Mapping</span>
+        <span class="marquee-item"><span class="marquee-dot"></span>Regulatory Alerts</span>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         3. Solutions / Features Section
+         ========================================================================== -->
+    <section id="solutions" class="py-24 border-t border-[#1E293B] bg-[#0D1321]/50">
+      <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4 reveal">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-bold uppercase tracking-wider">
+            Capabilities
+          </div>
+          <h2 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+            One platform for your business's legal needs
+          </h2>
+          <p class="text-lg sm:text-xl text-slate-300">
+            Find relevant information, understand important documents, and keep your legal work organised in one intelligent workspace.
+          </p>
+        </div>
+
+        <!-- Bento Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
           
-          <!-- Hero Text Content -->
-          <div class="lg:col-span-7 text-center lg:text-left">
-            
-            <!-- Category Pill Badge -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-950/80 border border-blue-500/30 text-blue-300 text-xs sm:text-sm font-medium mb-6 shadow-sm">
-              <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-              AI-Powered Legal Consultancy Platform
+          <!-- Card 1: AI Legal Research (Spans 2 cols) -->
+          <div class="bento-card md:col-span-2 space-y-5 flex flex-col justify-between reveal-child" style="--reveal-i: 0">
+            <div>
+              <div class="flex items-center justify-between mb-5">
+                <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-blue-400 flex items-center justify-center text-3xl shadow-lg shadow-blue-500/10">
+                  🔍
+                </div>
+                <span class="px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-semibold">
+                  Bare Acts Codified
+                </span>
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-bold text-white">Legal Research Engine</h3>
+              <p class="text-base sm:text-lg text-slate-300 leading-relaxed mt-3 max-w-xl">
+                Find and understand relevant Indian legal information quickly without wading through thousands of dense pages. Get structured answers grounded in Indian Bare Acts, MCA circulars, and Supreme Court principles.
+              </p>
+              <div class="mt-5 flex flex-wrap gap-2.5 text-xs sm:text-sm">
+                <span class="px-3 py-1.5 rounded-lg bg-blue-950/50 border border-blue-500/30 text-blue-300 font-mono">Sec 73 ICA • Damages</span>
+                <span class="px-3 py-1.5 rounded-lg bg-[#0D1321] border border-[#1E293B] text-slate-200 font-mono">Sec 180 Companies Act</span>
+                <span class="px-3 py-1.5 rounded-lg bg-[#0D1321] border border-[#1E293B] text-slate-200 font-mono">Supreme Court Precedents</span>
+              </div>
             </div>
+            <ul class="space-y-3 text-sm sm:text-base text-slate-200 pt-5 border-t border-[#1E293B]/60">
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                Explore commercial legal questions with instant statutory citations
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                Clear explanations tailored for founders, ops, and corporate legal teams
+              </li>
+            </ul>
+          </div>
 
-            <!-- Main Heading -->
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight mb-6">
-              AI-Powered Legal Intelligence <br class="hidden sm:inline">
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-cyan-300">
-                for Modern Businesses
-              </span>
-            </h1>
+          <!-- Card 2: Documents -->
+          <div class="bento-card space-y-5 flex flex-col justify-between reveal-child" style="--reveal-i: 1">
+            <div>
+              <div class="flex items-center justify-between mb-5">
+                <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-3xl shadow-lg shadow-indigo-500/10">
+                  📄
+                </div>
+                <span class="px-3 py-1.5 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs sm:text-sm font-semibold">
+                  Risk Audit
+                </span>
+              </div>
+              <h3 class="text-2xl font-bold text-white">Contract Diligence</h3>
+              <p class="text-base text-slate-300 leading-relaxed mt-3">
+                Scan vendor agreements and MSAs, highlight asymmetrical clauses, detect unlimited liability, and suggest balanced redlines.
+              </p>
+              <div class="mt-4 p-3 rounded-xl bg-rose-950/25 border border-rose-500/30 text-xs sm:text-sm text-rose-300 flex items-center gap-2">
+                <span>⚠️</span> Flagged: Uncapped Indemnity detected
+              </div>
+            </div>
+            <ul class="space-y-3 text-sm sm:text-base text-slate-200 pt-5 border-t border-[#1E293B]/60">
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+                Review indemnity & termination terms
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+                AI balanced redline recommendations
+              </li>
+            </ul>
+          </div>
 
-            <!-- Supporting Paragraph -->
-            <p class="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-8">
-              Simplify legal research, understand regulations, analyze documents, and make better-informed business decisions with AI-assisted legal intelligence.
+          <!-- Card 3: Compliance -->
+          <div class="bento-card space-y-5 flex flex-col justify-between reveal-child" style="--reveal-i: 2">
+            <div>
+              <div class="flex items-center justify-between mb-5">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-3xl shadow-lg shadow-emerald-500/10">
+                  🛡️
+                </div>
+                <span class="px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs sm:text-sm font-semibold">
+                  DPDP Act 2023
+                </span>
+              </div>
+              <h3 class="text-2xl font-bold text-white">Compliance Radar</h3>
+              <p class="text-base text-slate-300 leading-relaxed mt-3">
+                Stay on top of critical Indian statutory obligations including DPDP Act 2023, consent notices, and MCA regulatory filings.
+              </p>
+              <div class="mt-4 p-3 rounded-xl bg-emerald-950/25 border border-emerald-500/30 text-xs sm:text-sm text-emerald-300 flex items-center gap-2">
+                <span>✓</span> Data Fiduciary readiness verified
+              </div>
+            </div>
+            <ul class="space-y-3 text-sm sm:text-base text-slate-200 pt-5 border-t border-[#1E293B]/60">
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                Automated 72-hr breach notice templates
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                Section 180 debt threshold monitoring
+              </li>
+            </ul>
+          </div>
+
+          <!-- Card 4: Legal Workspace (Spans 2 cols) -->
+          <div class="bento-card md:col-span-2 space-y-5 flex flex-col justify-between reveal-child" style="--reveal-i: 3">
+            <div>
+              <div class="flex items-center justify-between mb-5">
+                <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-3xl shadow-lg shadow-amber-500/10">
+                  ⚡
+                </div>
+                <span class="px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-semibold">
+                  Team Multi-Tenant
+                </span>
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-bold text-white">Intelligent Team Workspace</h3>
+              <p class="text-base sm:text-lg text-slate-300 leading-relaxed mt-3 max-w-xl">
+                Consolidate your company's contracts, past queries, and statutory notes in one persistent team workspace. Track your entire audit history across all interactions.
+              </p>
+              <div class="mt-5 flex flex-wrap gap-2.5 text-xs sm:text-sm">
+                <span class="px-3 py-1.5 rounded-lg bg-[#0D1321] border border-[#1E293B] text-slate-200">Encrypted Document Vault</span>
+                <span class="px-3 py-1.5 rounded-lg bg-[#0D1321] border border-[#1E293B] text-slate-200">Membership Tier Entitlements</span>
+                <span class="px-3 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300">Complete Historical Audit Trail</span>
+              </div>
+            </div>
+            <ul class="space-y-3 text-sm sm:text-base text-slate-200 pt-5 border-t border-[#1E293B]/60">
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                Persisted research history with instant keyword retrieval
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                Multi-seat permissions for founders, legal counsels, and finance heads
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         4. How It Works Section
+         ========================================================================== -->
+    <section id="how-it-works" class="py-24 border-t border-[#1E293B]">
+      <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4 reveal">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-bold uppercase tracking-wider">
+            Workflow
+          </div>
+          <h2 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+            How it works
+          </h2>
+          <p class="text-lg sm:text-xl text-slate-300">
+            A clear, dependable path from your first legal question to informed commercial execution.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+          
+          <div class="bg-[#0D1321] border border-[#1E293B] rounded-2xl p-8 relative reveal-child" style="--reveal-i: 0">
+            <div class="text-5xl font-extrabold text-blue-500/35 mb-4 font-mono">01</div>
+            <h3 class="text-xl font-bold text-white mb-2.5">Tell us what you need</h3>
+            <p class="text-base text-slate-300 leading-relaxed">
+              Start with a question, upload a draft contract, or share the business context your team needs to evaluate.
             </p>
-
-            <!-- CTA Buttons -->
-            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-10">
-              <a href="#ai-assistant" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-base shadow-xl shadow-blue-600/30 transition-all hover:scale-[1.02] focus:ring-2 focus:ring-blue-400">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
-                Explore AI Assistant
-              </a>
-              
-              <a href="#solutions" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-navy-900 hover:bg-slate-800 text-slate-200 border border-slate-700/80 font-medium text-base transition-all hover:border-slate-500 focus:ring-2 focus:ring-slate-500">
-                Learn More
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </a>
-            </div>
-
-            <!-- Trust Bar / Feature Points -->
-            <div class="pt-6 border-t border-slate-800/80 text-xs sm:text-sm text-slate-400 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2">
-              <span class="flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                Grounded in Statutory Corpus
-              </span>
-              <span class="flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                Enterprise Security
-              </span>
-              <span class="flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                </svg>
-                AI Speed with Expert Oversight
-              </span>
-            </div>
-
           </div>
 
-          <!-- Hero LegalTech Visual Mockup (Crafted with Tailwind CSS) -->
-          <div class="lg:col-span-5">
-            <div class="relative mx-auto max-w-md lg:max-w-none">
-              
-              <!-- Outer glowing aura -->
-              <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl blur-lg opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+          <div class="bg-[#0D1321] border border-[#1E293B] rounded-2xl p-8 relative reveal-child" style="--reveal-i: 1">
+            <div class="text-5xl font-extrabold text-blue-500/35 mb-4 font-mono">02</div>
+            <h3 class="text-xl font-bold text-white mb-2.5">Get relevant legal insight</h3>
+            <p class="text-base text-slate-300 leading-relaxed">
+              Receive structured guidance referencing Indian bare acts, MCA circulars, and Supreme Court legal principles.
+            </p>
+          </div>
 
-              <!-- Main Mock Card -->
-              <div class="relative rounded-2xl bg-navy-900 border border-slate-700/80 p-6 shadow-2xl backdrop-blur-xl">
-                
-                <!-- Card Header -->
-                <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
-                  <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <h2 class="text-sm font-semibold text-white">Legal Assistant Query</h2>
-                      <p class="text-xs text-slate-400">RAG Verification Active</p>
-                    </div>
-                  </div>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-500/30">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span>
-                    Verified Source
-                  </span>
-                </div>
+          <div class="bg-[#0D1321] border border-[#1E293B] rounded-2xl p-8 relative reveal-child" style="--reveal-i: 2">
+            <div class="text-5xl font-extrabold text-blue-500/35 mb-4 font-mono">03</div>
+            <h3 class="text-xl font-bold text-white mb-2.5">Understand your options</h3>
+            <p class="text-base text-slate-300 leading-relaxed">
+              Review highlighted risk clauses, suggested redlines, and commercial trade-offs before signing or closing.
+            </p>
+          </div>
 
-                <!-- Query Prompt Mock -->
-                <div class="bg-navy-950 rounded-xl p-3.5 border border-slate-800 mb-4 text-xs">
-                  <div class="text-slate-400 mb-1 flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                    <span>User Prompt:</span>
-                  </div>
-                  <p class="text-slate-200 font-medium italic">
-                    "Evaluate statutory compliance and liability clauses under Indian Companies Act 2013 for Series A investment."
-                  </p>
-                </div>
-
-                <!-- AI Response Summary -->
-                <div class="space-y-3 text-xs mb-4">
-                  <div class="flex items-center justify-between text-slate-400">
-                    <span class="font-medium text-slate-300 flex items-center gap-1.5">
-                      <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                      </svg>
-                      Retrieved Legal Precedents:
-                    </span>
-                    <span class="text-blue-400 font-semibold">99.4% Match</span>
-                  </div>
-
-                  <!-- Citation Badges -->
-                  <div class="grid grid-cols-2 gap-2">
-                    <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800">
-                      <div class="text-[11px] font-semibold text-white">Section 42 &amp; 62</div>
-                      <div class="text-[10px] text-slate-400">Private Placement Rules</div>
-                    </div>
-                    <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800">
-                      <div class="text-[11px] font-semibold text-white">MCA Filings Form PAS-3</div>
-                      <div class="text-[10px] text-slate-400">Allotment of Securities</div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Floating Confidence / Safety Footer inside card -->
-                <div class="p-3 rounded-xl bg-blue-950/40 border border-blue-500/20 flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
-                    <span class="text-xs text-slate-300">Grounding Confidence:</span>
-                  </div>
-                  <span class="text-xs font-bold text-cyan-300">High (Statutory Backed)</span>
-                </div>
-
-              </div>
-
-            </div>
+          <div class="bg-[#0D1321] border border-[#1E293B] rounded-2xl p-8 relative reveal-child" style="--reveal-i: 3">
+            <div class="text-5xl font-extrabold text-blue-500/35 mb-4 font-mono">04</div>
+            <h3 class="text-xl font-bold text-white mb-2.5">Save to your workspace</h3>
+            <p class="text-base text-slate-300 leading-relaxed">
+              Store your research, track analyzed agreements, and access your full historical audit log whenever you need.
+            </p>
           </div>
 
         </div>
@@ -287,275 +432,237 @@
       </div>
     </section>
 
-
-    <!-- ========================================== -->
-    <!-- Solutions Section                          -->
-    <!-- ========================================== -->
-    <section id="solutions" class="py-20 bg-navy-950/60 border-t border-slate-800/80 relative">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- ==========================================================================
+         5. For Businesses (Startups vs Corporations)
+         ========================================================================== -->
+    <section id="for-businesses" class="py-24 border-t border-[#1E293B] bg-[#0D1321]/50">
+      <div class="max-w-7xl mx-auto px-6">
         
-        <!-- Section Header -->
-        <div class="text-center max-w-3xl mx-auto mb-16">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/30 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-4">
-            Platform Capabilities
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4 reveal">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-bold uppercase tracking-wider">
+            Built for Business Scale
           </div>
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
-            Built for Business Legal Needs
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+            Tailored for every stage of business growth
           </h2>
-          <p class="text-slate-400 text-base sm:text-lg">
-            Empower your team with comprehensive, AI-driven legal intelligence engineered specifically to protect corporate interests and accelerate growth.
+          <p class="text-lg sm:text-xl text-slate-300">
+            Whether you are bootstrapping a startup or scaling an enterprise legal operations team.
           </p>
         </div>
 
-        <!-- Solutions Grid (4 Semantic Cards) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-          <!-- Card 1: AI Legal Research -->
-          <div class="group p-6 rounded-2xl bg-navy-900/80 border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10 flex flex-col justify-between">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-blue-600/10 border border-blue-500/30 text-blue-400 flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                <!-- Search & Book SVG Icon -->
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-white mb-2.5">AI Legal Research</h3>
-              <p class="text-sm text-slate-300 leading-relaxed mb-4">
-                Search and understand relevant laws, sections, regulations, and legal information with citation-backed semantic retrieval.
-              </p>
-            </div>
-            <div class="pt-4 border-t border-slate-800/80 text-xs font-medium text-blue-400 flex items-center gap-1 group-hover:text-blue-300">
-              <span>Explore Research Engine</span>
-              <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Card 2: Contract Intelligence -->
-          <div class="group p-6 rounded-2xl bg-navy-900/80 border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10 flex flex-col justify-between">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-sky-600/10 border border-sky-500/30 text-sky-400 flex items-center justify-center mb-5 group-hover:bg-sky-500 group-hover:text-white transition-colors duration-300">
-                <!-- Contract / Document SVG Icon -->
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-white mb-2.5">Contract Intelligence</h3>
-              <p class="text-sm text-slate-300 leading-relaxed mb-4">
-                Analyze agreements and identify potentially important clauses, ambiguities, indemnification thresholds, and contractual risks.
-              </p>
-            </div>
-            <div class="pt-4 border-t border-slate-800/80 text-xs font-medium text-sky-400 flex items-center gap-1 group-hover:text-sky-300">
-              <span>View Clause Extraction</span>
-              <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Card 3: Compliance Intelligence -->
-          <div class="group p-6 rounded-2xl bg-navy-900/80 border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10 flex flex-col justify-between">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-cyan-600/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mb-5 group-hover:bg-cyan-500 group-hover:text-white transition-colors duration-300">
-                <!-- Shield / Compliance SVG Icon -->
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-white mb-2.5">Compliance Intelligence</h3>
-              <p class="text-sm text-slate-300 leading-relaxed mb-4">
-                Help businesses understand applicable regulatory changes, statutory filing duties, data privacy standards, and governance rules.
-              </p>
-            </div>
-            <div class="pt-4 border-t border-slate-800/80 text-xs font-medium text-cyan-400 flex items-center gap-1 group-hover:text-cyan-300">
-              <span>Track Regulatory Rules</span>
-              <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Card 4: Legal Decision Support -->
-          <div class="group p-6 rounded-2xl bg-navy-900/80 border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10 flex flex-col justify-between">
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-indigo-600/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center mb-5 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
-                <!-- Decision Scales / Logic SVG Icon -->
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-white mb-2.5">Legal Decision Support</h3>
-              <p class="text-sm text-slate-300 leading-relaxed mb-4">
-                Use AI-assisted analysis to explore legally available options, risk assessments, and supporting legal precedents before taking action.
-              </p>
-            </div>
-            <div class="pt-4 border-t border-slate-800/80 text-xs font-medium text-indigo-400 flex items-center gap-1 group-hover:text-indigo-300">
-              <span>Evaluate Case Pathways</span>
-              <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- ========================================== -->
-    <!-- AI & RAG Section (Tailwind Typography)      -->
-    <!-- ========================================== -->
-    <section id="ai-assistant" class="py-20 border-t border-slate-800/80 relative">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <!-- Section Title Header -->
-        <div class="text-center max-w-3xl mx-auto mb-16">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/30 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-4">
-            RAG Technology Architecture
-          </div>
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
-            Grounded in Legal Knowledge
-          </h2>
-          <p class="text-slate-400 text-base sm:text-lg">
-            How Lexora eliminates hallucination through strict Retrieval-Augmented Generation rooted in primary legal sources.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 reveal">
           
-          <!-- Demonstrating the Tailwind Typography Plugin inside an HTML5 <article> -->
-          <div class="lg:col-span-7 bg-navy-900/60 border border-slate-800 p-8 sm:p-10 rounded-3xl shadow-xl backdrop-blur-sm">
-            
-            <article class="prose prose-invert lg:prose-lg max-w-none">
-              <h3 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                Architected for Verifiable Legal Accuracy
-              </h3>
+          <!-- For Startups -->
+          <div class="bg-[#111827] border border-[#1E293B] rounded-3xl p-8 sm:p-10 space-y-6">
+            <span class="inline-block px-3.5 py-1.5 rounded-full bg-blue-500/10 text-blue-400 text-sm font-semibold border border-blue-500/20">
+              Early Stage to Growth
+            </span>
+            <h3 class="text-2xl sm:text-3xl font-bold text-white">For Startups</h3>
+            <p class="text-base sm:text-lg text-slate-300 leading-relaxed">
+              Move faster and close commercial agreements without being blindsided by standard contract pitfalls or filing omissions.
+            </p>
+            <ul class="space-y-3.5 text-base text-slate-200">
+              <li class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">✓</span>
+                Founder reverse-vesting & co-founder agreement reviews
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">✓</span>
+                Customer pilot SaaS MSAs and vendor liability caps
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">✓</span>
+                Pre-incorporation founder IP assignments (Copyright Act 1957)
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">✓</span>
+                Employment contracts & ESOP plan guidelines
+              </li>
+            </ul>
+            <div class="pt-4">
+              <a href="login.html" class="inline-block px-7 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-base font-semibold shadow-lg shadow-blue-600/25 transition-all">
+                Explore Startup Workspace →
+              </a>
+            </div>
+          </div>
 
-              <p class="text-slate-300 leading-relaxed">
-                Lexora is designed to combine artificial intelligence with a structured legal knowledge base. Instead of relying only on an AI model's stored knowledge, the system can retrieve relevant legal provisions and supporting sources before generating a response.
-              </p>
+          <!-- For Corporations -->
+          <div class="bg-gradient-to-br from-[#111827] to-[#0A1020] border border-blue-500/30 rounded-3xl p-8 sm:p-10 space-y-6 relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <span class="inline-block px-3.5 py-1.5 rounded-full bg-blue-500/20 text-blue-300 text-sm font-semibold border border-blue-500/40">
+              Mid-Market & Enterprise
+            </span>
+            <h3 class="text-2xl sm:text-3xl font-bold text-white">For Corporations</h3>
+            <p class="text-base sm:text-lg text-slate-300 leading-relaxed">
+              Accelerate high-volume contract review cycles, map clause deviations from your standard playbook, and stay compliant.
+            </p>
+            <ul class="space-y-3.5 text-base text-slate-200">
+              <li class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-blue-400/20 text-blue-300 flex items-center justify-center font-bold text-sm">✓</span>
+                High-volume contract review & fallback clause suggestions
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-blue-400/20 text-blue-300 flex items-center justify-center font-bold text-sm">✓</span>
+                DPDP Act 2023 Data Fiduciary & cross-border compliance audits
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-blue-400/20 text-blue-300 flex items-center justify-center font-bold text-sm">✓</span>
+                Section 180 Companies Act debt limits & MGT-14 filings
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-blue-400/20 text-blue-300 flex items-center justify-center font-bold text-sm">✓</span>
+                Pre-litigation risk assessments & Supreme Court citation mapping
+              </li>
+            </ul>
+            <div class="pt-4">
+              <a href="login.html" class="inline-block px-7 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-base font-semibold border border-slate-700 transition-all">
+                Request Enterprise Access →
+              </a>
+            </div>
+          </div>
 
-              <!-- Blockquote styled by Tailwind Typography -->
-              <blockquote class="border-l-4 border-blue-500 pl-4 py-1 text-slate-300 italic bg-blue-950/20 rounded-r-lg">
-                "Legal intelligence cannot rely on probabilistic guesswork. Every response must trace directly to recognized statutory provisions, regulatory gazettes, or binding case precedents."
-              </blockquote>
+        </div>
 
-              <h4 class="text-xl font-semibold text-white">How Retrieval-Augmented Generation (RAG) Works</h4>
+      </div>
+    </section>
 
-              <p class="text-slate-300 leading-relaxed">
-                When a legal query is processed, Lexora converts the question into a high-dimensional vector, searches indexed legal databases, extracts verified citations, and feeds that explicit context into our specialized language model.
-              </p>
+    <!-- ==========================================================================
+         6. Pricing & Entitlement Section
+         ========================================================================== -->
+    <section id="pricing" class="py-24 border-t border-[#1E293B]">
+      <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4 reveal">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-bold uppercase tracking-wider">
+            Transparent Membership Plans
+          </div>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+            Predictable plans for every legal workload
+          </h2>
+          <p class="text-lg sm:text-xl text-slate-300">
+            Choose a plan that fits your business. Scale seamlessly as your commercial transactions expand.
+          </p>
 
-              <ul class="text-slate-300 space-y-1">
-                <li><strong class="text-white">Elimination of Hallucinations:</strong> Responses are bounded strictly within retrieved factual context.</li>
-                <li><strong class="text-white">Point-in-Time Relevance:</strong> Reflects the most recent statutory amendments and regulatory updates.</li>
-                <li><strong class="text-white">Source Traceability:</strong> Direct paragraph citations allow counsel to cross-examine outputs instantly.</li>
+          <!-- Pricing Toggle -->
+          <div class="flex items-center justify-center gap-3 pt-4">
+            <div class="pricing-toggle" id="pricing-toggle">
+              <button type="button" class="pricing-toggle-btn active" data-billing="monthly">Monthly</button>
+              <button type="button" class="pricing-toggle-btn" data-billing="annual">Annual</button>
+            </div>
+            <span class="save-badge hidden" id="save-badge">Save 20%</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 reveal">
+          
+          <!-- Free Plan -->
+          <div class="bg-[#0D1321] border border-[#1E293B] rounded-3xl p-8 sm:p-9 space-y-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <h3 class="text-2xl font-bold text-white">Free Plan</h3>
+                <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-sm font-semibold">Starter</span>
+              </div>
+              <p class="text-sm text-slate-300 mt-2">Basic commercial exploration for founders.</p>
+              <div class="mt-6 flex items-baseline gap-1">
+                <span class="text-5xl font-extrabold text-white price-value" data-monthly="₹0" data-annual="₹0">₹0</span>
+                <span class="text-sm text-slate-400 billing-period" data-monthly="/ forever" data-annual="/ forever">/ forever</span>
+              </div>
+
+              <!-- Available AI Model Badge -->
+              <div class="mt-6 p-3.5 rounded-xl bg-[#111827] border border-slate-800 text-sm space-y-1.5">
+                <span class="text-slate-400 font-medium block">Available AI:</span>
+                <span class="font-bold text-blue-400 flex items-center gap-1.5 text-base">
+                  <span>⚡</span> Lexora Standard (Included)
+                </span>
+                <span class="text-slate-400 text-xs block">Lexora Advanced locked</span>
+              </div>
+
+              <ul class="mt-6 space-y-3.5 text-sm text-slate-200">
+                <li class="flex items-center gap-2.5">✓ 25 AI queries per month</li>
+                <li class="flex items-center gap-2.5">✓ Statutory Indian Bare Acts lookup</li>
+                <li class="flex items-center gap-2.5">✓ Basic contract scanning</li>
+                <li class="flex items-center gap-2.5 text-slate-500">✕ Deep precedent mapping</li>
+                <li class="flex items-center gap-2.5 text-slate-500">✕ Dedicated legal workspace</li>
               </ul>
-            </article>
-
+            </div>
+            <a href="login.html" class="block w-full py-3.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-center text-base font-semibold text-white transition-colors">
+              Get Started Free
+            </a>
           </div>
 
-          <!-- Visual RAG Flow Representation -->
-          <div class="lg:col-span-5 flex flex-col justify-center">
-            
-            <div class="rounded-3xl bg-navy-900/80 border border-slate-800 p-6 sm:p-8 shadow-2xl relative">
-              <h3 class="text-base font-bold uppercase tracking-wider text-slate-400 mb-6 flex items-center justify-between">
-                <span>RAG Retrieval Pipeline</span>
-                <span class="text-xs text-blue-400 font-semibold px-2 py-0.5 rounded bg-blue-950 border border-blue-800">Deterministic</span>
-              </h3>
-
-              <!-- Flow Step 1 -->
-              <div class="flex items-center gap-4 group">
-                <div class="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-400 flex items-center justify-center font-bold text-sm shrink-0">
-                  01
-                </div>
-                <div class="flex-1 p-3.5 rounded-xl bg-navy-950 border border-slate-800">
-                  <div class="text-xs text-slate-400 font-medium">Input Stage</div>
-                  <div class="text-sm font-semibold text-white">Legal Sources</div>
-                  <div class="text-[11px] text-slate-400 mt-0.5">Statutes, Acts, Court Judgments &amp; Filings</div>
-                </div>
-              </div>
-
-              <!-- Arrow -->
-              <div class="flex justify-center my-2 text-slate-600">
-                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg>
-              </div>
-
-              <!-- Flow Step 2 -->
-              <div class="flex items-center gap-4 group">
-                <div class="w-10 h-10 rounded-xl bg-sky-600/20 border border-sky-500/40 text-sky-400 flex items-center justify-center font-bold text-sm shrink-0">
-                  02
-                </div>
-                <div class="flex-1 p-3.5 rounded-xl bg-navy-950 border border-slate-800">
-                  <div class="text-xs text-slate-400 font-medium">Vector Indexing</div>
-                  <div class="text-sm font-semibold text-white">Semantic Retrieval</div>
-                  <div class="text-[11px] text-slate-400 mt-0.5">Dense vector matching across codified legal texts</div>
-                </div>
-              </div>
-
-              <!-- Arrow -->
-              <div class="flex justify-center my-2 text-slate-600">
-                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg>
-              </div>
-
-              <!-- Flow Step 3 -->
-              <div class="flex items-center gap-4 group">
-                <div class="w-10 h-10 rounded-xl bg-cyan-600/20 border border-cyan-500/40 text-cyan-400 flex items-center justify-center font-bold text-sm shrink-0">
-                  03
-                </div>
-                <div class="flex-1 p-3.5 rounded-xl bg-navy-950 border border-slate-800">
-                  <div class="text-xs text-slate-400 font-medium">Context Assembly</div>
-                  <div class="text-sm font-semibold text-white">Relevant Context</div>
-                  <div class="text-[11px] text-slate-400 mt-0.5">Top-k statutory passages &amp; precedent clauses</div>
-                </div>
-              </div>
-
-              <!-- Arrow -->
-              <div class="flex justify-center my-2 text-slate-600">
-                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg>
-              </div>
-
-              <!-- Flow Step 4 -->
-              <div class="flex items-center gap-4 group">
-                <div class="w-10 h-10 rounded-xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center font-bold text-sm shrink-0">
-                  04
-                </div>
-                <div class="flex-1 p-3.5 rounded-xl bg-navy-950 border border-slate-800">
-                  <div class="text-xs text-slate-400 font-medium">Generation Engine</div>
-                  <div class="text-sm font-semibold text-white">Domain-Trained AI</div>
-                  <div class="text-[11px] text-slate-400 mt-0.5">Synthesizes context with legal reasoning guidelines</div>
-                </div>
-              </div>
-
-              <!-- Arrow -->
-              <div class="flex justify-center my-2 text-slate-600">
-                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg>
-              </div>
-
-              <!-- Flow Step 5 -->
-              <div class="flex items-center gap-4 group">
-                <div class="w-10 h-10 rounded-xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
-                  05
-                </div>
-                <div class="flex-1 p-3.5 rounded-xl bg-blue-950/40 border border-blue-500/30">
-                  <div class="text-xs text-emerald-400 font-semibold">Final Output</div>
-                  <div class="text-sm font-bold text-white">Cited &amp; Auditable Response</div>
-                  <div class="text-[11px] text-slate-300 mt-0.5">Full citation trail ready for counsel review</div>
-                </div>
-              </div>
-
+          <!-- Professional Plan (Highlighted) -->
+          <div class="bg-[#111827] border-2 border-blue-500 rounded-3xl p-8 sm:p-9 space-y-6 flex flex-col justify-between relative shadow-2xl shadow-blue-500/10">
+            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-blue-600 text-white text-sm font-bold uppercase tracking-wider">
+              Most Popular
             </div>
+            <div>
+              <div class="flex items-center justify-between mt-1">
+                <h3 class="text-2xl font-bold text-white">Professional</h3>
+                <span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-sm font-semibold">Fast Growing</span>
+              </div>
+              <p class="text-sm text-slate-300 mt-2">Full AI legal intelligence for startups & operations.</p>
+              <div class="mt-6 flex items-baseline gap-1">
+                <span class="text-5xl font-extrabold text-white price-value" data-monthly="₹4,999" data-annual="₹3,999">₹4,999</span>
+                <span class="text-sm text-slate-300 billing-period" data-monthly="/ month" data-annual="/ month">/ month</span>
+              </div>
 
+              <!-- Available AI Model Badge -->
+              <div class="mt-6 p-3.5 rounded-xl bg-blue-950/40 border border-blue-500/30 text-sm space-y-1.5">
+                <span class="text-blue-300 font-medium block">Available AI Models:</span>
+                <span class="font-bold text-blue-400 flex items-center gap-1.5 text-base">
+                  <span>⚡</span> Lexora Standard (Included)
+                </span>
+                <span class="font-bold text-emerald-400 flex items-center gap-1.5 text-base">
+                  <span>🧠</span> Lexora Advanced (Unlocked)
+                </span>
+              </div>
+
+              <ul class="mt-6 space-y-3.5 text-sm text-slate-200">
+                <li class="flex items-center gap-2.5">✓ <strong>500 AI queries</strong> per month</li>
+                <li class="flex items-center gap-2.5">✓ Access to Lexora Advanced model</li>
+                <li class="flex items-center gap-2.5">✓ Deep reasoning & precedent citations</li>
+                <li class="flex items-center gap-2.5">✓ Full contract risk & deviation auditing</li>
+                <li class="flex items-center gap-2.5">✓ Saved research workspace & history</li>
+              </ul>
+            </div>
+            <a href="login.html" class="block w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-center text-base font-semibold text-white shadow-lg shadow-blue-600/30 transition-all">
+              Choose Professional
+            </a>
+          </div>
+
+          <!-- Enterprise Plan -->
+          <div class="bg-[#0D1321] border border-[#1E293B] rounded-3xl p-8 sm:p-9 space-y-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <h3 class="text-2xl font-bold text-white">Enterprise</h3>
+                <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-sm font-semibold">Bespoke</span>
+              </div>
+              <p class="text-sm text-slate-300 mt-2">For multi-entity corporations & in-house legal departments.</p>
+              <div class="mt-6 flex items-baseline gap-1">
+                <span class="text-5xl font-extrabold text-white price-value" data-monthly="Custom" data-annual="Custom">Custom</span>
+                <span class="text-sm text-slate-400 billing-period" data-monthly="/ annual billing" data-annual="/ annual billing">/ annual billing</span>
+              </div>
+
+              <!-- Available AI Model Badge -->
+              <div class="mt-6 p-3.5 rounded-xl bg-[#111827] border border-slate-800 text-sm space-y-1.5">
+                <span class="text-slate-400 font-medium block">Available AI Models:</span>
+                <span class="font-bold text-purple-400 flex items-center gap-1.5 text-base">
+                  <span>🛡️</span> All Models + DPDP Specialist
+                </span>
+                <span class="text-slate-400 text-xs block">Custom statutory corpora included</span>
+              </div>
+
+              <ul class="mt-6 space-y-3.5 text-sm text-slate-200">
+                <li class="flex items-center gap-2.5">✓ Unlimited team members</li>
+                <li class="flex items-center gap-2.5">✓ 5,000+ monthly queries</li>
+                <li class="flex items-center gap-2.5">✓ Custom statutory regulatory feeds</li>
+                <li class="flex items-center gap-2.5">✓ 99.9% uptime SLA guarantee</li>
+                <li class="flex items-center gap-2.5">✓ Dedicated account counsel</li>
+              </ul>
+            </div>
+            <a href="login.html" class="block w-full py-3.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-center text-base font-semibold text-white transition-colors">
+              Contact Enterprise
+            </a>
           </div>
 
         </div>
@@ -563,243 +670,266 @@
       </div>
     </section>
 
-
-    <!-- ========================================== -->
-    <!-- Why Lexora Section                         -->
-    <!-- ========================================== -->
-    <section id="why-lexora" class="py-20 bg-navy-950/60 border-t border-slate-800/80 relative">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <!-- Section Header -->
-        <div class="text-center max-w-3xl mx-auto mb-16">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/30 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-4">
-            The Lexora Advantage
-          </div>
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
-            Why Lexora
-          </h2>
-          <p class="text-slate-400 text-base sm:text-lg">
-            Purpose-built for organizations that require speed without compromising on legal diligence and precision.
-          </p>
+    <!-- ==========================================================================
+         7. Final CTA Banner
+         ========================================================================== -->
+    <section class="py-24 border-t border-[#1E293B] relative overflow-hidden bg-gradient-to-b from-[#070B14] to-[#0D1321]">
+      <div class="max-w-4xl mx-auto px-6 text-center space-y-6 reveal">
+        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
+          Have a legal question? <br>
+          <span class="bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">Start with Lexora.</span>
+        </h2>
+        <p class="text-xl md:text-2xl text-slate-300 max-w-2xl mx-auto">
+          Equip your company with instant Indian legal research, contract diligence, and regulatory compliance intelligence.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <a href="login.html" class="px-9 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg shadow-xl shadow-blue-600/30 transition-all hover:-translate-y-0.5">
+            Ask Lexora →
+          </a>
+          <a href="#solutions" class="px-9 py-4 rounded-xl border border-[#1E293B] bg-[#111827] hover:bg-slate-800 text-slate-200 font-bold text-lg transition-colors">
+            Explore Solutions
+          </a>
         </div>
-
-        <!-- 4 Benefits Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-          <!-- Benefit 1: Source Grounded -->
-          <div class="p-6 rounded-2xl bg-navy-900/60 border border-slate-800 hover:border-blue-500/40 transition duration-300">
-            <div class="w-10 h-10 rounded-lg bg-blue-600/10 border border-blue-500/20 text-blue-400 flex items-center justify-center mb-4">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-bold text-white mb-2">Source Grounded</h3>
-            <p class="text-sm text-slate-300 leading-relaxed">
-              Every insight is anchored directly in authentic statutory text, official notifications, and verified case precedent.
-            </p>
-          </div>
-
-          <!-- Benefit 2: Business Focused -->
-          <div class="p-6 rounded-2xl bg-navy-900/60 border border-slate-800 hover:border-blue-500/40 transition duration-300">
-            <div class="w-10 h-10 rounded-lg bg-sky-600/10 border border-sky-500/20 text-sky-400 flex items-center justify-center mb-4">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-bold text-white mb-2">Business Focused</h3>
-            <p class="text-sm text-slate-300 leading-relaxed">
-              Tailored specifically to help startups and corporate leadership navigate agreements, compliance, and enterprise risk.
-            </p>
-          </div>
-
-          <!-- Benefit 3: AI Assisted -->
-          <div class="p-6 rounded-2xl bg-navy-900/60 border border-slate-800 hover:border-blue-500/40 transition duration-300">
-            <div class="w-10 h-10 rounded-lg bg-cyan-600/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center mb-4">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-bold text-white mb-2">AI Assisted</h3>
-            <p class="text-sm text-slate-300 leading-relaxed">
-              Accelerate hours of complex manual document discovery and clause comparison into instant, synthesizable answers.
-            </p>
-          </div>
-
-          <!-- Benefit 4: Clear & Accessible -->
-          <div class="p-6 rounded-2xl bg-navy-900/60 border border-slate-800 hover:border-blue-500/40 transition duration-300">
-            <div class="w-10 h-10 rounded-lg bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mb-4">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-bold text-white mb-2">Clear &amp; Accessible</h3>
-            <p class="text-sm text-slate-300 leading-relaxed">
-              Demystify convoluted statutory provisions into plain, actionable language without sacrificing legal validity.
-            </p>
-          </div>
-
-        </div>
-
       </div>
     </section>
-
-
-    <!-- ========================================== -->
-    <!-- Call to Action Section                     -->
-    <!-- ========================================== -->
-    <section id="contact" class="py-20 relative overflow-hidden">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div class="relative rounded-3xl bg-gradient-to-b from-blue-900/50 to-navy-900 border border-blue-500/30 p-8 sm:p-12 md:p-16 text-center shadow-2xl overflow-hidden">
-          
-          <!-- Background decorative glow -->
-          <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-500/20 blur-[90px] rounded-full pointer-events-none"></div>
-
-          <div class="relative z-10 max-w-2xl mx-auto">
-            <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-6">
-              Make Legal Research Smarter
-            </h2>
-            
-            <p class="text-base sm:text-lg text-slate-300 leading-relaxed mb-8">
-              Explore a new approach to legal intelligence designed for startups and growing businesses.
-            </p>
-
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a href="#contact" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-base shadow-xl shadow-blue-600/40 hover:scale-105 transition-all duration-200 focus:ring-2 focus:ring-blue-400">
-                Get Started
-              </a>
-              <a href="#about" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-full bg-navy-950/80 hover:bg-slate-800 text-slate-200 border border-slate-700 font-medium text-base transition-colors">
-                Speak With Consultant
-              </a>
-            </div>
-
-            <p class="mt-6 text-xs text-slate-400">
-              No credit card required · Instant demo access · Enterprise compliance ready
-            </p>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
   </main>
 
-
-  <!-- ========================================== -->
-  <!-- Semantic Footer                            -->
-  <!-- ========================================== -->
-  <footer id="about" class="border-t border-slate-800 bg-navy-950 pt-16 pb-12 text-slate-400 text-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <!-- ==========================================================================
+       8. Footer
+       ========================================================================== -->
+  <footer class="border-t border-[#1E293B] bg-[#070B14] text-sm text-slate-300 py-16">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-5 gap-10">
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800/80">
-        
-        <!-- Brand Summary Column -->
-        <div class="lg:col-span-2">
-          <a href="#home" class="flex items-center gap-3 mb-4">
-            <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/30">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
-              </svg>
-            </div>
-            <span class="text-xl font-extrabold text-white tracking-tight">Lexora</span>
-          </a>
-          <p class="text-slate-400 text-sm leading-relaxed max-w-sm mb-4">
-            AI-powered legal intelligence for modern businesses. Combining proprietary legal indexing with retrieval-augmented generation for verifiable decision support.
-          </p>
-          <div class="text-xs text-slate-400">
-            Built for startups, enterprises, and legal professionals.
+      <!-- Brand column -->
+      <div class="col-span-2 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white text-base">
+            L
           </div>
+          <span class="text-xl font-bold text-white">Lexora</span>
         </div>
-
-        <!-- Quick Links Column -->
-        <div>
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-4">Quick Links</h3>
-          <ul class="space-y-2.5">
-            <li><a href="#home" class="hover:text-blue-400 transition-colors">Home</a></li>
-            <li><a href="#solutions" class="hover:text-blue-400 transition-colors">Solutions</a></li>
-            <li><a href="#ai-assistant" class="hover:text-blue-400 transition-colors">AI Assistant</a></li>
-            <li><a href="#why-lexora" class="hover:text-blue-400 transition-colors">Why Lexora</a></li>
-            <li><a href="#contact" class="hover:text-blue-400 transition-colors">Contact</a></li>
-          </ul>
-        </div>
-
-        <!-- Solutions Column -->
-        <div>
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-4">Solutions</h3>
-          <ul class="space-y-2.5">
-            <li><a href="#solutions" class="hover:text-blue-400 transition-colors">AI Legal Research</a></li>
-            <li><a href="#solutions" class="hover:text-blue-400 transition-colors">Contract Intelligence</a></li>
-            <li><a href="#solutions" class="hover:text-blue-400 transition-colors">Compliance Intelligence</a></li>
-            <li><a href="#solutions" class="hover:text-blue-400 transition-colors">Legal Decision Support</a></li>
-            <li><a href="#ai-assistant" class="hover:text-blue-400 transition-colors">RAG Pipeline</a></li>
-          </ul>
-        </div>
-
-        <!-- Contact Column -->
-        <div>
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-4">Contact</h3>
-          <ul class="space-y-2.5">
-            <li class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-              </svg>
-              <span>contact@lexora.ai</span>
-            </li>
-            <li class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              </svg>
-              <span>Bengaluru &amp; Delaware</span>
-            </li>
-            <li class="text-xs text-slate-400 pt-2">
-              Enterprise Consultation Available
-            </li>
-          </ul>
-        </div>
-
+        <p class="text-sm text-slate-300 max-w-sm leading-relaxed">
+          AI-powered legal intelligence for startups, corporations and modern businesses in India. Research, document analysis, and legal workspaces built for business.
+        </p>
       </div>
 
-      <!-- Copyright and Legal Disclaimer -->
-      <div class="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-        <div>
-          &copy; 2026 Lexora. AI-powered legal intelligence for businesses.
-        </div>
-        
-        <div class="max-w-md text-center md:text-right text-slate-400 font-normal">
-          <strong>Disclaimer:</strong> For informational and decision-support purposes. Not a substitute for professional legal advice.
-        </div>
+      <!-- Platform -->
+      <div class="space-y-3">
+        <h4 class="font-bold text-white text-sm uppercase tracking-wider">Platform</h4>
+        <ul class="space-y-2">
+          <li><a href="login.html" class="hover:text-white transition-colors">AI Assistant</a></li>
+          <li><a href="login.html" class="hover:text-white transition-colors">Document Analysis</a></li>
+          <li><a href="login.html" class="hover:text-white transition-colors">Legal Research</a></li>
+          <li><a href="#pricing" class="hover:text-white transition-colors">Entitlements</a></li>
+        </ul>
+      </div>
+
+      <!-- Solutions -->
+      <div class="space-y-3">
+        <h4 class="font-bold text-white text-sm uppercase tracking-wider">Solutions</h4>
+        <ul class="space-y-2">
+          <li><a href="#for-businesses" class="hover:text-white transition-colors">For Startups</a></li>
+          <li><a href="#for-businesses" class="hover:text-white transition-colors">For Corporations</a></li>
+          <li><a href="#solutions" class="hover:text-white transition-colors">Compliance Engine</a></li>
+          <li><a href="#how-it-works" class="hover:text-white transition-colors">Workflow Model</a></li>
+        </ul>
+      </div>
+
+      <!-- Company & Legal -->
+      <div class="space-y-3">
+        <h4 class="font-bold text-white text-sm uppercase tracking-wider">Company</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-white transition-colors">About Lexora</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Security & Privacy</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Bar Council Policy</a></li>
+          <li><a href="mailto:contact@lexora.legal" class="hover:text-white transition-colors">contact@lexora.legal</a></li>
+        </ul>
       </div>
 
     </div>
+
+    <!-- Statutory Disclaimer Bar -->
+    <div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-[#1E293B] flex flex-col md:flex-row items-center justify-between gap-4 text-slate-400 text-xs sm:text-sm">
+      <div>&copy; 2026 Lexora Technologies Pvt Ltd. All rights reserved.</div>
+      <div class="max-w-xl text-center md:text-right">
+        <strong>Statutory Notice:</strong> Lexora provides AI-assisted statutory research and document intelligence for informational and decision-support purposes and does not substitute for formal counsel from an advocate licensed under the Advocates Act, 1961.
+      </div>
+    </div>
   </footer>
 
+  <!-- Floating Back to Top Button -->
+  <button id="back-to-top" class="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-xl bg-blue-600/90 hover:bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-600/30 border border-blue-400/30 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 hover:scale-105" aria-label="Scroll to top">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>
+  </button>
 
-  <!-- ========================================== -->
-  <!-- Minimal Vanilla JavaScript for Mobile Menu -->
-  <!-- ========================================== -->
+  <!-- Reusable Client State Script -->
+  <script src="js/app.js"></script>
+  <script src="js/ambient.js"></script>
   <script>
-    // Grab mobile navigation elements
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Mobile Drawer Hamburger Toggle
+      const mobileBtn = document.getElementById('mobile-menu-btn');
+      const mobileDrawer = document.getElementById('mobile-drawer');
+      if (mobileBtn && mobileDrawer) {
+        mobileBtn.addEventListener('click', () => {
+          mobileDrawer.classList.toggle('hidden');
+        });
+      }
 
-    // Toggle menu visibility when clicking hamburger button
-    mobileMenuBtn.addEventListener('click', () => {
-      const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
-      mobileMenuBtn.setAttribute('aria-expanded', String(!isExpanded));
-      mobileMenu.classList.toggle('hidden');
-    });
+      // 2. Interactive Monthly / Annual Pricing Toggle
+      const toggleContainer = document.getElementById('pricing-toggle');
+      if (toggleContainer) {
+        const toggleButtons = toggleContainer.querySelectorAll('.pricing-toggle-btn');
+        const saveBadge = document.getElementById('save-badge');
+        const priceValues = document.querySelectorAll('.price-value');
+        const billingPeriods = document.querySelectorAll('.billing-period');
 
-    // Close the mobile menu automatically whenever a navigation link is clicked
-    const navLinks = mobileMenu.querySelectorAll('a');
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-      });
+        toggleButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const billing = btn.getAttribute('data-billing');
+            toggleButtons.forEach(b => b.classList.toggle('active', b === btn));
+
+            if (saveBadge) {
+              saveBadge.classList.toggle('hidden', billing !== 'annual');
+            }
+
+            priceValues.forEach(el => {
+              el.classList.add('switching');
+              setTimeout(() => {
+                const targetText = el.getAttribute(`data-${billing}`);
+                if (targetText) el.textContent = targetText;
+                el.classList.remove('switching');
+              }, 120);
+            });
+
+            billingPeriods.forEach(el => {
+              const targetPeriod = el.getAttribute(`data-${billing}`);
+              if (targetPeriod) el.textContent = targetPeriod;
+            });
+          });
+        });
+      }
+
+      // 3. Scroll-triggered Reveal Animations with Fallback
+      const revealElements = document.querySelectorAll('.reveal, .reveal-child');
+      if (revealElements.length > 0) {
+        document.documentElement.classList.add('js-reveal-active');
+
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                obs.unobserve(entry.target);
+              }
+            });
+          }, {
+            threshold: 0.08,
+            rootMargin: '0px 0px 40px 0px'
+          });
+
+          revealElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+              el.classList.add('visible');
+            } else {
+              observer.observe(el);
+            }
+          });
+        } else {
+          revealElements.forEach(el => el.classList.add('visible'));
+        }
+      }
+
+      // 4. Subtle Parallax for Hero Mesh
+      const heroMesh = document.querySelector('.hero-mesh');
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (heroMesh && !prefersReducedMotion) {
+        let currentX = 0;
+        let currentY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        let rafId = null;
+
+        function updateParallax() {
+          currentX += (targetX - currentX) * 0.05;
+          currentY += (targetY - currentY) * 0.05;
+          heroMesh.style.transform = `translate(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px)`;
+          rafId = requestAnimationFrame(updateParallax);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+          const xNorm = (e.clientX / window.innerWidth) - 0.5;
+          const yNorm = (e.clientY / window.innerHeight) - 0.5;
+          targetX = xNorm * 35;
+          targetY = yNorm * 25;
+          if (!rafId) rafId = requestAnimationFrame(updateParallax);
+        }, { passive: true });
+      }
+
+
+      // 6. Real-time Scroll Progress Bar, Sticky Nav Elevation, ScrollSpy & Parallax
+      const progressBar = document.getElementById('scroll-progress');
+      const navbar = document.getElementById('main-navbar');
+      const backToTopBtn = document.getElementById('back-to-top');
+      const navLinks = document.querySelectorAll('.nav-link');
+      const sections = document.querySelectorAll('section[id]');
+      const ambientContainer = document.querySelector('.lexora-ambient');
+
+      function handleScroll() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+        // Update progress bar width
+        if (progressBar) {
+          progressBar.style.width = `${scrollPercent}%`;
+        }
+
+        // Elevate navbar on scroll
+        if (navbar) {
+          navbar.classList.toggle('nav-scrolled', scrollTop > 25);
+        }
+
+        // Back to top visibility
+        if (backToTopBtn) {
+          backToTopBtn.classList.toggle('visible', scrollTop > 400);
+        }
+
+        // Scroll Parallax on Ambient Layers
+        if (ambientContainer && !prefersReducedMotion) {
+          ambientContainer.style.transform = `translateY(${scrollTop * 0.15}px)`;
+        }
+
+        // ScrollSpy: Highlight active section nav link
+        let currentSectionId = '';
+        sections.forEach(section => {
+          const top = section.offsetTop - 120;
+          const height = section.offsetHeight;
+          if (scrollTop >= top && scrollTop < top + height) {
+            currentSectionId = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          if (href === `#${currentSectionId}`) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      handleScroll(); // Initial run
+
+      if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
     });
   </script>
-
 </body>
 </html>

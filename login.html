@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Lexora Legal Intelligence</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            lexora: {
+              bg: '#070B14',
+              surface: '#0D1321',
+              card: '#111827',
+              border: '#1E293B',
+              text: '#F8FAFC',
+              muted: '#94A3B8',
+              accent: '#3B82F6',
+              accentHover: '#2563EB',
+              secondary: '#60A5FA'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="css/custom.css">
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    /* Google Button Styles */
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid #1E293B;
+      background: linear-gradient(135deg, #0D1321 0%, #111827 100%);
+      color: #F8FAFC;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .google-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(66, 133, 244, 0.08), rgba(234, 67, 53, 0.04), rgba(251, 188, 4, 0.04), rgba(52, 168, 83, 0.04));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .google-btn:hover {
+      border-color: rgba(66, 133, 244, 0.4);
+      background: linear-gradient(135deg, #111827 0%, #1a2234 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(66, 133, 244, 0.15);
+    }
+    .google-btn:hover::before {
+      opacity: 1;
+    }
+    .google-btn:active {
+      transform: translateY(0px);
+    }
+    .google-btn svg {
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .google-btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* OR Divider */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #1E293B 30%, #1E293B 70%, transparent);
+    }
+    .auth-divider span {
+      font-size: 11px;
+      font-weight: 600;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+    }
+
+    /* Google button loading state */
+    .google-btn.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+    .google-btn.loading .google-btn-text {
+      display: none;
+    }
+    .google-btn.loading .google-btn-spinner {
+      display: inline-block;
+    }
+    .google-btn-spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: #F8FAFC;
+      border-radius: 50%;
+      animation: g-spin 0.6s linear infinite;
+    }
+    @keyframes g-spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-[#070B14] text-[#F8FAFC] font-sans antialiased min-h-screen flex flex-col justify-between bg-grid-glow bg-dot-pattern">
+
+  <!-- Top Simple Brand Header -->
+  <header class="p-6">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white text-base shadow-lg shadow-blue-600/20">
+          L
+        </div>
+        <span class="text-xl font-bold tracking-tight text-white">Lexora</span>
+      </a>
+      <a href="index.html" class="text-xs font-semibold text-slate-400 hover:text-white transition-colors">
+        ← Back to Website
+      </a>
+    </div>
+  </header>
+
+  <!-- Login Main Container -->
+  <main class="flex-1 flex items-center justify-center px-6 py-12">
+    <div class="w-full max-w-md space-y-6">
+      
+      <!-- Card Container -->
+      <div class="bg-[#111827] border border-[#1E293B] rounded-3xl p-8 shadow-2xl space-y-6 relative overflow-hidden">
+        
+        <!-- Header -->
+        <div class="text-center space-y-2">
+          <h1 id="auth-heading" class="text-2xl font-extrabold text-white">Welcome back to Lexora</h1>
+          <p id="auth-subtext" class="text-xs text-[#94A3B8]">Sign in to access your business legal intelligence workspace</p>
+        </div>
+
+        <!-- Tab Toggle (Sign In / Register) -->
+        <div class="flex rounded-xl bg-[#070B14] p-1 border border-[#1E293B] text-xs font-semibold">
+          <button type="button" id="tab-signin" class="flex-1 py-2 text-center rounded-lg bg-blue-600 text-white shadow-sm transition-all">
+            Sign In
+          </button>
+          <button type="button" id="tab-signup" class="flex-1 py-2 text-center rounded-lg text-slate-400 hover:text-white transition-all">
+            Create Account
+          </button>
+        </div>
+
+        <!-- ============ GOOGLE SIGN-IN BUTTON ============ -->
+        <div id="google-signin-section" class="space-y-4">
+          <button type="button" id="google-signin-btn" class="google-btn" onclick="GoogleAuth.prompt('signin')">
+            <svg width="20" height="20" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            <span class="google-btn-text">Continue with Google</span>
+            <div class="google-btn-spinner"></div>
+          </button>
+
+          <div class="auth-divider">
+            <span>or continue with email</span>
+          </div>
+        </div>
+
+
+        <!-- ============ SIGN IN FORM ============ -->
+        <form id="login-form" class="space-y-4">
+          <div class="space-y-1.5">
+            <label for="email" class="block text-xs font-semibold text-slate-300">Work Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              value="prashant@lexora.legal" 
+              required
+              class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all"
+              placeholder="name@company.com"
+            >
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label for="password" class="block text-xs font-semibold text-slate-300">Password</label>
+              <a href="#" class="text-[11px] text-blue-400 hover:underline">Forgot?</a>
+            </div>
+            <input 
+              type="password" 
+              id="password" 
+              value="••••••••••••" 
+              required
+              class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all"
+            >
+          </div>
+
+          <div class="space-y-1.5" id="plan-selection-row">
+            <label for="plan-select" class="block text-xs font-semibold text-slate-300">Membership Tier</label>
+            <select 
+              id="plan-select" 
+              class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 text-sm text-white outline-none transition-all"
+            >
+              <option value="Professional" selected>Professional Plan (Standard + Advanced AI)</option>
+              <option value="Free">Free Plan (Standard AI Only)</option>
+              <option value="Enterprise">Enterprise Plan (All Models)</option>
+            </select>
+          </div>
+
+          <button 
+            type="submit" 
+            class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
+          >
+            Enter AI Workspace →
+          </button>
+        </form>
+
+        <!-- ============ SIGN UP FORM (Hidden by default) ============ -->
+        <form id="signup-form" class="space-y-4 hidden">
+          <div class="space-y-1.5">
+            <label for="signup-name" class="block text-xs font-semibold text-slate-300">Full Name</label>
+            <input 
+              type="text" 
+              id="signup-name" 
+              required
+              class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all"
+              placeholder="e.g. Prashant Parwani"
+            >
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="signup-email" class="block text-xs font-semibold text-slate-300">Work Email</label>
+            <input 
+              type="email" 
+              id="signup-email" 
+              required
+              class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all"
+              placeholder="name@company.com"
+            >
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="signup-password" class="block text-xs font-semibold text-slate-300">Password</label>
+            <input 
+              type="password" 
+              id="signup-password" 
+              required
+              minlength="8"
+              class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all"
+              placeholder="Minimum 8 characters"
+            >
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="signup-confirm" class="block text-xs font-semibold text-slate-300">Confirm Password</label>
+            <input 
+              type="password" 
+              id="signup-confirm" 
+              required
+              minlength="8"
+              class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all"
+              placeholder="Re-enter your password"
+            >
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="signup-plan" class="block text-xs font-semibold text-slate-300">Choose Plan</label>
+            <select 
+              id="signup-plan" 
+              class="w-full px-4 py-2.5 rounded-xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 text-sm text-white outline-none transition-all"
+            >
+              <option value="Free" selected>Free Plan — ₹0 / forever</option>
+              <option value="Professional">Professional Plan — ₹4,999 / month</option>
+              <option value="Enterprise">Enterprise Plan — Custom pricing</option>
+            </select>
+          </div>
+
+          <!-- Error message area -->
+          <p id="signup-error" class="text-xs text-rose-400 font-medium hidden"></p>
+
+          <button 
+            type="submit" 
+            class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.01] flex items-center justify-center gap-2"
+          >
+            Create Account & Enter Workspace →
+          </button>
+        </form>
+
+        <div class="text-center pt-2">
+          <p id="auth-footer-text" class="text-[11px] text-slate-500">
+            By signing in, you agree to Lexora's Terms of Service and Privacy Policy.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Simple Footer -->
+  <footer class="p-6 text-center text-xs text-slate-600">
+    &copy; 2026 Lexora Technologies Pvt Ltd. All rights reserved.
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/google-auth.js"></script>
+  <script src="js/ambient.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // ---- Elements ----
+      const tabSignin = document.getElementById("tab-signin");
+      const tabSignup = document.getElementById("tab-signup");
+      const loginForm = document.getElementById("login-form");
+      const signupForm = document.getElementById("signup-form");
+      const authHeading = document.getElementById("auth-heading");
+      const authSubtext = document.getElementById("auth-subtext");
+      const authFooterText = document.getElementById("auth-footer-text");
+      const emailInput = document.getElementById("email");
+      const planSelect = document.getElementById("plan-select");
+      const signupError = document.getElementById("signup-error");
+
+      // ---- Active tab styling helpers ----
+      const activeTabClasses = ["bg-blue-600", "text-white", "shadow-sm"];
+      const inactiveTabClasses = ["text-slate-400"];
+
+      function setActiveTab(activeBtn, inactiveBtn) {
+        activeBtn.classList.add(...activeTabClasses);
+        activeBtn.classList.remove(...inactiveTabClasses);
+        inactiveBtn.classList.remove(...activeTabClasses);
+        inactiveBtn.classList.add(...inactiveTabClasses);
+      }
+
+      // ---- Google button reference ----
+      const googleBtn = document.getElementById("google-signin-btn");
+
+      // ---- Tab: Sign In ----
+      tabSignin.addEventListener("click", () => {
+        setActiveTab(tabSignin, tabSignup);
+        loginForm.classList.remove("hidden");
+        signupForm.classList.add("hidden");
+        authHeading.textContent = "Welcome back to Lexora";
+        authSubtext.textContent = "Sign in to access your business legal intelligence workspace";
+        authFooterText.textContent = "By signing in, you agree to Lexora's Terms of Service and Privacy Policy.";
+        // Update Google button for sign-in mode
+        if (googleBtn) {
+          googleBtn.setAttribute("onclick", "GoogleAuth.prompt('signin')");
+          googleBtn.querySelector('.google-btn-text').textContent = 'Continue with Google';
+        }
+      });
+
+      // ---- Tab: Create Account ----
+      tabSignup.addEventListener("click", () => {
+        setActiveTab(tabSignup, tabSignin);
+        signupForm.classList.remove("hidden");
+        loginForm.classList.add("hidden");
+        signupError.classList.add("hidden");
+        authHeading.textContent = "Create your Lexora account";
+        authSubtext.textContent = "Get started with AI-powered legal intelligence for your business";
+        authFooterText.textContent = "By creating an account, you agree to Lexora's Terms of Service and Privacy Policy.";
+        // Update Google button for sign-up mode
+        if (googleBtn) {
+          googleBtn.setAttribute("onclick", "GoogleAuth.prompt('signup')");
+          googleBtn.querySelector('.google-btn-text').textContent = 'Sign up with Google';
+        }
+      });
+
+
+      // ---- Standard Login Form Submission ----
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const selectedPlan = planSelect.value;
+        const enteredEmail = emailInput.value.trim();
+        const userName = enteredEmail.split("@")[0] || "User";
+        
+        const limitMap = { Free: 25, Professional: 500, Enterprise: 5000 };
+        const usedMap = { Free: 14, Professional: 420, Enterprise: 1100 };
+
+        const user = {
+          name: userName.charAt(0).toUpperCase() + userName.slice(1),
+          email: enteredEmail,
+          role: "Corporate Counsel",
+          organization: "Lexora Client Enterprise",
+          plan: selectedPlan,
+          queriesUsed: usedMap[selectedPlan] || 10,
+          queriesLimit: limitMap[selectedPlan] || 500
+        };
+
+        setCurrentUser(user);
+        showToast(`Signed in successfully under ${selectedPlan} Plan`, "success");
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 600);
+      });
+
+      // ---- Create Account Form Submission ----
+      signupForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById("signup-name").value.trim();
+        const email = document.getElementById("signup-email").value.trim();
+        const password = document.getElementById("signup-password").value;
+        const confirmPassword = document.getElementById("signup-confirm").value;
+        const selectedPlan = document.getElementById("signup-plan").value;
+
+        // Validate passwords match
+        if (password !== confirmPassword) {
+          signupError.textContent = "Passwords do not match. Please try again.";
+          signupError.classList.remove("hidden");
+          return;
+        }
+
+        if (password.length < 8) {
+          signupError.textContent = "Password must be at least 8 characters long.";
+          signupError.classList.remove("hidden");
+          return;
+        }
+
+        signupError.classList.add("hidden");
+
+        const limitMap = { Free: 25, Professional: 500, Enterprise: 5000 };
+
+        const user = {
+          name: fullName,
+          email: email,
+          role: "New Member",
+          organization: "—",
+          plan: selectedPlan,
+          queriesUsed: 0,
+          queriesLimit: limitMap[selectedPlan] || 25
+        };
+
+        setCurrentUser(user);
+        showToast(`Account created! Welcome to Lexora, ${fullName}`, "success");
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 600);
+      });
+    });
+  </script>
+</body>
+</html>
