@@ -68,7 +68,7 @@ class LexoraDocumentManager {
     }
 
     this.bindEvents();
-    console.info('[Lexora File API] Native HTML5 File API initialized. Zero external API key required.');
+    console.info('[Lexora Documents] Document upload module initialized.');
   }
 
   /**
@@ -162,7 +162,7 @@ class LexoraDocumentManager {
 
     // Show visual confirmation toast
     if (typeof showToast === 'function') {
-      showToast(`Selected: ${this.activeMetadata.name} (${this.activeMetadata.formattedSize}) via HTML5 File API`, 'success');
+      showToast(`Selected: ${this.activeMetadata.name} (${this.activeMetadata.formattedSize})`, 'success');
     }
   }
 
@@ -193,7 +193,7 @@ class LexoraDocumentManager {
         hour: '2-digit',
         minute: '2-digit'
       }),
-      isBrowserNative: true // Flag confirming purely native extraction (no API key)
+      isBrowserNative: true
     };
   }
 
@@ -232,7 +232,7 @@ class LexoraDocumentManager {
           resolve({
             type: 'binary',
             byteLength: buffer.byteLength,
-            message: `Binary document loaded into client memory (${this.formatBytes(buffer.byteLength)}). Ready for backend OCR/NLP tokenization.`
+            message: `Document loaded (${this.formatBytes(buffer.byteLength)}). Ready for analysis.`
           });
         };
         reader.onerror = () => {
@@ -281,19 +281,19 @@ class LexoraDocumentManager {
     if (preview && preview.type === 'text') {
       snippetContainer.innerHTML = `
         <div class="flex items-center justify-between text-[11px] text-slate-400 font-sans border-b border-slate-800 pb-1.5">
-          <span class="font-bold text-slate-300">📄 Client-Side Text Stream Preview (HTML5 FileReader)</span>
+          <span class="font-bold text-slate-300">📄 Document Preview</span>
           <span class="text-blue-400">${preview.totalChars.toLocaleString()} characters</span>
         </div>
-        <p class="text-slate-300 whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto pr-1">${this.escapeHtml(preview.contentSnippet)}${preview.isTruncated ? '\n\n... [Truncated for client preview]' : ''}</p>
+        <p class="text-slate-300 whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto pr-1">${this.escapeHtml(preview.contentSnippet)}${preview.isTruncated ? '\n\n... [Preview truncated]' : ''}</p>
       `;
     } else if (preview && preview.type === 'binary') {
       snippetContainer.innerHTML = `
         <div class="flex items-center justify-between text-[11px] text-slate-400 font-sans">
-          <span class="font-bold text-slate-300">🔒 Binary Document Stream Verified</span>
-          <span class="text-emerald-400 font-semibold">✓ 100% Client Memory Buffer</span>
+          <span class="font-bold text-slate-300">📄 Document Loaded</span>
+          <span class="text-emerald-400 font-semibold">✓ Ready</span>
         </div>
         <p class="text-slate-400 text-[11px] font-sans pt-1">
-          ${preview.message}
+          ${meta.friendlyType} (${meta.formattedSize}) — ready for AI analysis.
         </p>
       `;
     }
@@ -346,11 +346,11 @@ class LexoraDocumentManager {
 
     // Client-side simulated workflow for demo
     const pipelineSteps = [
-      { pct: 20, text: `Parsing "${this.activeMetadata.name}" statutory clauses & preamble...` },
-      { pct: 45, text: 'Cross-referencing liability caps against Section 73 Indian Contract Act 1872...' },
-      { pct: 70, text: 'Auditing Data Fiduciary clauses for Section 8 DPDP Act 2023 compliance...' },
-      { pct: 90, text: 'Synthesizing asymmetric termination & IP indemnity redlines...' },
-      { pct: 100, text: 'Document Diligence complete! 3 high-attention clauses isolated.' }
+      { pct: 20, text: `Reading "${this.activeMetadata.name}"...` },
+      { pct: 45, text: 'Extracting key information...' },
+      { pct: 70, text: 'Analyzing document structure...' },
+      { pct: 90, text: 'Preparing summary...' },
+      { pct: 100, text: 'Document analysis complete!' }
     ];
 
     let currentStep = 0;

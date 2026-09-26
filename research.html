@@ -43,6 +43,20 @@
   </script>
 
   <link rel="stylesheet" href="css/custom.css">
+  <style>
+    /* Drag & drop visual styles */
+    .research-card { cursor: grab; }
+    .research-card:active { cursor: grabbing; }
+    .research-card.dragging { opacity: 0.5; transform: scale(0.97); }
+    .saved-dropzone.drag-over {
+      border-color: #3B82F6 !important;
+      background: rgba(59, 130, 246, 0.08) !important;
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);
+    }
+    .category-card { transition: all 0.2s ease; }
+    .category-card:hover { transform: translateY(-2px); }
+    .category-card.active { border-color: #3B82F6 !important; background: rgba(59, 130, 246, 0.08) !important; }
+  </style>
 </head>
 <body class="bg-[#070B14] text-[#F8FAFC] font-sans antialiased min-h-screen flex bg-grid-glow">
 
@@ -122,12 +136,12 @@
         <button id="sidebar-toggle" class="md:hidden text-slate-400 hover:text-white p-1">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
-        <h1 class="text-sm font-bold text-white">Indian Statutory & Precedent Research</h1>
+        <h1 class="text-sm font-bold text-white">Legal Research</h1>
       </div>
 
       <div class="flex items-center gap-3">
         <span class="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold">
-          HTML5 LocalStorage + Clipboard API
+          Drag & Drop to Save
         </span>
         <a href="settings.html" class="w-8 h-8 rounded-xl bg-blue-600 hover:bg-blue-500 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-600/20">
           P
@@ -136,28 +150,27 @@
     </header>
 
     <!-- Content -->
-    <main class="flex-1 p-6 md:p-8 max-w-6xl w-full mx-auto space-y-8">
+    <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto space-y-8">
       
       <!-- Heading -->
       <div class="space-y-1.5">
         <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-          Statutory Search & Precedent Citations
+          Legal Research
         </h2>
         <p class="text-sm text-[#94A3B8]">
-          Lookup Indian Central Bare Acts, sections, MCA notifications, and binding Supreme Court commercial rulings.
+          Browse Indian law categories, explore key statutes and precedents. Drag any research card to your Saved Research panel.
         </p>
       </div>
 
-      <!-- Search Input & Act Filters -->
-      <div class="bg-[#111827] border border-[#1E293B] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
-        
+      <!-- Search Bar -->
+      <div class="bg-[#111827] border border-[#1E293B] rounded-2xl p-4 shadow-xl">
         <form id="research-search-form" class="relative">
           <span class="absolute inset-y-0 left-4 flex items-center text-slate-500 text-sm">🔍</span>
           <input 
             type="text" 
             id="research-search-input"
-            placeholder="Search by topic, statutory Act, or Section number (e.g. Section 27, DPDP Act consent, debt borrowing)..."
-            class="w-full pl-11 pr-32 py-3.5 rounded-2xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all"
+            placeholder="Search across all categories (e.g. Section 27, DPDP consent, arbitration clause)..."
+            class="w-full pl-11 pr-32 py-3.5 rounded-xl bg-[#070B14] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all"
           >
           <button 
             type="submit" 
@@ -166,204 +179,62 @@
             Search
           </button>
         </form>
-
-        <!-- Central Act Filter Chips -->
-        <div class="space-y-2">
-          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Filter By Central Act:</div>
-          <div class="flex flex-wrap items-center gap-2">
-            <button type="button" class="act-filter-btn px-3 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-bold border border-blue-500 shadow-sm" data-act="all">
-              All Acts
-            </button>
-            <button type="button" class="act-filter-btn px-3 py-1.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 text-slate-300 text-xs font-medium border border-[#1E293B] transition-colors" data-act="contract">
-              Indian Contract Act, 1872
-            </button>
-            <button type="button" class="act-filter-btn px-3 py-1.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 text-slate-300 text-xs font-medium border border-[#1E293B] transition-colors" data-act="companies">
-              Companies Act, 2013
-            </button>
-            <button type="button" class="act-filter-btn px-3 py-1.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 text-slate-300 text-xs font-medium border border-[#1E293B] transition-colors" data-act="dpdp">
-              DPDP Act, 2023
-            </button>
-            <button type="button" class="act-filter-btn px-3 py-1.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 text-slate-300 text-xs font-medium border border-[#1E293B] transition-colors" data-act="arbitration">
-              Arbitration Act, 1996
-            </button>
-          </div>
-        </div>
-
       </div>
 
-      <!-- Two Column Layout: Search Results (Left) vs Saved Research (Right) -->
+      <!-- ======================================================================
+           Categories Grid
+           ====================================================================== -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-bold text-white">Browse by Category</h3>
+          <button id="btn-show-all" class="text-xs text-blue-400 font-semibold hover:underline">Show All</button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3" id="categories-grid">
+          <!-- Categories rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           Two Column: Research Cards + Saved Research
+           ====================================================================== -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        <!-- Results Column (8 cols) -->
+        <!-- Research Cards (Left — 8 cols) -->
         <div class="lg:col-span-8 space-y-5">
           <div class="flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider text-xs">
-              Statutory Provisions & Doctrines (<span id="results-count">4</span>)
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">
+              <span id="active-category-name">All Categories</span>
+              <span class="text-slate-500 font-normal ml-1">(<span id="results-count">0</span> sections)</span>
             </h3>
-            <span class="text-xs text-slate-500">Plain English Synthesis + Bare Act Text</span>
+            <span class="text-[11px] text-slate-500">Drag cards to Saved Research →</span>
           </div>
 
           <!-- Results Container -->
           <div id="research-results-container" class="space-y-4">
-            
-            <!-- Result Item 1 -->
-            <div class="p-6 rounded-2xl bg-[#111827] border border-[#1E293B] hover:border-slate-700 transition-all space-y-3" data-act-type="contract">
-              <div class="flex items-start justify-between">
-                <div>
-                  <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider block">Indian Contract Act, 1872</span>
-                  <h4 class="text-base font-bold text-white mt-0.5">Section 27 — Agreement in Restraint of Trade Void</h4>
-                </div>
-                <div class="flex items-center gap-2">
-                  <button class="btn-save-research px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors flex items-center gap-1.5" data-id="act-sec-27" data-title="Section 27 Contract Act — Restraint of Trade" data-act="Indian Contract Act, 1872" data-summary="Non-competes post-termination are void ab initio. Sale of goodwill exception only.">
-                    <span>⭐</span> Save
-                  </button>
-                  <button class="btn-copy-citation px-2.5 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors" data-text="Section 27, Indian Contract Act 1872: Every agreement by which any one is restrained from exercising a lawful profession, trade or business of any kind, is to that extent void. Exception: One who sells the goodwill of a business may agree with the buyer to refrain from carrying on a similar business within specified local limits.">
-                    📋 Copy
-                  </button>
-                </div>
-              </div>
-
-              <div class="p-3.5 rounded-xl bg-[#070B14] border border-slate-800 text-xs text-slate-300 font-mono leading-relaxed">
-                "Every agreement by which any one is restrained from exercising a lawful profession, trade or business of any kind, is to that extent void."
-              </div>
-
-              <div class="space-y-1 text-xs text-slate-300 leading-relaxed">
-                <strong class="text-white">Commercial Takeaway:</strong> Post-termination non-compete clauses cannot be enforced against employees or founders in India, regardless of geographic reasonableness or duration.
-                <div class="text-[11px] text-slate-500 pt-1">
-                  <strong>Landmark Precedent:</strong> <em>Percept D'Mark (India) (P) Ltd. v. Zaheer Khan, (2006) 4 SCC 227</em>.
-                </div>
-              </div>
-
-              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                <span class="text-slate-500 text-[11px]">Chapter II: Of Contracts, Voidable Contracts & Void Agreements</span>
-                <a href="assistant.html?q=Can%20I%20enforce%20a%20non-compete%20under%20Section%2027%20Indian%20Contract%20Act" class="text-blue-400 font-semibold hover:underline">
-                  Inquire with Assistant →
-                </a>
-              </div>
-            </div>
-
-            <!-- Result Item 2 -->
-            <div class="p-6 rounded-2xl bg-[#111827] border border-[#1E293B] hover:border-slate-700 transition-all space-y-3" data-act-type="companies">
-              <div class="flex items-start justify-between">
-                <div>
-                  <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider block">Companies Act, 2013</span>
-                  <h4 class="text-base font-bold text-white mt-0.5">Section 180(1)(c) — Restrictions on Powers of Board (Borrowing Limits)</h4>
-                </div>
-                <div class="flex items-center gap-2">
-                  <button class="btn-save-research px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors flex items-center gap-1.5" data-id="act-sec-180" data-title="Section 180(1)(c) Companies Act — Borrowing Powers" data-act="Companies Act, 2013" data-summary="Special resolution mandatory if debt exceeds paid-up capital + free reserves.">
-                    <span>⭐</span> Save
-                  </button>
-                  <button class="btn-copy-citation px-2.5 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors" data-text="Section 180(1)(c), Companies Act 2013: The Board of Directors shall not borrow money exceeding aggregate of paid-up share capital, free reserves and securities premium without prior shareholder Special Resolution.">
-                    📋 Copy
-                  </button>
-                </div>
-              </div>
-
-              <div class="p-3.5 rounded-xl bg-[#070B14] border border-slate-800 text-xs text-slate-300 font-mono leading-relaxed">
-                "The Board of Directors of a company shall exercise the power to borrow money, where the money to be borrowed, together with the money already borrowed by the company will exceed aggregate of its paid-up share capital, free reserves and securities premium, only with the consent of the company by a special resolution."
-              </div>
-
-              <div class="space-y-1 text-xs text-slate-300 leading-relaxed">
-                <strong class="text-white">Commercial Takeaway:</strong> Venture debt, bank facilities, and convertible notes exceeding capital buffers must be ratified via general meeting and filed on MCA Form MGT-14.
-              </div>
-
-              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                <span class="text-slate-500 text-[11px]">Chapter XII: Meetings of Board and Its Powers</span>
-                <a href="assistant.html?q=Explain%20Section%20180%20Companies%20Act%20borrowing%20requirements" class="text-blue-400 font-semibold hover:underline">
-                  Inquire with Assistant →
-                </a>
-              </div>
-            </div>
-
-            <!-- Result Item 3 -->
-            <div class="p-6 rounded-2xl bg-[#111827] border border-[#1E293B] hover:border-slate-700 transition-all space-y-3" data-act-type="dpdp">
-              <div class="flex items-start justify-between">
-                <div>
-                  <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider block">Digital Personal Data Protection Act, 2023</span>
-                  <h4 class="text-base font-bold text-white mt-0.5">Section 8 — General Obligations of Data Fiduciary</h4>
-                </div>
-                <div class="flex items-center gap-2">
-                  <button class="btn-save-research px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors flex items-center gap-1.5" data-id="act-dpdp-8" data-title="Section 8 DPDP Act 2023 — Data Fiduciary Obligations" data-act="DPDP Act, 2023" data-summary="Mandatory security safeguards, personal data breach notification, and deletion on consent withdrawal.">
-                    <span>⭐</span> Save
-                  </button>
-                  <button class="btn-copy-citation px-2.5 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors" data-text="Section 8, DPDP Act 2023: A Data Fiduciary shall implement appropriate technical and organisational measures to ensure effective adherence with the provisions of this Act. In the event of a personal data breach, give the Board and each affected Data Principal intimation of such breach.">
-                    📋 Copy
-                  </button>
-                </div>
-              </div>
-
-              <div class="p-3.5 rounded-xl bg-[#070B14] border border-slate-800 text-xs text-slate-300 font-mono leading-relaxed">
-                "A Data Fiduciary shall implement reasonable security safeguards to prevent personal data breach; and in the event of a personal data breach, give the Board and each affected Data Principal intimation of such breach in such form and manner as may be prescribed."
-              </div>
-
-              <div class="space-y-1 text-xs text-slate-300 leading-relaxed">
-                <strong class="text-white">Commercial Takeaway:</strong> Data processors operate strictly on Data Fiduciary contracts. Incident notifications are statutory, not discretionary.
-              </div>
-
-              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                <span class="text-slate-500 text-[11px]">Chapter II: Obligations of Data Fiduciary</span>
-                <a href="assistant.html?q=What%20are%20Section%208%20DPDP%20compliance%20obligations" class="text-blue-400 font-semibold hover:underline">
-                  Inquire with Assistant →
-                </a>
-              </div>
-            </div>
-
-            <!-- Result Item 4 -->
-            <div class="p-6 rounded-2xl bg-[#111827] border border-[#1E293B] hover:border-slate-700 transition-all space-y-3" data-act-type="arbitration">
-              <div class="flex items-start justify-between">
-                <div>
-                  <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider block">Arbitration & Conciliation Act, 1996</span>
-                  <h4 class="text-base font-bold text-white mt-0.5">Section 7 — Arbitration Agreement</h4>
-                </div>
-                <div class="flex items-center gap-2">
-                  <button class="btn-save-research px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors flex items-center gap-1.5" data-id="act-arb-7" data-title="Section 7 Arbitration Act — Arbitration Clause" data-act="Arbitration & Conciliation Act, 1996" data-summary="Agreement must be in writing. Can be in clause or separate agreement.">
-                    <span>⭐</span> Save
-                  </button>
-                  <button class="btn-copy-citation px-2.5 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors" data-text="Section 7, Arbitration & Conciliation Act 1996: An arbitration agreement shall be in writing. An arbitration agreement is in writing if it is contained in a document signed by the parties or an exchange of letters, telex, telegrams or other means of telecommunication.">
-                    📋 Copy
-                  </button>
-                </div>
-              </div>
-
-              <div class="p-3.5 rounded-xl bg-[#070B14] border border-slate-800 text-xs text-slate-300 font-mono leading-relaxed">
-                "An arbitration agreement shall be in writing. An arbitration agreement is in writing if it is contained in a document signed by the parties or in an exchange of letters or electronic communication."
-              </div>
-
-              <div class="space-y-1 text-xs text-slate-300 leading-relaxed">
-                <strong class="text-white">Commercial Takeaway:</strong> Electronic assent in SaaS agreements is legally recognized as a written arbitration clause in India.
-              </div>
-
-              <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                <span class="text-slate-500 text-[11px]">Part I: Arbitration — General Provisions</span>
-                <a href="assistant.html?q=How%20to%20draft%20an%20arbitration%20clause%20under%20Section%207" class="text-blue-400 font-semibold hover:underline">
-                  Inquire with Assistant →
-                </a>
-              </div>
-            </div>
-
+            <!-- Dynamically populated -->
           </div>
-
         </div>
 
-        <!-- Saved Research Workspace (Right Column, 4 cols) -->
-        <div class="lg:col-span-4 bg-[#111827] border border-[#1E293B] rounded-3xl p-6 space-y-4 sticky top-24">
+        <!-- Saved Research (Right — 4 cols) — DROP ZONE -->
+        <div id="saved-research-dropzone" class="saved-dropzone lg:col-span-4 bg-[#111827] border-2 border-dashed border-[#1E293B] rounded-3xl p-6 space-y-4 sticky top-24 transition-all duration-200">
           <div class="flex items-center justify-between pb-3 border-b border-[#1E293B]">
             <div>
               <h3 class="text-sm font-bold text-white flex items-center gap-2">
                 <span>⭐</span> Saved Research
               </h3>
-              <span class="text-[11px] text-slate-500">Persisted in HTML5 LocalStorage</span>
+              <span class="text-[11px] text-slate-500">Drop cards here or click Save</span>
             </div>
-            <span id="saved-count-badge" class="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold">2</span>
+            <span id="saved-count-badge" class="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold">0</span>
           </div>
 
           <!-- Dynamic Saved List -->
           <div id="saved-research-list" class="space-y-3 text-xs max-h-[500px] overflow-y-auto pr-1">
-            <!-- Populated via LocalStorage API -->
+            <!-- Populated dynamically -->
           </div>
 
           <div class="pt-3 border-t border-slate-800 text-[11px] text-slate-500">
-            Click "Save" on any section card above to persist statutory citations for your team's upcoming contract negotiation.
+            Click "Save" on any research card or drag & drop it here to bookmark it.
           </div>
         </div>
 
@@ -377,141 +248,448 @@
   <script src="js/ambient.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const searchForm = document.getElementById("research-search-form");
-      const searchInput = document.getElementById("research-search-input");
-      const filterBtns = document.querySelectorAll(".act-filter-btn");
+      // ======================================================================
+      // DEMO DATA — Categories & Research Sections
+      // Will be replaced with live API integration
+      // ======================================================================
+      const CATEGORIES = [
+        { id: "contract",       name: "Contract Law",        icon: "📜", color: "blue",    count: 3 },
+        { id: "companies",      name: "Companies Act",       icon: "🏢", color: "violet",  count: 3 },
+        { id: "constitutional", name: "Constitutional Law",  icon: "⚖️", color: "amber",   count: 2 },
+        { id: "family",         name: "Family Law",          icon: "👨‍👩‍👧", color: "rose",    count: 3 },
+        { id: "labour",         name: "Labour & Employment", icon: "🛠️", color: "emerald", count: 2 },
+        { id: "dpdp",           name: "Data Privacy (DPDP)", icon: "🔒", color: "cyan",    count: 2 },
+        { id: "ipr",            name: "Intellectual Property",icon: "💡", color: "orange",  count: 2 },
+        { id: "criminal",       name: "Criminal Law",        icon: "🔨", color: "red",     count: 2 },
+        { id: "arbitration",    name: "Arbitration",         icon: "🤝", color: "indigo",  count: 2 },
+        { id: "tax",            name: "Tax & GST",           icon: "📊", color: "teal",    count: 2 },
+        { id: "property",       name: "Property Law",        icon: "🏠", color: "lime",    count: 2 },
+        { id: "cyber",          name: "Cyber Law",           icon: "🌐", color: "sky",     count: 2 },
+      ];
+
+      const RESEARCH_DATA = [
+        // Contract Law
+        { id: "contract-sec27", category: "contract", act: "Indian Contract Act, 1872", title: "Section 27 — Agreement in Restraint of Trade", quote: "\"Every agreement by which any one is restrained from exercising a lawful profession, trade or business of any kind, is to that extent void.\"", takeaway: "Post-termination non-compete clauses cannot be enforced against employees or founders in India, regardless of geographic scope or duration.", precedent: "Percept D'Mark (India) v. Zaheer Khan, (2006) 4 SCC 227", chapter: "Chapter II: Voidable Contracts & Void Agreements" },
+        { id: "contract-sec73", category: "contract", act: "Indian Contract Act, 1872", title: "Section 73 — Compensation for Breach", quote: "\"When a contract has been broken, the party who suffers by such breach is entitled to receive compensation for any loss caused to him thereby.\"", takeaway: "Damages must be proximate and foreseeable. Remote or speculative losses are not recoverable under Indian contract law.", precedent: "Hadley v. Baxendale principle adopted in ONGC v. Saw Pipes Ltd., (2003) 5 SCC 705", chapter: "Chapter VI: Consequences of Breach" },
+        { id: "contract-sec10", category: "contract", act: "Indian Contract Act, 1872", title: "Section 10 — What Agreements Are Contracts", quote: "\"All agreements are contracts if they are made by the free consent of parties competent to contract, for a lawful consideration and with a lawful object.\"", takeaway: "Five essential elements: offer & acceptance, free consent, competent parties, lawful consideration, and lawful object.", precedent: "Mohori Bibee v. Dharmodas Ghose, (1903) 30 IA 114", chapter: "Chapter I: Communication, Acceptance & Revocation" },
+
+        // Companies Act
+        { id: "companies-sec180", category: "companies", act: "Companies Act, 2013", title: "Section 180(1)(c) — Board Borrowing Powers", quote: "\"The Board shall not borrow money exceeding aggregate of paid-up share capital, free reserves and securities premium without a Special Resolution.\"", takeaway: "Venture debt, bank facilities, and convertible notes exceeding capital buffers must be approved by shareholders via special resolution.", precedent: "MCA General Circular No. 04/2014", chapter: "Chapter XII: Board Meetings & Powers" },
+        { id: "companies-sec149", category: "companies", act: "Companies Act, 2013", title: "Section 149 — Independent Directors", quote: "\"Every listed company shall have at least one-third of the total number of directors as independent directors.\"", takeaway: "Independent directors provide governance oversight. Cannot hold office beyond two consecutive terms of five years each.", precedent: "SEBI (LODR) Regulations, 2015 — Regulation 17", chapter: "Chapter XI: Appointment & Qualification of Directors" },
+        { id: "companies-sec166", category: "companies", act: "Companies Act, 2013", title: "Section 166 — Duties of Directors", quote: "\"A director shall act in good faith in order to promote the objects of the company for the benefit of its members as a whole.\"", takeaway: "Directors owe fiduciary duty, must avoid conflicts of interest, and shall not achieve undue gain at company expense.", precedent: "Re Smith & Fawcett Ltd [1942] Ch 304", chapter: "Chapter XI: Duties of Directors" },
+
+        // Constitutional Law
+        { id: "const-art19", category: "constitutional", act: "Constitution of India", title: "Article 19 — Freedom of Speech & Expression", quote: "\"All citizens shall have the right to freedom of speech and expression, and to practise any profession or carry on any occupation, trade or business.\"", takeaway: "Fundamental right subject to reasonable restrictions under Art 19(2)-(6) — public order, morality, sovereignty, contempt of court.", precedent: "Shreya Singhal v. Union of India, (2015) 5 SCC 1 — struck down Section 66A IT Act", chapter: "Part III: Fundamental Rights" },
+        { id: "const-art21", category: "constitutional", act: "Constitution of India", title: "Article 21 — Right to Life & Personal Liberty", quote: "\"No person shall be deprived of his life or personal liberty except according to procedure established by law.\"", takeaway: "Expansive interpretation includes right to privacy, livelihood, clean environment, education, health, and dignity.", precedent: "K.S. Puttaswamy v. Union of India, (2017) 10 SCC 1 — Right to Privacy", chapter: "Part III: Fundamental Rights" },
+
+        // Family Law
+        { id: "family-hma13", category: "family", act: "Hindu Marriage Act, 1955", title: "Section 13 — Grounds for Divorce", quote: "\"Any marriage may be dissolved by a decree of divorce on the petition presented by either the husband or the wife on specified grounds.\"", takeaway: "Grounds include adultery, cruelty, desertion for 2+ years, conversion, unsoundness of mind, and incurable disease. Mutual consent under Section 13B.", precedent: "Naveen Kohli v. Neelu Kohli, (2006) 4 SCC 558", chapter: "Chapter IV: Restitution & Judicial Separation" },
+        { id: "family-hsa", category: "family", act: "Hindu Succession Act, 1956", title: "Section 6 — Devolution of Interest in Coparcenary Property", quote: "\"The daughter of a coparcener shall by birth become a coparcener in her own right in the same manner as the son.\"", takeaway: "After 2005 Amendment, daughters have equal coparcenary rights by birth, including right to claim partition.", precedent: "Vineeta Sharma v. Rakesh Sharma, (2020) 9 SCC 1", chapter: "Chapter II: Intestate Succession" },
+        { id: "family-dva", category: "family", act: "Protection of Women from Domestic Violence Act, 2005", title: "Section 12 — Application for Protection Orders", quote: "\"An aggrieved person or a Protection Officer may present an application to the Magistrate seeking relief under this Act.\"", takeaway: "Provides civil remedies including protection orders, residence orders, monetary relief, and custody orders. Criminal complaint is separate.", precedent: "Hiral P. Harsora v. Kusum Narottamdas, (2016) 10 SCC 165", chapter: "Chapter IV: Procedure" },
+
+        // Labour & Employment
+        { id: "labour-ida25f", category: "labour", act: "Industrial Disputes Act, 1947", title: "Section 25F — Conditions for Retrenchment", quote: "\"No workman employed for not less than one year of continuous service shall be retrenched until one month's notice or wages in lieu, and retrenchment compensation at 15 days' average pay per year.\"", takeaway: "Retrenchment requires LIFO principle (last in, first out), written notice, and statutory compensation. Non-compliance makes termination void.", precedent: "Workmen of Hindustan Steel Ltd v. Hindustan Steel Ltd, AIR 1985 SC 251", chapter: "Chapter VA: Lay-Off, Retrenchment & Closure" },
+        { id: "labour-gratuity", category: "labour", act: "Payment of Gratuity Act, 1972", title: "Section 4 — Payment of Gratuity", quote: "\"Gratuity shall be payable to an employee on the termination of his employment after he has rendered continuous service for not less than five years.\"", takeaway: "Calculation: 15 days' wages × years of service (÷26). Maximum ₹25 lakhs. Five-year requirement waived on death or disability.", precedent: "Surendra Kumar Verma v. Central Govt., (1980) 4 SCC 443", chapter: "Chapter II: Payment of Gratuity" },
+
+        // DPDP
+        { id: "dpdp-sec6", category: "dpdp", act: "DPDP Act, 2023", title: "Section 6 — Consent for Processing Personal Data", quote: "\"Personal data may be processed by a Data Fiduciary only for a lawful purpose for which the Data Principal has given consent.\"", takeaway: "Consent must be free, specific, informed, unconditional, and unambiguous. Consent notice must be clear and in plain language.", precedent: "Newly enacted — Rules pending notification by Central Government", chapter: "Chapter II: Obligations of Data Fiduciary" },
+        { id: "dpdp-sec8", category: "dpdp", act: "DPDP Act, 2023", title: "Section 8 — General Obligations of Data Fiduciary", quote: "\"A Data Fiduciary shall implement reasonable security safeguards to prevent personal data breach and intimate the Board and affected Data Principals in event of breach.\"", takeaway: "Mandatory breach notification, purpose limitation, data minimization, and accuracy obligations. Significant Data Fiduciaries face heightened duties.", precedent: "Analogous to GDPR Art 5 & 32 principles", chapter: "Chapter II: Obligations of Data Fiduciary" },
+
+        // IPR
+        { id: "ipr-patent", category: "ipr", act: "Patents Act, 1970", title: "Section 3 — Inventions Not Patentable", quote: "\"The following shall not be inventions within the meaning of this Act — an invention which is frivolous or contrary to well established natural laws...\"", takeaway: "Software per se, mathematical methods, business methods, and algorithms are not patentable in India. Technical application of software may qualify.", precedent: "Ferid Allani v. Union of India, IPAB 2013 — software patent with technical effect", chapter: "Chapter II: Inventions Not Patentable" },
+        { id: "ipr-copyright", category: "ipr", act: "Copyright Act, 1957", title: "Section 17 — First Owner of Copyright", quote: "\"The author of a work shall be the first owner of the copyright therein. In case of employment, the employer shall be the first owner.\"", takeaway: "Work made in course of employment belongs to employer. Freelancer/contractor retains copyright unless assigned in writing.", precedent: "IPRS v. Eastern Indian Motion Pictures, (1977) 2 SCC 820", chapter: "Chapter IV: Ownership of Copyright" },
+
+        // Criminal Law
+        { id: "criminal-bns103", category: "criminal", act: "Bharatiya Nyaya Sanhita, 2023", title: "Section 103 — Murder", quote: "\"Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.\"", takeaway: "Replaces IPC Section 302. BNS came into effect from 1st July 2024. Death penalty is rarest of rare exception.", precedent: "Bachan Singh v. State of Punjab, (1980) 2 SCC 684 — rarest of rare doctrine", chapter: "Chapter VI: Of Offences Affecting the Human Body" },
+        { id: "criminal-bns318", category: "criminal", act: "Bharatiya Nyaya Sanhita, 2023", title: "Section 318 — Cheating", quote: "\"Whoever, by deceiving any person, fraudulently or dishonestly induces the person so deceived to deliver any property, shall be punished with imprisonment up to 3 years and fine.\"", takeaway: "Replaces IPC Section 420. Requires dishonest inducement and delivery of property. Digital fraud now explicitly covered.", precedent: "Dr. Vimla v. Delhi Admin, AIR 1963 SC 1572", chapter: "Chapter XVII: Of Offences Against Property" },
+
+        // Arbitration
+        { id: "arb-sec7", category: "arbitration", act: "Arbitration & Conciliation Act, 1996", title: "Section 7 — Arbitration Agreement", quote: "\"An arbitration agreement shall be in writing. It may be in the form of an arbitration clause in a contract or in the form of a separate agreement.\"", takeaway: "Electronic/click-wrap agreements qualify as 'in writing'. Arbitration clause survives termination of main contract.", precedent: "Chloro Controls India v. Severn Trent Water, (2013) 1 SCC 641", chapter: "Part I: General Provisions" },
+        { id: "arb-sec34", category: "arbitration", act: "Arbitration & Conciliation Act, 1996", title: "Section 34 — Setting Aside Arbitral Award", quote: "\"An arbitral award may be set aside by the Court only if the party making the application furnishes proof that the composition of tribunal or procedure was not in accordance with the agreement.\"", takeaway: "Courts cannot re-examine merits. Limited grounds: incapacity, invalid agreement, beyond scope, public policy violation.", precedent: "ONGC v. Saw Pipes Ltd., (2003) 5 SCC 705", chapter: "Part I: Chapter VII — Recourse Against Award" },
+
+        // Tax & GST
+        { id: "tax-gst12", category: "tax", act: "CGST Act, 2017", title: "Section 12 — Time of Supply of Goods", quote: "\"The time of supply of goods shall be the earlier of the date of issue of invoice or the last date on which he is required to issue the invoice.\"", takeaway: "Determines when GST liability arises. Invoice must be issued before or at the time of removal/delivery of goods.", precedent: "CBIC Circular No. 65/39/2018-DOR", chapter: "Chapter IV: Time and Value of Supply" },
+        { id: "tax-it80c", category: "tax", act: "Income Tax Act, 1961", title: "Section 80C — Deductions from Gross Income", quote: "\"In computing the total income, a deduction of up to ₹1.5 lakhs shall be allowed in respect of specified investments and payments.\"", takeaway: "Covers PPF, ELSS, NSC, 5-year FD, life insurance premium, tuition fees, home loan principal repayment. Most common tax-saving section.", precedent: "CIT v. Rajendra Prasad Moody, (1978) 115 ITR 519 (SC)", chapter: "Chapter VIA: Deductions" },
+
+        // Property Law
+        { id: "property-tpa54", category: "property", act: "Transfer of Property Act, 1882", title: "Section 54 — Sale of Immovable Property", quote: "\"Sale is a transfer of ownership in exchange for a price paid or promised. For tangible immovable property of ₹100+ value, transfer must be by registered instrument.\"", takeaway: "Unregistered sale deed for immovable property above ₹100 is void. Registration under Section 17 of Registration Act is mandatory.", precedent: "Suraj Lamp & Industries v. State of Haryana, (2012) 1 SCC 656 — GPA sales are illegal", chapter: "Chapter IV: Of Sales" },
+        { id: "property-rera", category: "property", act: "RERA Act, 2016", title: "Section 3 — Registration of Real Estate Projects", quote: "\"No promoter shall advertise, market, book, sell or offer for sale any plot, apartment or building without registering the real estate project with RERA.\"", takeaway: "All real estate projects above 500 sq. meters or 8 units must be RERA registered. Severe penalties for non-compliance.", precedent: "Pioneer Urban Land v. Union of India, (2019) 8 SCC 416", chapter: "Chapter II: Registration of Real Estate Projects" },
+
+        // Cyber Law
+        { id: "cyber-it66", category: "cyber", act: "Information Technology Act, 2000", title: "Section 66 — Computer Related Offences", quote: "\"If any person, dishonestly or fraudulently, does any act referred to in section 43, he shall be punishable with imprisonment up to three years or fine up to five lakh rupees or both.\"", takeaway: "Covers hacking, data theft, system damage, denial of service attacks. Section 66A was struck down as unconstitutional.", precedent: "Shreya Singhal v. Union of India, (2015) 5 SCC 1", chapter: "Chapter XI: Offences" },
+        { id: "cyber-it72a", category: "cyber", act: "Information Technology Act, 2000", title: "Section 72A — Breach of Confidentiality & Privacy", quote: "\"Any person who has secured access to personal information and discloses it without consent, causing wrongful loss, shall be punished with imprisonment up to 3 years and fine up to ₹5 lakhs.\"", takeaway: "Applies to intermediaries, service providers, and individuals. Intent to cause wrongful loss/gain is required.", precedent: "Applicable alongside DPDP Act, 2023 for data breach liability", chapter: "Chapter XII: Intermediaries" },
+      ];
+
+      // ======================================================================
+      // DOM References
+      // ======================================================================
+      const categoriesGrid = document.getElementById("categories-grid");
       const resultsContainer = document.getElementById("research-results-container");
       const savedContainer = document.getElementById("saved-research-list");
+      const savedDropzone = document.getElementById("saved-research-dropzone");
       const savedCountBadge = document.getElementById("saved-count-badge");
       const resultsCount = document.getElementById("results-count");
+      const activeCategoryName = document.getElementById("active-category-name");
+      const searchForm = document.getElementById("research-search-form");
+      const searchInput = document.getElementById("research-search-input");
+      const btnShowAll = document.getElementById("btn-show-all");
       const sidebar = document.getElementById("app-sidebar");
       const toggleBtn = document.getElementById("sidebar-toggle");
       const backdrop = document.getElementById("sidebar-backdrop");
 
       // Sidebar mobile drawer
       if (toggleBtn && sidebar && backdrop) {
-        toggleBtn.addEventListener("click", () => {
-          sidebar.classList.toggle("-translate-x-full");
-          backdrop.classList.toggle("hidden");
-        });
-        backdrop.addEventListener("click", () => {
-          sidebar.classList.add("-translate-x-full");
-          backdrop.classList.add("hidden");
+        toggleBtn.addEventListener("click", () => { sidebar.classList.toggle("-translate-x-full"); backdrop.classList.toggle("hidden"); });
+        backdrop.addEventListener("click", () => { sidebar.classList.add("-translate-x-full"); backdrop.classList.add("hidden"); });
+      }
+
+      let activeCategory = "all";
+
+      // ======================================================================
+      // 1. Render Category Grid
+      // ======================================================================
+      function renderCategories() {
+        const colorMap = {
+          blue: "from-blue-600/20 to-blue-900/10 border-blue-500/20 text-blue-400",
+          violet: "from-violet-600/20 to-violet-900/10 border-violet-500/20 text-violet-400",
+          amber: "from-amber-600/20 to-amber-900/10 border-amber-500/20 text-amber-400",
+          rose: "from-rose-600/20 to-rose-900/10 border-rose-500/20 text-rose-400",
+          emerald: "from-emerald-600/20 to-emerald-900/10 border-emerald-500/20 text-emerald-400",
+          cyan: "from-cyan-600/20 to-cyan-900/10 border-cyan-500/20 text-cyan-400",
+          orange: "from-orange-600/20 to-orange-900/10 border-orange-500/20 text-orange-400",
+          red: "from-red-600/20 to-red-900/10 border-red-500/20 text-red-400",
+          indigo: "from-indigo-600/20 to-indigo-900/10 border-indigo-500/20 text-indigo-400",
+          teal: "from-teal-600/20 to-teal-900/10 border-teal-500/20 text-teal-400",
+          lime: "from-lime-600/20 to-lime-900/10 border-lime-500/20 text-lime-400",
+          sky: "from-sky-600/20 to-sky-900/10 border-sky-500/20 text-sky-400",
+        };
+
+        categoriesGrid.innerHTML = CATEGORIES.map(cat => {
+          const colors = colorMap[cat.color] || colorMap.blue;
+          return `
+            <button 
+              class="category-card p-4 rounded-2xl bg-gradient-to-br ${colors} border cursor-pointer text-left space-y-2 hover:shadow-lg transition-all"
+              data-category="${cat.id}"
+            >
+              <div class="text-2xl">${cat.icon}</div>
+              <div>
+                <p class="text-xs font-bold text-white leading-tight">${cat.name}</p>
+                <p class="text-[10px] text-slate-500 mt-0.5">${cat.count} sections</p>
+              </div>
+            </button>
+          `;
+        }).join("");
+
+        // Click handlers
+        categoriesGrid.querySelectorAll(".category-card").forEach(card => {
+          card.addEventListener("click", () => {
+            activeCategory = card.getAttribute("data-category");
+            // Visual active state
+            categoriesGrid.querySelectorAll(".category-card").forEach(c => c.classList.remove("active"));
+            card.classList.add("active");
+            renderResearchCards();
+          });
         });
       }
 
-      // 1. Render Saved Research from LocalStorage (HTML5 LocalStorage API)
+      // ======================================================================
+      // 2. Render Research Cards (Filterable & Draggable)
+      // ======================================================================
+      function renderResearchCards(searchTerm = "") {
+        let filtered = RESEARCH_DATA;
+
+        if (activeCategory !== "all") {
+          filtered = filtered.filter(r => r.category === activeCategory);
+          const cat = CATEGORIES.find(c => c.id === activeCategory);
+          activeCategoryName.textContent = cat ? cat.name : "All Categories";
+        } else {
+          activeCategoryName.textContent = "All Categories";
+        }
+
+        if (searchTerm) {
+          const term = searchTerm.toLowerCase();
+          filtered = filtered.filter(r => 
+            r.title.toLowerCase().includes(term) ||
+            r.act.toLowerCase().includes(term) ||
+            r.takeaway.toLowerCase().includes(term) ||
+            r.quote.toLowerCase().includes(term) ||
+            (r.chapter && r.chapter.toLowerCase().includes(term))
+          );
+        }
+
+        resultsCount.textContent = filtered.length;
+
+        if (filtered.length === 0) {
+          resultsContainer.innerHTML = `
+            <div class="p-8 rounded-2xl bg-[#111827] border border-[#1E293B] text-center space-y-2">
+              <p class="text-sm text-slate-400">No research sections found</p>
+              <p class="text-xs text-slate-500">Try a different category or search term</p>
+            </div>
+          `;
+          return;
+        }
+
+        resultsContainer.innerHTML = filtered.map(r => `
+          <div 
+            class="research-card p-5 rounded-2xl bg-[#111827] border border-[#1E293B] hover:border-slate-700 transition-all space-y-3"
+            draggable="true"
+            data-id="${r.id}"
+            data-title="${escapeAttr(r.title)}"
+            data-act="${escapeAttr(r.act)}"
+            data-summary="${escapeAttr(r.takeaway)}"
+          >
+            <!-- Header with Save & Copy -->
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider block">${escapeHtml(r.act)}</span>
+                <h4 class="text-sm sm:text-base font-bold text-white mt-0.5">${escapeHtml(r.title)}</h4>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button class="btn-save-research px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-blue-600/20 hover:text-blue-400 border border-slate-700 hover:border-blue-500/30 text-xs font-semibold text-slate-300 transition-all flex items-center gap-1.5"
+                  data-id="${r.id}" data-title="${escapeAttr(r.title)}" data-act="${escapeAttr(r.act)}" data-summary="${escapeAttr(r.takeaway)}">
+                  <span>⭐</span> Save
+                </button>
+                <button class="btn-copy-citation px-2.5 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition-colors"
+                  data-text="${escapeAttr(r.title + ': ' + r.quote)}">
+                  📋 Copy
+                </button>
+              </div>
+            </div>
+
+            <!-- Bare Act Quote -->
+            <div class="p-3.5 rounded-xl bg-[#070B14] border border-slate-800 text-xs text-slate-300 font-mono leading-relaxed italic">
+              ${escapeHtml(r.quote)}
+            </div>
+
+            <!-- Takeaway & Precedent -->
+            <div class="space-y-1 text-xs text-slate-300 leading-relaxed">
+              <p><strong class="text-white">Key Takeaway:</strong> ${escapeHtml(r.takeaway)}</p>
+              ${r.precedent ? `<p class="text-[11px] text-slate-500"><strong>Landmark:</strong> <em>${escapeHtml(r.precedent)}</em></p>` : ''}
+            </div>
+
+            <!-- Footer -->
+            <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
+              <span class="text-slate-500 text-[11px]">${escapeHtml(r.chapter || '')}</span>
+              <a href="assistant.html?q=${encodeURIComponent('Explain ' + r.title)}" class="text-blue-400 font-semibold hover:underline text-[11px]">
+                Ask Assistant →
+              </a>
+            </div>
+          </div>
+        `).join("");
+
+        // Wire Save buttons
+        wireCardButtons();
+        // Wire Drag events
+        wireDragEvents();
+      }
+
+      // ======================================================================
+      // 3. Save & Copy Button Handlers
+      // ======================================================================
+      function wireCardButtons() {
+        document.querySelectorAll(".btn-save-research").forEach(btn => {
+          btn.addEventListener("click", () => {
+            saveResearchItem({
+              id: btn.getAttribute("data-id"),
+              title: btn.getAttribute("data-title"),
+              act: btn.getAttribute("data-act"),
+              summary: btn.getAttribute("data-summary"),
+            });
+            // Visual feedback
+            btn.innerHTML = '<span>✓</span> Saved';
+            btn.classList.add("text-emerald-400", "border-emerald-500/30");
+            setTimeout(() => {
+              btn.innerHTML = '<span>⭐</span> Save';
+              btn.classList.remove("text-emerald-400", "border-emerald-500/30");
+            }, 1500);
+          });
+        });
+
+        document.querySelectorAll(".btn-copy-citation").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const text = btn.getAttribute("data-text");
+            if (typeof copyToClipboard === "function") {
+              copyToClipboard(text, btn);
+            } else {
+              navigator.clipboard.writeText(text);
+            }
+          });
+        });
+      }
+
+      // ======================================================================
+      // 4. Drag & Drop API — Drag research cards into Saved Research
+      // ======================================================================
+      function wireDragEvents() {
+        document.querySelectorAll(".research-card[draggable]").forEach(card => {
+          card.addEventListener("dragstart", (e) => {
+            card.classList.add("dragging");
+            e.dataTransfer.setData("application/json", JSON.stringify({
+              id: card.getAttribute("data-id"),
+              title: card.getAttribute("data-title"),
+              act: card.getAttribute("data-act"),
+              summary: card.getAttribute("data-summary"),
+            }));
+            e.dataTransfer.effectAllowed = "copy";
+          });
+
+          card.addEventListener("dragend", () => {
+            card.classList.remove("dragging");
+          });
+        });
+      }
+
+      // Dropzone handlers
+      if (savedDropzone) {
+        ["dragenter", "dragover"].forEach(evt => {
+          savedDropzone.addEventListener(evt, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            savedDropzone.classList.add("drag-over");
+          });
+        });
+
+        ["dragleave", "drop"].forEach(evt => {
+          savedDropzone.addEventListener(evt, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            savedDropzone.classList.remove("drag-over");
+          });
+        });
+
+        savedDropzone.addEventListener("drop", (e) => {
+          try {
+            const data = JSON.parse(e.dataTransfer.getData("application/json"));
+            if (data && data.id) {
+              saveResearchItem(data);
+              if (typeof showToast === "function") {
+                showToast(`Saved: ${data.title}`, "success");
+              }
+            }
+          } catch (err) {
+            console.error("Drop parse error:", err);
+          }
+        });
+      }
+
+      // ======================================================================
+      // 5. Saved Research — LocalStorage CRUD
+      // ======================================================================
+      function saveResearchItem(item) {
+        if (typeof StorageHelper !== "undefined" && StorageHelper.saveResearchItem) {
+          StorageHelper.saveResearchItem({
+            ...item,
+            date: new Date().toISOString().split("T")[0]
+          });
+        } else {
+          // Fallback direct localStorage
+          let list = JSON.parse(localStorage.getItem("lexora_saved_research") || "[]");
+          if (!list.find(r => r.id === item.id)) {
+            list.push({ ...item, date: new Date().toISOString().split("T")[0] });
+            localStorage.setItem("lexora_saved_research", JSON.stringify(list));
+          }
+        }
+        renderSavedResearch();
+      }
+
+      function removeSavedItem(id) {
+        if (typeof StorageHelper !== "undefined" && StorageHelper.removeSavedResearch) {
+          StorageHelper.removeSavedResearch(id);
+        } else {
+          let list = JSON.parse(localStorage.getItem("lexora_saved_research") || "[]");
+          list = list.filter(r => r.id !== id);
+          localStorage.setItem("lexora_saved_research", JSON.stringify(list));
+        }
+        renderSavedResearch();
+      }
+
+      function getSavedList() {
+        if (typeof StorageHelper !== "undefined" && StorageHelper.getSavedResearch) {
+          return StorageHelper.getSavedResearch();
+        }
+        return JSON.parse(localStorage.getItem("lexora_saved_research") || "[]");
+      }
+
       function renderSavedResearch() {
-        const list = StorageHelper.getSavedResearch();
+        const list = getSavedList();
         savedCountBadge.textContent = list.length;
 
         if (list.length === 0) {
           savedContainer.innerHTML = `
-            <div class="p-4 rounded-xl bg-[#0D1321] border border-slate-800 text-center text-slate-500">
-              No saved research. Click "Save" on any statutory card to bookmark it.
+            <div class="p-6 rounded-xl bg-[#0D1321] border border-dashed border-slate-700 text-center space-y-2">
+              <div class="text-2xl">📌</div>
+              <p class="text-xs text-slate-400">No saved research yet</p>
+              <p class="text-[11px] text-slate-500">Drag a card here or click Save</p>
             </div>
           `;
           return;
         }
 
         savedContainer.innerHTML = list.map(item => `
-          <div class="p-3.5 rounded-xl bg-[#0D1321] border border-slate-800 hover:border-slate-700 space-y-1.5 transition-colors">
+          <div class="p-3.5 rounded-xl bg-[#0D1321] border border-slate-800 hover:border-blue-500/30 space-y-1.5 transition-colors">
             <div class="flex items-start justify-between gap-2">
-              <span class="font-bold text-white block text-xs truncate">${item.title}</span>
-              <button class="btn-remove-saved text-slate-500 hover:text-rose-400 text-xs p-0.5" data-id="${item.id}" title="Remove from LocalStorage">
+              <span class="font-bold text-white text-xs leading-snug">${escapeHtml(item.title)}</span>
+              <button class="btn-remove-saved text-slate-500 hover:text-rose-400 text-xs p-0.5 shrink-0 transition-colors" data-id="${item.id}" title="Remove">
                 ✕
               </button>
             </div>
-            <p class="text-[11px] text-slate-400 line-clamp-2">${item.summary}</p>
-            <div class="flex items-center justify-between text-[10px] text-blue-400 font-semibold pt-1">
-              <span>${item.act}</span>
-              <a href="assistant.html?q=${encodeURIComponent(item.title)}" class="hover:underline">Ask Assistant →</a>
+            <p class="text-[11px] text-slate-400 line-clamp-2">${escapeHtml(item.summary || '')}</p>
+            <div class="flex items-center justify-between text-[10px] pt-1">
+              <span class="text-blue-400 font-semibold">${escapeHtml(item.act || '')}</span>
+              <a href="assistant.html?q=${encodeURIComponent(item.title || '')}" class="text-blue-400 hover:underline font-semibold">Ask Assistant →</a>
             </div>
           </div>
         `).join("");
 
         // Wire remove buttons
-        document.querySelectorAll(".btn-remove-saved").forEach(btn => {
+        savedContainer.querySelectorAll(".btn-remove-saved").forEach(btn => {
           btn.addEventListener("click", () => {
-            const id = btn.getAttribute("data-id");
-            StorageHelper.removeSavedResearch(id);
-            renderSavedResearch();
+            removeSavedItem(btn.getAttribute("data-id"));
           });
         });
       }
 
-      // 2. Wire "Save to Research" Buttons
-      document.querySelectorAll(".btn-save-research").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const item = {
-            id: btn.getAttribute("data-id"),
-            title: btn.getAttribute("data-title"),
-            act: btn.getAttribute("data-act"),
-            summary: btn.getAttribute("data-summary"),
-            date: new Date().toISOString().split("T")[0]
-          };
-          StorageHelper.saveResearchItem(item);
-          renderSavedResearch();
-        });
-      });
-
-      // 3. Wire "Copy Citation" Buttons (HTML5 Clipboard API)
-      document.querySelectorAll(".btn-copy-citation").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const text = btn.getAttribute("data-text");
-          copyToClipboard(text, btn);
-        });
-      });
-
-      // 4. Act Filter Buttons
-      filterBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-          filterBtns.forEach(b => {
-            b.className = "act-filter-btn px-3 py-1.5 rounded-xl bg-[#0D1321] hover:bg-slate-800 text-slate-300 text-xs font-medium border border-[#1E293B] transition-colors";
-          });
-          btn.className = "act-filter-btn px-3 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-bold border border-blue-500 shadow-sm";
-
-          const actFilter = btn.getAttribute("data-act");
-          const cards = resultsContainer.querySelectorAll("[data-act-type]");
-          let visibleCount = 0;
-
-          cards.forEach(card => {
-            const type = card.getAttribute("data-act-type");
-            if (actFilter === "all" || type === actFilter) {
-              card.classList.remove("hidden");
-              visibleCount++;
-            } else {
-              card.classList.add("hidden");
-            }
-          });
-          resultsCount.textContent = visibleCount;
-        });
-      });
-
-      // 5. Search Filtering
+      // ======================================================================
+      // 6. Search Handler
+      // ======================================================================
       searchForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        const term = searchInput.value.trim().toLowerCase();
+        const term = searchInput.value.trim();
         if (!term) return;
-
-        StorageHelper.addRecentSearch(term);
-        const cards = resultsContainer.querySelectorAll("[data-act-type]");
-        let visibleCount = 0;
-
-        cards.forEach(card => {
-          const text = card.innerText.toLowerCase();
-          if (text.includes(term)) {
-            card.classList.remove("hidden");
-            visibleCount++;
-          } else {
-            card.classList.add("hidden");
-          }
-        });
-
-        resultsCount.textContent = visibleCount;
-        showToast(`Found ${visibleCount} statutory results for "${term}"`, "info");
+        // Reset category selection
+        activeCategory = "all";
+        categoriesGrid.querySelectorAll(".category-card").forEach(c => c.classList.remove("active"));
+        renderResearchCards(term);
+        if (typeof showToast === "function") {
+          showToast(`Searching for "${term}"...`, "info");
+        }
       });
 
+      // Show All button
+      btnShowAll.addEventListener("click", () => {
+        activeCategory = "all";
+        searchInput.value = "";
+        categoriesGrid.querySelectorAll(".category-card").forEach(c => c.classList.remove("active"));
+        renderResearchCards();
+      });
+
+      // ======================================================================
+      // 7. Helpers
+      // ======================================================================
+      function escapeHtml(str) {
+        if (!str) return "";
+        return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      function escapeAttr(str) {
+        if (!str) return "";
+        return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      }
+
+      // ======================================================================
+      // Init
+      // ======================================================================
+      renderCategories();
+      renderResearchCards();
       renderSavedResearch();
     });
   </script>

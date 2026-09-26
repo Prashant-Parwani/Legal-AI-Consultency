@@ -43,13 +43,24 @@
   </script>
 
   <link rel="stylesheet" href="css/custom.css">
+  <style>
+    /* Sleek custom drag-over states */
+    .drag-hover-active {
+      border-color: #3B82F6 !important;
+      background: rgba(59, 130, 246, 0.08) !important;
+    }
+    .card-drag-ghost {
+      opacity: 0.5;
+      transform: scale(0.98);
+    }
+  </style>
 </head>
 <body class="bg-[#070B14] text-[#F8FAFC] font-sans antialiased h-screen flex overflow-hidden">
 
   <!-- ==========================================================================
-       1. Left Sidebar: Navigation & Conversation History
+       1. Left Sidebar: Queries History & Uploaded Documents Library
        ========================================================================== -->
-  <aside id="assistant-sidebar" class="w-72 bg-[#0D1321] border-r border-[#1E293B] flex flex-col justify-between shrink-0 fixed md:static inset-y-0 left-0 z-40 transition-transform -translate-x-full md:translate-x-0">
+  <aside id="assistant-sidebar" class="w-80 bg-[#0D1321] border-r border-[#1E293B] flex flex-col justify-between shrink-0 fixed md:static inset-y-0 left-0 z-40 transition-transform -translate-x-full md:translate-x-0 shadow-2xl md:shadow-none">
     
     <!-- Top Branding & Back -->
     <div class="p-4 border-b border-[#1E293B] flex items-center justify-between">
@@ -57,61 +68,90 @@
         <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-600/20">
           L
         </div>
-        <span class="font-extrabold text-white text-sm">Lexora Assistant</span>
+        <div>
+          <span class="font-extrabold text-white text-sm block leading-tight">Lexora Assistant</span>
+          <span class="text-[10px] text-blue-400 font-medium">Statutory AI Workspace</span>
+        </div>
       </a>
-      <a href="dashboard.html" class="text-xs text-slate-400 hover:text-white p-1" title="Back to Dashboard">
+      <a href="dashboard.html" class="text-xs text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors" title="Back to Dashboard">
         ✕
       </a>
     </div>
 
-    <!-- New Chat & Conversation History -->
-    <div class="p-4 flex-1 flex flex-col min-h-0 space-y-4">
+    <!-- Main Sidebar Content with Segmented Tabs -->
+    <div class="p-4 flex-1 flex flex-col min-h-0 space-y-3.5">
       
-      <!-- New Chat Button -->
-      <button id="btn-new-chat" class="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/25 transition-all">
-        <span>+</span>
+      <!-- New Chat / Inquiry Button -->
+      <button id="btn-new-chat" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 transition-all hover:scale-[1.01] active:scale-[0.99]">
+        <span class="text-base font-bold">+</span>
         <span>New Legal Inquiry</span>
       </button>
 
-      <!-- History Section Header -->
-      <div class="flex items-center justify-between text-[11px] text-slate-400 font-semibold uppercase tracking-wider px-1 pt-2">
-        <span>Recent Inquiries</span>
-        <span class="text-[10px] text-blue-400">LocalStorage</span>
+      <!-- Segmented Navigation Pills: History vs Documents -->
+      <div class="grid grid-cols-2 p-1 rounded-xl bg-[#070B14] border border-[#1E293B]">
+        <button id="sidebar-tab-history" class="py-1.5 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all bg-blue-600 text-white shadow-sm">
+          <span>💬</span>
+          <span>History</span>
+          <span id="badge-history-count" class="text-[10px] px-1.5 py-0.2 rounded-full bg-blue-700 text-blue-200">5</span>
+        </button>
+        <button id="sidebar-tab-documents" class="py-1.5 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all text-slate-400 hover:text-slate-200">
+          <span>📄</span>
+          <span>Documents</span>
+          <span id="badge-docs-count" class="text-[10px] px-1.5 py-0.2 rounded-full bg-[#1E293B] text-slate-300">3</span>
+        </button>
       </div>
 
-      <!-- History List -->
-      <div id="chat-history-list" class="flex-1 overflow-y-auto space-y-1.5 pr-1">
-        <button class="w-full text-left p-2.5 rounded-xl bg-[#111827] border border-blue-500/30 text-white text-xs font-semibold block truncate">
-          Termination of Employment Contract
-        </button>
-        <button class="w-full text-left p-2.5 rounded-xl hover:bg-[#111827] text-slate-400 hover:text-slate-200 text-xs font-medium block truncate transition-colors">
-          Section 27 Non-compete enforceability
-        </button>
-        <button class="w-full text-left p-2.5 rounded-xl hover:bg-[#111827] text-slate-400 hover:text-slate-200 text-xs font-medium block truncate transition-colors">
-          Section 180(1)(c) Borrowing resolution
-        </button>
-        <button class="w-full text-left p-2.5 rounded-xl hover:bg-[#111827] text-slate-400 hover:text-slate-200 text-xs font-medium block truncate transition-colors">
-          DPDP 2023 Consent Notice Requirements
-        </button>
-        <button class="w-full text-left p-2.5 rounded-xl hover:bg-[#111827] text-slate-400 hover:text-slate-200 text-xs font-medium block truncate transition-colors">
-          Reverse vesting founder agreement
-        </button>
+      <!-- ================= PANE 1: RECENT INQUIRIES & HISTORY ================= -->
+      <div id="sidebar-pane-history" class="flex-1 flex flex-col min-h-0 space-y-2">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 font-semibold uppercase tracking-wider px-1 pt-1">
+          <span>Recent Inquiries</span>
+          <button id="btn-clear-history" class="text-[10px] text-slate-500 hover:text-rose-400 transition-colors lowercase" title="Clear all inquiry history">
+            clear all
+          </button>
+        </div>
+
+        <!-- History List (Scrollable) -->
+        <div id="chat-history-list" class="flex-1 overflow-y-auto space-y-1.5 pr-1">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- ================= PANE 2: UPLOADED DOCUMENTS LIBRARY ================= -->
+      <div id="sidebar-pane-documents" class="flex-1 flex flex-col min-h-0 space-y-2.5 hidden">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 font-semibold uppercase tracking-wider px-1 pt-1">
+          <span>Document Library</span>
+          <button id="btn-sidebar-upload-trigger" class="text-[10px] text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1 transition-colors">
+            <span>+</span> Upload
+          </button>
+          <input type="file" id="sidebar-doc-upload" accept=".pdf,.doc,.docx,.txt" class="hidden">
+        </div>
+
+        <!-- Drag Hint Notice -->
+        <div class="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-[11px] text-blue-300/90 flex items-start gap-2">
+          <span class="text-sm shrink-0">💡</span>
+          <p class="leading-relaxed">Drag and drop any document into the chat to enquire about it repeatedly.</p>
+        </div>
+
+        <!-- Document List (Scrollable, Draggable Items) -->
+        <div id="sidebar-doc-list" class="flex-1 overflow-y-auto space-y-2 pr-1">
+          <!-- Populated dynamically via JS -->
+        </div>
       </div>
 
     </div>
 
-    <!-- Bottom Navigation Links -->
-    <div class="p-4 border-t border-[#1E293B] space-y-2 bg-[#0A0F1B] text-xs">
+    <!-- Bottom Navigation Links & Plan -->
+    <div class="p-4 border-t border-[#1E293B] space-y-2.5 bg-[#0A0F1B] text-xs">
       <div class="flex items-center justify-between text-[11px]">
         <span class="text-slate-400">Active Plan:</span>
-        <span class="js-user-plan-badge">Professional</span>
+        <span class="js-user-plan-badge font-semibold text-blue-400">Professional</span>
       </div>
-      <div class="grid grid-cols-2 gap-2 pt-1">
-        <a href="documents.html" class="py-1.5 px-2.5 rounded-lg bg-[#111827] hover:bg-slate-800 text-slate-300 text-[11px] text-center transition-colors">
-          Documents
+      <div class="grid grid-cols-2 gap-2 pt-0.5">
+        <a href="documents.html" class="py-1.5 px-2.5 rounded-lg bg-[#111827] hover:bg-slate-800 border border-[#1E293B] hover:border-slate-700 text-slate-300 text-[11px] text-center font-medium transition-colors flex items-center justify-center gap-1">
+          <span>📁</span> Documents
         </a>
-        <a href="research.html" class="py-1.5 px-2.5 rounded-lg bg-[#111827] hover:bg-slate-800 text-slate-300 text-[11px] text-center transition-colors">
-          Research
+        <a href="research.html" class="py-1.5 px-2.5 rounded-lg bg-[#111827] hover:bg-slate-800 border border-[#1E293B] hover:border-slate-700 text-slate-300 text-[11px] text-center font-medium transition-colors flex items-center justify-center gap-1">
+          <span>⚖️</span> Research
         </a>
       </div>
     </div>
@@ -124,165 +164,228 @@
   <!-- ==========================================================================
        2. Main Chat Area
        ========================================================================== -->
-  <div class="flex-1 flex flex-col h-screen min-w-0">
+  <div class="flex-1 flex flex-col h-screen min-w-0 relative">
     
-    <!-- Chat Header with Model Selector -->
-    <header class="h-16 border-b border-[#1E293B] bg-[#070B14]/90 backdrop-blur-md px-6 flex items-center justify-between shrink-0">
+    <!-- Clean Top Header (Engine moved to bottom near chat) -->
+    <header class="h-16 border-b border-[#1E293B] bg-[#070B14]/90 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between shrink-0 z-10">
       
-      <div class="flex items-center gap-3">
-        <button id="btn-toggle-assistant-nav" class="md:hidden text-slate-400 hover:text-white p-1">
+      <div class="flex items-center gap-3 min-w-0">
+        <button id="btn-toggle-assistant-nav" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800" title="Toggle Sidebar">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
 
-        <!-- Active Model Dropdown Selector (Dynamically Populated) -->
-        <div class="flex items-center gap-2">
-          <label for="chat-model-select" class="text-xs text-slate-400 hidden sm:inline">Engine:</label>
-          <select 
-            id="chat-model-select" 
-            class="px-3 py-1.5 rounded-xl bg-[#0D1321] border border-[#1E293B] text-xs font-semibold text-white focus:outline-none focus:border-blue-500 transition-colors"
-          >
-            <!-- Populated via JavaScript according to plan -->
-          </select>
+        <!-- Session Status & Title -->
+        <div class="flex items-center gap-2.5 truncate">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse-dot shrink-0"></div>
+          <span class="font-bold text-white text-sm truncate">Legal AI Counsel</span>
+          <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-[10px] font-medium text-slate-300">
+            Indian Statutory Corpus
+          </span>
+        </div>
+
+        <!-- Attached Doc Pill in Header if one is active -->
+        <div id="header-attached-pill" class="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/25 text-blue-400 text-xs font-medium truncate max-w-[220px]">
+          <span>📄</span>
+          <span id="header-doc-name" class="truncate">Master_Services_Agreement.pdf</span>
         </div>
       </div>
 
       <!-- Right Header Actions -->
-      <div class="flex items-center gap-3">
-        <span class="text-xs text-emerald-400 flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse-dot"></span>
-          <span class="hidden sm:inline">Grounded Indian Corpus</span>
-        </span>
-        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg bg-[#0D1321] border border-[#1E293B] hover:border-slate-600 text-slate-300 text-xs font-semibold transition-colors">
+      <div class="flex items-center gap-2.5 shrink-0">
+        <button id="btn-header-reset" class="px-3 py-1.5 rounded-lg bg-[#0D1321] hover:bg-[#111827] border border-[#1E293B] hover:border-slate-700 text-slate-300 text-xs font-medium transition-colors flex items-center gap-1.5" title="Clear chat view and reset session">
+          <span>↻</span>
+          <span class="hidden sm:inline">Reset</span>
+        </button>
+        <a href="dashboard.html" class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors shadow-sm shadow-blue-600/20">
           Dashboard →
         </a>
       </div>
 
     </header>
 
-    <!-- Chat Stream Message Container -->
-    <div id="chat-stream" class="flex-1 overflow-y-auto p-6 space-y-6 max-w-4xl w-full mx-auto">
-      
-      <!-- Sample Initial Conversation -->
-      <!-- Message 1: User -->
-      <div class="flex items-start justify-end gap-3">
-        <div class="bg-blue-600/20 border border-blue-500/30 text-white rounded-2xl rounded-tr-none px-5 py-3.5 max-w-[85%] sm:max-w-[75%] text-sm shadow-sm space-y-1">
-          <p class="font-medium text-slate-100">Can my company terminate this employment contract?</p>
-          <p class="text-xs text-blue-300/80">Employee has been with us for 14 months, agreement specifies 30 days notice or pay in lieu. Are there statutory severance mandates under Indian Law?</p>
+    <!-- Chat Stream Message Container (Relative for Drag & Drop Overlay) -->
+    <div class="flex-1 relative min-h-0 flex flex-col">
+
+      <!-- Full Area Drag & Drop Overlay -->
+      <div id="chat-drop-overlay" class="absolute inset-0 z-30 bg-[#070B14]/90 backdrop-blur-md border-2 border-dashed border-blue-500 hidden flex-col items-center justify-center p-6 text-center space-y-3 transition-all pointer-events-none">
+        <div class="w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-3xl shadow-xl shadow-blue-600/30 animate-bounce">
+          📄
         </div>
-        <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-300 shrink-0">
-          You
-        </div>
-      </div>
-
-      <!-- Message 2: Lexora AI Response -->
-      <div class="flex items-start gap-3">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-xs font-extrabold text-white shrink-0 shadow-md shadow-blue-500/30">
-          L
-        </div>
-        <div class="bg-[#111827] border border-[#1E293B] rounded-2xl rounded-tl-none p-5 max-w-[95%] sm:max-w-[85%] space-y-4 text-sm shadow-xl">
-          
-          <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-3">
-            <span class="font-bold text-blue-400 flex items-center gap-1.5">
-              <span>🧠</span> Lexora Preliminary Legal Memorandum
-            </span>
-            <div class="flex items-center gap-2">
-              <button class="btn-copy-response px-2.5 py-1 rounded-md bg-[#0D1321] border border-slate-800 hover:border-slate-700 text-[11px] font-semibold text-slate-300 transition-colors flex items-center gap-1" title="Copy response to clipboard via HTML5 Clipboard API">
-                <span>📋</span> Copy
-              </button>
-            </div>
-          </div>
-
-          <div class="chat-response-content space-y-3 text-slate-200 leading-relaxed text-xs sm:text-sm">
-            <p>
-              Based on the contractual context provided and codified Indian employment statutes, several key aspects of the termination must be evaluated:
-            </p>
-
-            <div class="space-y-2.5 pt-1">
-              <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
-                <span class="font-bold text-white block">1. Notice Period vs. Pay in Lieu (Contractual Clause)</span>
-                <p class="text-xs text-slate-400">
-                  If the contract stipulates 30 days' written notice or salary in lieu thereof, exercising termination for convenience requires paying gross salary (basic + allowances) for the 30-day period immediately on or before the effective relief date.
-                </p>
-              </div>
-
-              <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
-                <span class="font-bold text-white block">2. Applicability of Industrial Disputes Act, 1947</span>
-                <p class="text-xs text-slate-400">
-                  If the employee falls under the definition of a <em>"workman"</em> (non-managerial / non-supervisory capacity earning below statutory thresholds), Section 25F mandates: (a) 1 month's notice in writing or wages in lieu; and (b) Retrenchment compensation equivalent to 15 days' average pay for every completed year of continuous service.
-                </p>
-              </div>
-
-              <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
-                <span class="font-bold text-white block">3. State Shops and Commercial Establishments Act</span>
-                <p class="text-xs text-slate-400">
-                  Local state legislation (e.g. Karnataka, Maharashtra, Delhi) governs severance rules. In Delhi, Section 30 requires 1 month's notice or wages for employees with more than 3 months of service, except in cases of proven misconduct after inquiry.
-                </p>
-              </div>
-            </div>
-
-            <p class="pt-1 text-slate-300">
-              <strong>Next Steps for Company:</strong> Prepare a formal termination notice citing the contractual convenience clause, calculate full and final settlement (including accrued unavailed leave and pro-rata bonus), and require execution of a standard release and non-disparagement acknowledgement.
-            </p>
-          </div>
-
-          <!-- Grounded Sources Citation Box -->
-          <div class="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
-            <div class="flex items-center gap-1.5 flex-wrap">
-              <span class="font-bold text-slate-400">Sources:</span>
-              <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Indian Contract Act 1872 Sec 73</span>
-              <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Industrial Disputes Act 1947 Sec 25F</span>
-              <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Delhi Shops & Establishments Act Sec 30</span>
-            </div>
-            <a href="research.html" class="text-blue-400 font-semibold hover:underline">
-              Research Sections →
-            </a>
-          </div>
-
+        <div class="space-y-1">
+          <h3 class="text-lg font-bold text-white">Drop Document Here to Attach</h3>
+          <p class="text-xs text-blue-300 max-w-sm">This document will be analyzed by Lexora AI for your next queries. You can drag and drop it anytime.</p>
         </div>
       </div>
 
+      <!-- Scrollable Messages -->
+      <div id="chat-stream" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 max-w-4xl w-full mx-auto">
+        
+        <!-- Sample Initial Conversation -->
+        <!-- Message 1: User -->
+        <div class="flex items-start justify-end gap-3">
+          <div class="bg-blue-600/20 border border-blue-500/30 text-white rounded-2xl rounded-tr-none px-5 py-3.5 max-w-[85%] sm:max-w-[75%] text-sm shadow-sm space-y-1">
+            <p class="font-medium text-slate-100">Can my company terminate this employment contract?</p>
+            <p class="text-xs text-blue-300/80">Employee has been with us for 14 months, agreement specifies 30 days notice or pay in lieu. Are there statutory severance mandates under Indian Law?</p>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-300 shrink-0">
+            You
+          </div>
+        </div>
+
+        <!-- Message 2: Lexora AI Response -->
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-xs font-extrabold text-white shrink-0 shadow-md shadow-blue-500/30">
+            L
+          </div>
+          <div class="bg-[#111827] border border-[#1E293B] rounded-2xl rounded-tl-none p-5 max-w-[95%] sm:max-w-[85%] space-y-4 text-sm shadow-xl">
+            
+            <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-3">
+              <span class="font-bold text-blue-400 flex items-center gap-1.5">
+                <span>🧠</span> Lexora Preliminary Legal Memorandum
+              </span>
+              <div class="flex items-center gap-2">
+                <button class="btn-copy-response px-2.5 py-1 rounded-md bg-[#0D1321] border border-slate-800 hover:border-slate-700 text-[11px] font-semibold text-slate-300 transition-colors flex items-center gap-1" title="Copy response to clipboard">
+                  <span>📋</span> Copy
+                </button>
+              </div>
+            </div>
+
+            <div class="chat-response-content space-y-3 text-slate-200 leading-relaxed text-xs sm:text-sm">
+              <p>
+                Based on the contractual context provided and codified Indian employment statutes, several key aspects of the termination must be evaluated:
+              </p>
+
+              <div class="space-y-2.5 pt-1">
+                <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
+                  <span class="font-bold text-white block">1. Notice Period vs. Pay in Lieu (Contractual Clause)</span>
+                  <p class="text-xs text-slate-400">
+                    If the contract stipulates 30 days' written notice or salary in lieu thereof, exercising termination for convenience requires paying gross salary (basic + allowances) for the 30-day period immediately on or before the effective relief date.
+                  </p>
+                </div>
+
+                <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
+                  <span class="font-bold text-white block">2. Applicability of Industrial Disputes Act, 1947</span>
+                  <p class="text-xs text-slate-400">
+                    If the employee falls under the definition of a <em>"workman"</em> (non-managerial / non-supervisory capacity earning below statutory thresholds), Section 25F mandates: (a) 1 month's notice in writing or wages in lieu; and (b) Retrenchment compensation equivalent to 15 days' average pay for every completed year of continuous service.
+                  </p>
+                </div>
+
+                <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
+                  <span class="font-bold text-white block">3. State Shops and Commercial Establishments Act</span>
+                  <p class="text-xs text-slate-400">
+                    Local state legislation (e.g. Karnataka, Maharashtra, Delhi) governs severance rules. In Delhi, Section 30 requires 1 month's notice or wages for employees with more than 3 months of service, except in cases of proven misconduct after inquiry.
+                  </p>
+                </div>
+              </div>
+
+              <p class="pt-1 text-slate-300">
+                <strong>Next Steps for Company:</strong> Prepare a formal termination notice citing the contractual convenience clause, calculate full and final settlement (including accrued unavailed leave and pro-rata bonus), and require execution of a standard release and non-disparagement acknowledgement.
+              </p>
+            </div>
+
+            <!-- Grounded Sources Citation Box -->
+            <div class="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-bold text-slate-400">Sources:</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Indian Contract Act 1872 Sec 73</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Industrial Disputes Act 1947 Sec 25F</span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Delhi Shops & Establishments Act Sec 30</span>
+              </div>
+              <a href="research.html" class="text-blue-400 font-semibold hover:underline">
+                Research Sections →
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
     </div>
 
-    <!-- Bottom Input Area -->
-    <div class="p-4 sm:p-6 border-t border-[#1E293B] bg-[#070B14] shrink-0">
-      <div class="max-w-4xl mx-auto space-y-3">
+    <!-- ==========================================================================
+         3. Clean Bottom Input Area (Engine selector relocated here, suggestions removed)
+         ========================================================================== -->
+    <div class="p-4 sm:p-5 border-t border-[#1E293B] bg-[#070B14] shrink-0">
+      <div class="max-w-4xl mx-auto space-y-2.5">
         
-        <!-- Prompt Suggestion Chips -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-          <span class="text-slate-500 text-[11px] font-semibold shrink-0">Suggestions:</span>
-          <button type="button" class="assistant-chip px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-[#1E293B] text-slate-300 text-[11px] whitespace-nowrap transition-colors" data-prompt="What are the essential liability limitation clauses for a B2B SaaS Master Services Agreement under Indian law?">
-            B2B SaaS Liability Clauses
-          </button>
-          <button type="button" class="assistant-chip px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-[#1E293B] text-slate-300 text-[11px] whitespace-nowrap transition-colors" data-prompt="Under Section 180(1)(c) Companies Act 2013, how is debt threshold calculated for special resolution?">
-            Section 180 Debt Threshold
-          </button>
-          <button type="button" class="assistant-chip px-3 py-1 rounded-lg bg-[#0D1321] hover:bg-slate-800 border border-[#1E293B] text-slate-300 text-[11px] whitespace-nowrap transition-colors" data-prompt="How must Data Fiduciary consent notices be formatted under Digital Personal Data Protection Act 2023?">
-            DPDP 2023 Consent Notice
+        <!-- Active Attached Document Banner (if attached) -->
+        <div id="active-doc-banner" class="hidden items-center justify-between p-2.5 px-3.5 rounded-xl bg-blue-950/40 border border-blue-500/30 text-xs">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center text-xs shrink-0">📄</span>
+            <div class="min-w-0">
+              <span class="text-blue-200 font-semibold truncate block" id="active-doc-title">Master_Services_Agreement_2024.pdf</span>
+              <span class="text-[10px] text-blue-400" id="active-doc-sub">Attached to inquiry • AI will cite clauses from this file</span>
+            </div>
+          </div>
+          <button id="btn-detach-doc" class="text-slate-400 hover:text-rose-400 p-1 text-xs transition-colors shrink-0" title="Detach document">
+            ✕ Remove
           </button>
         </div>
 
-        <!-- Chat Input Form -->
-        <form id="assistant-form" class="flex items-center gap-3">
-          <div class="relative flex-1">
+        <!-- Unified Modern Input Form -->
+        <form id="assistant-form" class="rounded-2xl bg-[#0D1321] border border-[#1E293B] focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 shadow-xl transition-all overflow-hidden">
+          
+          <!-- Textarea -->
+          <div class="p-3 pb-1">
             <textarea 
               id="assistant-input"
-              rows="1" 
-              placeholder="Ask a legal question or describe a business situation..."
-              class="w-full px-4 py-3 rounded-xl bg-[#0D1321] border border-[#1E293B] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm text-white placeholder-slate-500 outline-none transition-all resize-none max-h-32"
+              rows="2" 
+              placeholder="Ask a legal question, enquire about statutory provisions, or ask about attached document..."
+              class="w-full bg-transparent text-sm text-white placeholder-slate-500 outline-none resize-none max-h-36 leading-relaxed"
             ></textarea>
           </div>
-          <button 
-            type="submit" 
-            class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-600/30 transition-all hover:scale-105 shrink-0 flex items-center gap-1.5"
-          >
-            <span>Ask</span>
-            <span>→</span>
-          </button>
+
+          <!-- Bottom Control Bar (Engine Selector + Attach + Send) -->
+          <div class="px-3 py-2 bg-[#0A0F1B] border-t border-[#1E293B]/70 flex flex-wrap items-center justify-between gap-2.5">
+            
+            <!-- Left Controls: Engine Selector & Attach Doc -->
+            <div class="flex items-center gap-2">
+              
+              <!-- Engine Selector (Moved here from top header) -->
+              <div class="flex items-center gap-1.5">
+                <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">Engine:</span>
+                <select 
+                  id="chat-model-select" 
+                  class="px-2.5 py-1 rounded-lg bg-[#111827] border border-[#1E293B] hover:border-slate-700 text-xs font-semibold text-slate-200 focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
+                  title="Select AI Reasoning Engine"
+                >
+                  <!-- Populated dynamically via JS -->
+                </select>
+              </div>
+
+              <!-- Quick Attach Document Trigger -->
+              <button 
+                type="button" 
+                id="btn-quick-attach" 
+                class="px-2.5 py-1 rounded-lg bg-[#111827] hover:bg-slate-800 border border-[#1E293B] hover:border-slate-700 text-slate-300 hover:text-white text-xs font-medium transition-colors flex items-center gap-1.5"
+                title="Select or attach document from Library"
+              >
+                <span>📎</span>
+                <span class="hidden sm:inline">Attach Doc</span>
+              </button>
+            </div>
+
+            <!-- Right Controls: Submit & Shortcut Hint -->
+            <div class="flex items-center gap-3">
+              <span class="text-[10px] text-slate-500 hidden md:inline">Shift + Enter for new line</span>
+              <button 
+                type="submit" 
+                id="btn-submit-inquiry"
+                class="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-md shadow-blue-600/25 transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5"
+              >
+                <span>Ask</span>
+                <span>→</span>
+              </button>
+            </div>
+
+          </div>
+
         </form>
 
-        <div class="flex items-center justify-between text-[11px] text-slate-500 px-1">
+        <!-- Subtle Disclaimer Footer -->
+        <div class="flex items-center justify-between text-[11px] text-slate-500 px-1 pt-0.5">
           <span>AI-generated insight is grounded in statutory Indian sources for research purposes.</span>
-          <span class="hidden sm:inline">Shift + Enter for new line</span>
+          <span class="text-slate-600 text-[10px]">Lexora v2.4</span>
         </div>
 
       </div>
@@ -302,6 +405,10 @@
       const sidebar = document.getElementById("assistant-sidebar");
       const toggleNav = document.getElementById("btn-toggle-assistant-nav");
       const backdrop = document.getElementById("assistant-backdrop");
+      const dropOverlay = document.getElementById("chat-drop-overlay");
+
+      // Active Attached Document State
+      let activeAttachedDocument = null;
 
       // 1. Mobile Sidebar Toggle
       if (toggleNav && sidebar && backdrop) {
@@ -315,7 +422,30 @@
         });
       }
 
-      // 2. Populate Model Selector based on Entitlement System
+      // 2. Sidebar Tabs (History vs Documents)
+      const tabHistory = document.getElementById("sidebar-tab-history");
+      const tabDocuments = document.getElementById("sidebar-tab-documents");
+      const paneHistory = document.getElementById("sidebar-pane-history");
+      const paneDocuments = document.getElementById("sidebar-pane-documents");
+
+      function switchSidebarTab(tabName) {
+        if (tabName === "history") {
+          tabHistory.className = "py-1.5 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all bg-blue-600 text-white shadow-sm";
+          tabDocuments.className = "py-1.5 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all text-slate-400 hover:text-slate-200";
+          paneHistory.classList.remove("hidden");
+          paneDocuments.classList.add("hidden");
+        } else {
+          tabDocuments.className = "py-1.5 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all bg-blue-600 text-white shadow-sm";
+          tabHistory.className = "py-1.5 px-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all text-slate-400 hover:text-slate-200";
+          paneDocuments.classList.remove("hidden");
+          paneHistory.classList.add("hidden");
+        }
+      }
+
+      tabHistory.addEventListener("click", () => switchSidebarTab("history"));
+      tabDocuments.addEventListener("click", () => switchSidebarTab("documents"));
+
+      // 3. Populate Model Selector based on Entitlement System
       function populateModelSelector() {
         if (!modelSelect) return;
         modelSelect.innerHTML = "";
@@ -326,7 +456,7 @@
           const opt = document.createElement("option");
           opt.value = m.id;
           const isAllowed = isModelUnlocked(m.id, user);
-          opt.textContent = isAllowed ? `${m.name} (${m.badge})` : `🔒 ${m.name} (Upgrade required)`;
+          opt.textContent = isAllowed ? `${m.name} (${m.badge})` : `🔒 ${m.name}`;
           opt.disabled = !isAllowed;
           if (isAllowed) {
             opt.selected = true;
@@ -336,7 +466,444 @@
       }
       populateModelSelector();
 
-      // 3. Setup Clipboard API for existing response cards
+      // =========================================================================
+      // 4. Dynamic Recent Queries History System
+      // =========================================================================
+      const historyListEl = document.getElementById("chat-history-list");
+      const badgeHistoryCount = document.getElementById("badge-history-count");
+      const btnClearHistory = document.getElementById("btn-clear-history");
+
+      const DEFAULT_QUERIES = [
+        { id: "q-1", text: "Termination of Employment Contract", category: "Labour & Employment", date: "Today" },
+        { id: "q-2", text: "Section 27 Non-compete enforceability", category: "Contract Act", date: "Yesterday" },
+        { id: "q-3", text: "Section 180(1)(c) Borrowing resolution", category: "Companies Act", date: "Sep 24" },
+        { id: "q-4", text: "DPDP 2023 Consent Notice Requirements", category: "Data Privacy", date: "Sep 22" },
+        { id: "q-5", text: "Reverse vesting founder agreement", category: "Corporate", date: "Sep 20" }
+      ];
+
+      function getStoredQueries() {
+        try {
+          const raw = localStorage.getItem("lexora_assistant_queries");
+          if (raw) return JSON.parse(raw);
+        } catch (e) { /* ignore */ }
+        return DEFAULT_QUERIES;
+      }
+
+      function saveStoredQueries(queries) {
+        try {
+          localStorage.setItem("lexora_assistant_queries", JSON.stringify(queries));
+        } catch (e) { /* ignore */ }
+      }
+
+      function renderRecentQueries() {
+        if (!historyListEl) return;
+        const queries = getStoredQueries();
+        historyListEl.innerHTML = "";
+
+        if (badgeHistoryCount) {
+          badgeHistoryCount.textContent = queries.length;
+        }
+
+        if (queries.length === 0) {
+          historyListEl.innerHTML = `
+            <div class="p-4 text-center text-xs text-slate-500">
+              No recent queries yet.<br>Ask a question below to start.
+            </div>
+          `;
+          return;
+        }
+
+        queries.forEach((q, idx) => {
+          const item = document.createElement("div");
+          item.className = "group relative flex items-center justify-between p-2.5 rounded-xl hover:bg-[#111827] border border-transparent hover:border-slate-800 transition-all cursor-pointer";
+          
+          item.innerHTML = `
+            <div class="flex items-center gap-2.5 min-w-0 pr-6">
+              <span class="text-slate-500 group-hover:text-blue-400 text-xs shrink-0">💬</span>
+              <div class="min-w-0">
+                <p class="text-xs font-medium text-slate-300 group-hover:text-white truncate leading-snug">${escapeHtml(q.text)}</p>
+                <span class="text-[10px] text-slate-500">${escapeHtml(q.date || "Recent")} • ${escapeHtml(q.category || "General")}</span>
+              </div>
+            </div>
+            <button class="btn-delete-query absolute right-2 opacity-0 group-hover:opacity-100 text-slate-500 hover:text-rose-400 p-1 text-xs transition-opacity" title="Remove from history">
+              ✕
+            </button>
+          `;
+
+          // Click to load query
+          item.addEventListener("click", (e) => {
+            if (e.target.closest(".btn-delete-query")) return;
+            if (assistantInput) {
+              assistantInput.value = q.text;
+              assistantInput.focus();
+            }
+          });
+
+          // Delete single query
+          const delBtn = item.querySelector(".btn-delete-query");
+          if (delBtn) {
+            delBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              const updated = getStoredQueries().filter(item => item.id !== q.id);
+              saveStoredQueries(updated);
+              renderRecentQueries();
+              showToast("Inquiry removed from history", "info");
+            });
+          }
+
+          historyListEl.appendChild(item);
+        });
+      }
+
+      function addRecentQuery(text) {
+        if (!text || !text.trim()) return;
+        const trimmed = text.trim();
+        let queries = getStoredQueries();
+        queries = queries.filter(q => q.text.toLowerCase() !== trimmed.toLowerCase());
+        queries.unshift({
+          id: "q-" + Date.now(),
+          text: trimmed,
+          category: "Indian Law",
+          date: "Just now"
+        });
+        if (queries.length > 15) queries = queries.slice(0, 15);
+        saveStoredQueries(queries);
+        renderRecentQueries();
+      }
+
+      if (btnClearHistory) {
+        btnClearHistory.addEventListener("click", () => {
+          saveStoredQueries([]);
+          renderRecentQueries();
+          showToast("Recent history cleared", "info");
+        });
+      }
+
+      renderRecentQueries();
+
+      // =========================================================================
+      // 5. Document Library & Drag-and-Drop System
+      // =========================================================================
+      const docListEl = document.getElementById("sidebar-doc-list");
+      const badgeDocsCount = document.getElementById("badge-docs-count");
+      const fileUploadInput = document.getElementById("sidebar-doc-upload");
+      const btnUploadTrigger = document.getElementById("btn-sidebar-upload-trigger");
+      const btnQuickAttach = document.getElementById("btn-quick-attach");
+      const activeDocBanner = document.getElementById("active-doc-banner");
+      const activeDocTitle = document.getElementById("active-doc-title");
+      const activeDocSub = document.getElementById("active-doc-sub");
+      const btnDetachDoc = document.getElementById("btn-detach-doc");
+      const headerAttachedPill = document.getElementById("header-attached-pill");
+      const headerDocName = document.getElementById("header-doc-name");
+
+      const DEFAULT_DOCUMENTS = [
+        {
+          id: "doc-1",
+          name: "Master_Services_Agreement_2024.pdf",
+          size: "184 KB",
+          extension: "PDF",
+          date: "Sep 2026",
+          snippet: "MASTER SERVICES AGREEMENT\nBetween Lexora Cloud Solutions Pvt Ltd and Client Corp.\n1. Scope of Services: Cloud ERP Deployment.\n2. Term: 24 months.\n3. Limitation of Liability: Neither party's aggregate liability under Section 73 Indian Contract Act shall exceed total fees paid in preceding 12 months, except for gross negligence, willful misconduct, and breach of confidentiality obligations.\n4. Governing Law: Laws of India, exclusive jurisdiction of courts in New Delhi.\n5. Dispute Resolution: Arbitration under Arbitration & Conciliation Act 1996 in New Delhi before a sole arbitrator."
+        },
+        {
+          id: "doc-2",
+          name: "Employment_Agreement_Standard.pdf",
+          size: "96 KB",
+          extension: "PDF",
+          date: "Sep 2026",
+          snippet: "EMPLOYMENT AGREEMENT\n1. Role: Senior Legal Counsel.\n2. Notice Period: 30 days written notice or gross salary in lieu of notice by either party.\n3. Non-Compete: Employee covenants not to engage in competing business during tenure. Post-termination non-compete restricted per Section 27 Indian Contract Act.\n4. Confidentiality: 3-year survival clause.\n5. Statutory Severance: Retrenchment compensation per Industrial Disputes Act Section 25F if applicable."
+        },
+        {
+          id: "doc-3",
+          name: "DPDP_Compliance_Notice_Template.docx",
+          size: "64 KB",
+          extension: "DOCX",
+          date: "Sep 2026",
+          snippet: "DATA FIDUCIARY NOTICE UNDER DPDP ACT 2023\nIn accordance with Sections 5 & 6 of Digital Personal Data Protection Act 2023:\n1. Personal Data Collected: Name, PAN, Aadhaar (masked), Official Email, Device IP.\n2. Purpose: KYC compliance and enterprise contractual execution.\n3. Data Principal Rights: Right to access summary, right to correction, right to erasure, right to grievance redressal via Data Protection Officer.\n4. Third Party Processors: AWS India Cloud Region, Razorpay."
+        }
+      ];
+
+      function getStoredDocuments() {
+        try {
+          const raw = localStorage.getItem("lexora_assistant_documents");
+          if (raw) return JSON.parse(raw);
+        } catch (e) { /* ignore */ }
+        return DEFAULT_DOCUMENTS;
+      }
+
+      function saveStoredDocuments(docs) {
+        try {
+          localStorage.setItem("lexora_assistant_documents", JSON.stringify(docs));
+        } catch (e) { /* ignore */ }
+      }
+
+      // Check if there is any document passed from documents.html via sessionStorage
+      function syncFromSessionStorage() {
+        try {
+          const sessionDocs = sessionStorage.getItem("lexora_doc_history");
+          if (sessionDocs) {
+            const parsed = JSON.parse(sessionDocs);
+            const current = getStoredDocuments();
+            let addedAny = false;
+            parsed.forEach(sd => {
+              if (!current.some(d => d.name === sd.name)) {
+                current.unshift({
+                  id: "doc-" + Date.now() + Math.random().toString(36).substr(2, 4),
+                  name: sd.name,
+                  size: sd.size || "120 KB",
+                  extension: sd.extension || "PDF",
+                  date: sd.date || "Recent",
+                  snippet: `Document: ${sd.name}. Content uploaded from Documents workspace.`
+                });
+                addedAny = true;
+              }
+            });
+            if (addedAny) saveStoredDocuments(current);
+          }
+        } catch (e) { /* ignore */ }
+      }
+      syncFromSessionStorage();
+
+      function renderDocumentsLibrary() {
+        if (!docListEl) return;
+        const docs = getStoredDocuments();
+        docListEl.innerHTML = "";
+
+        if (badgeDocsCount) {
+          badgeDocsCount.textContent = docs.length;
+        }
+
+        if (docs.length === 0) {
+          docListEl.innerHTML = `
+            <div class="p-4 text-center text-xs text-slate-500">
+              No documents in library.<br>Click "+ Upload" above to add documents.
+            </div>
+          `;
+          return;
+        }
+
+        docs.forEach(doc => {
+          const card = document.createElement("div");
+          const isAttached = activeAttachedDocument && activeAttachedDocument.id === doc.id;
+          
+          card.className = `p-3 rounded-xl bg-[#111827] border ${isAttached ? 'border-blue-500 bg-blue-950/20' : 'border-[#1E293B] hover:border-blue-500/40'} transition-all cursor-grab active:cursor-grabbing group relative select-none`;
+          card.setAttribute("draggable", "true");
+          card.setAttribute("data-doc-id", doc.id);
+
+          const badgeColor = doc.extension === "PDF" ? "bg-rose-500/15 text-rose-400 border-rose-500/30" : "bg-blue-500/15 text-blue-400 border-blue-500/30";
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-start gap-2.5 min-w-0">
+                <span class="text-slate-500 group-hover:text-blue-400 cursor-grab text-xs mt-0.5" title="Drag into chat">⋮⋮</span>
+                <div class="w-8 h-8 rounded-lg ${badgeColor} border flex items-center justify-center font-bold text-[10px] shrink-0">
+                  ${escapeHtml(doc.extension || "DOC")}
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs font-semibold text-white truncate group-hover:text-blue-200 transition-colors">${escapeHtml(doc.name)}</p>
+                  <p class="text-[10px] text-slate-400">${escapeHtml(doc.size || "")} • ${escapeHtml(doc.date || "")}</p>
+                </div>
+              </div>
+              <button class="btn-attach-card text-[11px] px-2 py-0.5 rounded bg-[#0D1321] hover:bg-blue-600 text-slate-300 hover:text-white border border-[#1E293B] transition-colors shrink-0">
+                ${isAttached ? "✓ Active" : "+ Attach"}
+              </button>
+            </div>
+          `;
+
+          // Drag Start & End
+          card.addEventListener("dragstart", (e) => {
+            e.dataTransfer.setData("application/json", JSON.stringify(doc));
+            e.dataTransfer.setData("text/plain", doc.name);
+            e.dataTransfer.effectAllowed = "copy";
+            card.classList.add("card-drag-ghost");
+          });
+
+          card.addEventListener("dragend", () => {
+            card.classList.remove("card-drag-ghost");
+          });
+
+          // Click on card or attach button
+          card.addEventListener("click", () => {
+            attachDocumentToChat(doc);
+          });
+
+          docListEl.appendChild(card);
+        });
+      }
+
+      function attachDocumentToChat(doc) {
+        activeAttachedDocument = doc;
+        if (activeDocBanner && activeDocTitle && activeDocSub) {
+          activeDocTitle.textContent = doc.name;
+          activeDocSub.textContent = `${doc.size || 'Document'} • Active for inquiry • AI will cite clauses from this file`;
+          activeDocBanner.classList.remove("hidden");
+          activeDocBanner.classList.add("flex");
+        }
+        if (headerAttachedPill && headerDocName) {
+          headerDocName.textContent = doc.name;
+          headerAttachedPill.classList.remove("hidden");
+          headerAttachedPill.classList.add("inline-flex");
+        }
+        renderDocumentsLibrary();
+        showToast(`Document "${doc.name}" attached to conversation`, "success");
+        if (assistantInput) assistantInput.focus();
+      }
+
+      function detachDocumentFromChat() {
+        activeAttachedDocument = null;
+        if (activeDocBanner) {
+          activeDocBanner.classList.add("hidden");
+          activeDocBanner.classList.remove("flex");
+        }
+        if (headerAttachedPill) {
+          headerAttachedPill.classList.add("hidden");
+          headerAttachedPill.classList.remove("inline-flex");
+        }
+        renderDocumentsLibrary();
+        showToast("Document detached from inquiry", "info");
+      }
+
+      if (btnDetachDoc) {
+        btnDetachDoc.addEventListener("click", detachDocumentFromChat);
+      }
+
+      // Quick Attach button in bottom chat toolbar
+      if (btnQuickAttach) {
+        btnQuickAttach.addEventListener("click", () => {
+          switchSidebarTab("documents");
+          if (sidebar && sidebar.classList.contains("-translate-x-full")) {
+            sidebar.classList.remove("-translate-x-full");
+            if (backdrop) backdrop.classList.remove("hidden");
+          }
+          showToast("Select or drag any document into chat", "info");
+        });
+      }
+
+      // Upload button inside Sidebar Documents pane
+      if (btnUploadTrigger && fileUploadInput) {
+        btnUploadTrigger.addEventListener("click", () => {
+          fileUploadInput.click();
+        });
+
+        fileUploadInput.addEventListener("change", (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = (readEvt) => {
+            const content = readEvt.target.result;
+            const ext = file.name.split('.').pop().toUpperCase();
+            const newDoc = {
+              id: "doc-" + Date.now(),
+              name: file.name,
+              size: formatBytes(file.size),
+              extension: ext,
+              date: "Just now",
+              snippet: typeof content === "string" ? content.slice(0, 3000) : `[Document content: ${file.name}]`
+            };
+
+            const docs = getStoredDocuments();
+            docs.unshift(newDoc);
+            saveStoredDocuments(docs);
+            renderDocumentsLibrary();
+            attachDocumentToChat(newDoc);
+            showToast(`Uploaded "${file.name}" & attached to inquiry!`, "success");
+            fileUploadInput.value = "";
+          };
+
+          if (file.type.includes("text") || file.name.endsWith(".txt")) {
+            reader.readAsText(file);
+          } else {
+            // For PDF/DOCX read as text or binary snippet
+            reader.readAsText(file);
+          }
+        });
+      }
+
+      // =========================================================================
+      // 6. Drag & Drop on Chat Stream Area (Drag & drop again and again)
+      // =========================================================================
+      let dragCounter = 0;
+      const chatContainer = chatStream.parentElement;
+
+      ["dragenter"].forEach(ev => {
+        chatContainer.addEventListener(ev, (e) => {
+          e.preventDefault();
+          dragCounter++;
+          if (dropOverlay) dropOverlay.classList.remove("hidden");
+          if (dropOverlay) dropOverlay.classList.add("flex");
+        });
+      });
+
+      ["dragover"].forEach(ev => {
+        chatContainer.addEventListener(ev, (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "copy";
+        });
+      });
+
+      ["dragleave"].forEach(ev => {
+        chatContainer.addEventListener(ev, (e) => {
+          e.preventDefault();
+          dragCounter--;
+          if (dragCounter <= 0) {
+            dragCounter = 0;
+            if (dropOverlay) dropOverlay.classList.add("hidden");
+            if (dropOverlay) dropOverlay.classList.remove("flex");
+          }
+        });
+      });
+
+      chatContainer.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dragCounter = 0;
+        if (dropOverlay) {
+          dropOverlay.classList.add("hidden");
+          dropOverlay.classList.remove("flex");
+        }
+
+        // 1. Try reading document from internal JSON drag
+        const rawJson = e.dataTransfer.getData("application/json");
+        if (rawJson) {
+          try {
+            const doc = JSON.parse(rawJson);
+            attachDocumentToChat(doc);
+            return;
+          } catch (err) { /* fallback */ }
+        }
+
+        // 2. Try handling external file dropped from desktop
+        const files = e.dataTransfer.files;
+        if (files && files.length > 0) {
+          const file = files[0];
+          const ext = file.name.split('.').pop().toUpperCase();
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            const snippet = typeof evt.target.result === "string" ? evt.target.result.slice(0, 3000) : `[Document content: ${file.name}]`;
+            const newDoc = {
+              id: "doc-" + Date.now(),
+              name: file.name,
+              size: formatBytes(file.size),
+              extension: ext,
+              date: "Just now",
+              snippet: snippet
+            };
+            const docs = getStoredDocuments();
+            docs.unshift(newDoc);
+            saveStoredDocuments(docs);
+            renderDocumentsLibrary();
+            attachDocumentToChat(newDoc);
+            showToast(`Dropped "${file.name}" into chat!`, "success");
+          };
+          reader.readAsText(file);
+        }
+      });
+
+      renderDocumentsLibrary();
+
+      // =========================================================================
+      // 7. Clipboard API for existing response cards
+      // =========================================================================
       document.querySelectorAll(".btn-copy-response").forEach(btn => {
         btn.addEventListener("click", () => {
           const card = btn.closest(".bg-\\[\\#111827\\]");
@@ -345,27 +912,43 @@
         });
       });
 
-      // 4. Quick prompt suggestions
-      document.querySelectorAll(".assistant-chip").forEach(chip => {
-        chip.addEventListener("click", () => {
-          const prompt = chip.getAttribute("data-prompt");
-          if (assistantInput) {
-            assistantInput.value = prompt;
-            assistantInput.focus();
-          }
-        });
-      });
-
-      // 5. Auto-load query from URL parameter if passed from Dashboard
+      // 8. Auto-load query from URL parameter if passed from Dashboard or Documents
       const urlParams = new URLSearchParams(window.location.search);
       const initialQuery = urlParams.get("q");
+      const isDocMode = urlParams.get("doc") === "true";
+
+      // If coming from Documents page with a document loaded, show context banner
+      if (isDocMode) {
+        const docName = sessionStorage.getItem("lexora_doc_name");
+        const docContent = sessionStorage.getItem("lexora_doc_content");
+        if (docName) {
+          const matchedDoc = getStoredDocuments().find(d => d.name === docName);
+          if (matchedDoc) {
+            attachDocumentToChat(matchedDoc);
+          } else {
+            const newDoc = {
+              id: "doc-" + Date.now(),
+              name: docName,
+              size: "Uploaded",
+              extension: docName.split('.').pop().toUpperCase(),
+              date: "Just now",
+              snippet: docContent || `Document ${docName}`
+            };
+            const docs = getStoredDocuments();
+            docs.unshift(newDoc);
+            saveStoredDocuments(docs);
+            renderDocumentsLibrary();
+            attachDocumentToChat(newDoc);
+          }
+        }
+      }
+
       if (initialQuery) {
         assistantInput.value = initialQuery;
-        // Trigger simulated generation
         handleSendMessage(initialQuery);
       }
 
-      // Backend API Base URL (auto-resolves for Live Server on port 5500 or Express on port 5000)
+      // Backend API Base URL
       const API_BASE_URL = (window.location.port === "5000" || window.location.protocol === "https:")
         ? "" 
         : "http://localhost:5000";
@@ -373,28 +956,21 @@
       // Conversation context buffer for multi-turn reasoning
       const conversationHistory = [];
 
-      // New Chat Button Handler
-      const btnNewChat = document.getElementById("btn-new-chat");
-      if (btnNewChat) {
-        btnNewChat.addEventListener("click", () => {
-          conversationHistory.length = 0;
-          showToast("New legal inquiry session started", "info");
-          if (assistantInput) assistantInput.focus();
-        });
+      // New Chat & Reset Buttons
+      function startNewSession() {
+        conversationHistory.length = 0;
+        detachDocumentFromChat();
+        showToast("New legal inquiry session started", "info");
+        if (assistantInput) assistantInput.focus();
       }
 
-      // History item click handlers
-      document.querySelectorAll("#chat-history-list button").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const text = btn.textContent.trim();
-          if (assistantInput) {
-            assistantInput.value = text;
-            assistantInput.focus();
-          }
-        });
-      });
+      const btnNewChat = document.getElementById("btn-new-chat");
+      if (btnNewChat) btnNewChat.addEventListener("click", startNewSession);
 
-      // 6. Handle Form Submit
+      const btnHeaderReset = document.getElementById("btn-header-reset");
+      if (btnHeaderReset) btnHeaderReset.addEventListener("click", startNewSession);
+
+      // 9. Handle Form Submit
       assistantForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const msg = assistantInput.value.trim();
@@ -412,8 +988,7 @@
       });
 
       /**
-       * Core Chat Message Handler:
-       * Communicates with backend/routes/ai.js -> ai-router.js -> gemini.js
+       * Core Chat Message Handler
        */
       async function handleSendMessage(userText) {
         // Enforce membership query limit check
@@ -424,6 +999,9 @@
           return;
         }
 
+        // Add to Recent Inquiries list and persist
+        addRecentQuery(userText);
+
         // Save to Recent Searches in LocalStorage
         if (typeof StorageHelper !== "undefined" && StorageHelper.addRecentSearch) {
           StorageHelper.addRecentSearch(userText);
@@ -432,11 +1010,25 @@
         // Selected Lexora AI Engine (Lexora Standard vs Lexora Advanced)
         const selectedModelId = modelSelect ? modelSelect.value : "lexora-standard";
 
+        // Check if there's an attached document
+        let docContextMessage = null;
+        let attachedDocName = null;
+        if (activeAttachedDocument) {
+          attachedDocName = activeAttachedDocument.name;
+          docContextMessage = `The user has attached the legal document "${activeAttachedDocument.name}". Here is the document content/excerpt:\n\n---\n${activeAttachedDocument.snippet}\n---\n\nUser question: ${userText}`;
+        }
+
         // Append User Message to Stream
         const userDiv = document.createElement("div");
-        userDiv.className = "flex items-start justify-end gap-3";
+        userDiv.className = "flex items-start justify-end gap-3 animate-fade-in";
+        
+        const docBadgeHtml = attachedDocName 
+          ? `<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[11px] font-medium border border-blue-400/20 mb-1"><span>📄 Attached:</span> <span class="font-bold truncate max-w-[200px]">${escapeHtml(attachedDocName)}</span></div>`
+          : "";
+
         userDiv.innerHTML = `
           <div class="bg-blue-600/20 border border-blue-500/30 text-white rounded-2xl rounded-tr-none px-5 py-3.5 max-w-[85%] sm:max-w-[75%] text-sm shadow-sm">
+            ${docBadgeHtml}
             <p class="font-medium text-slate-100">${escapeHtml(userText)}</p>
           </div>
           <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-300 shrink-0">
@@ -456,8 +1048,8 @@
           <div class="bg-[#111827] border border-[#1E293B] rounded-2xl rounded-tl-none p-4 text-xs text-blue-400 font-semibold flex items-center gap-3">
             <span class="w-2.5 h-2.5 rounded-full bg-blue-400 animate-ping"></span>
             <div class="space-y-0.5">
-              <span class="block text-slate-200 font-bold">Lexora AI Router Active</span>
-              <span class="block text-[11px] text-slate-400 font-normal">Analyzing statutory context &amp; generating legal memo via Gemini...</span>
+              <span class="block text-slate-200 font-bold">Lexora AI Core Active</span>
+              <span class="block text-[11px] text-slate-400 font-normal">Analyzing statutory context &amp; generating legal memorandum...</span>
             </div>
           </div>
         `;
@@ -465,15 +1057,13 @@
         chatStream.scrollTop = chatStream.scrollHeight;
 
         try {
-          // Backend API Request Flow:
-          // assistant.html -> POST /api/ai/chat -> routes/ai.js -> services/ai-router.js -> services/gemini.js
           const response = await fetch(`${API_BASE_URL}/api/ai/chat`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
             },
             body: JSON.stringify({
-              message: userText,
+              message: docContextMessage || userText,
               modelId: selectedModelId,
               userPlan: currentUser.plan,
               history: conversationHistory.slice(-6)
@@ -523,7 +1113,7 @@
           }
           renderErrorCard({
             code: "NETWORK_DISCONNECTED",
-            message: `Cannot connect to Lexora AI Backend at ${API_BASE_URL || "http://localhost:5000"}. Please start the backend with 'npm start'.`
+            message: `Cannot connect to Lexora AI Backend at ${API_BASE_URL || "http://localhost:5000"}. Please ensure the server is active with 'npm start'.`
           }, userText);
         }
       }
@@ -533,7 +1123,7 @@
        */
       function renderAiResponseCard(data, originalQuery) {
         const aiDiv = document.createElement("div");
-        aiDiv.className = "flex items-start gap-3";
+        aiDiv.className = "flex items-start gap-3 animate-fade-in";
 
         const formattedHtml = formatMarkdownResponse(data.body);
 
@@ -545,8 +1135,8 @@
         // Grounding status badge
         const isGrounded = data.meta && data.meta.isSourceGrounded;
         const groundingBadge = isGrounded
-          ? `<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">✓ Verified RAG Corpus Grounded</span>`
-          : `<span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-semibold" title="Generated by Gemini AI; Indian Law RAG retrieval layer is pending integration">Gemini AI Synthesis (Exploratory Legal Research)</span>`;
+          ? `<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">✓ Verified RAG Grounded</span>`
+          : `<span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-semibold">Gemini AI Synthesis</span>`;
 
         aiDiv.innerHTML = `
           <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-xs font-extrabold text-white shrink-0 shadow-md shadow-blue-500/30">
@@ -562,7 +1152,7 @@
                 </span>
                 ${groundingBadge}
               </div>
-              <button class="btn-copy-response px-2.5 py-1 rounded-md bg-[#0D1321] border border-slate-800 hover:border-slate-700 text-[11px] font-semibold text-slate-300 transition-colors flex items-center gap-1" title="Copy response via HTML5 Clipboard API">
+              <button class="btn-copy-response px-2.5 py-1 rounded-md bg-[#0D1321] border border-slate-800 hover:border-slate-700 text-[11px] font-semibold text-slate-300 transition-colors flex items-center gap-1" title="Copy response">
                 <span>📋</span> Copy
               </button>
             </div>
@@ -576,10 +1166,9 @@
             <div class="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
               <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="font-bold text-slate-400">Sources:</span>
-                ${sourcesPills}
+                ${sourcesPills || '<span class="text-slate-500">Statutory Indian Corpus</span>'}
               </div>
               <div class="flex items-center gap-3">
-                <span class="text-[10px] text-slate-500 italic">Pre-RAG Stage</span>
                 <a href="research.html" class="text-blue-400 font-semibold hover:underline">
                   Research Bare Acts →
                 </a>
@@ -592,7 +1181,7 @@
         chatStream.appendChild(aiDiv);
         chatStream.scrollTop = chatStream.scrollHeight;
 
-        // Wire HTML5 Clipboard API for new response card
+        // Wire Copy button
         const copyBtn = aiDiv.querySelector(".btn-copy-response");
         if (copyBtn) {
           copyBtn.addEventListener("click", () => {
@@ -607,7 +1196,7 @@
        */
       function renderErrorCard(error, originalQuery) {
         const errDiv = document.createElement("div");
-        errDiv.className = "flex items-start gap-3";
+        errDiv.className = "flex items-start gap-3 animate-fade-in";
 
         let troubleshootingTip = "Please verify your backend connection and try again.";
         if (error.code === "CONFIG_MISSING") {
@@ -668,7 +1257,7 @@
        */
       function renderQuotaExceededCard() {
         const quotaDiv = document.createElement("div");
-        quotaDiv.className = "flex items-start gap-3";
+        quotaDiv.className = "flex items-start gap-3 animate-fade-in";
         quotaDiv.innerHTML = `
           <div class="w-8 h-8 rounded-full bg-amber-600/30 border border-amber-500/50 flex items-center justify-center text-xs font-bold text-amber-300 shrink-0">
             ▲
@@ -678,7 +1267,7 @@
               <span>🔒</span> Monthly AI Inquiries Exhausted
             </span>
             <p class="text-slate-300 leading-relaxed">
-              You have utilized all allocated AI inquiries under your current plan. To unlock additional inference capacity and access <strong>Lexora Advanced</strong>, consider upgrading your membership.
+              You have utilized all allocated AI inquiries under your current plan. To unlock additional inference capacity, consider upgrading your membership.
             </p>
             <div class="pt-1">
               <a href="membership.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors">

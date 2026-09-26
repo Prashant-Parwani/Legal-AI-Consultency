@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document Diligence — Lexora Legal Intelligence</title>
+  <title>Documents — Lexora Legal Intelligence</title>
   
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233B82F6'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
@@ -122,12 +122,12 @@
         <button id="sidebar-toggle" class="md:hidden text-slate-400 hover:text-white p-1">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
-        <h1 class="text-sm font-bold text-white">Document Diligence & Clause Analysis</h1>
+        <h1 class="text-sm font-bold text-white">Documents</h1>
       </div>
 
       <div class="flex items-center gap-3">
         <span class="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold">
-          HTML5 Drag & Drop + File API
+          PDF, DOCX, TXT
         </span>
         <a href="settings.html" class="w-8 h-8 rounded-xl bg-blue-600 hover:bg-blue-500 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-600/20">
           P
@@ -136,33 +136,28 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 p-6 md:p-8 max-w-6xl w-full mx-auto space-y-8">
+    <main class="flex-1 p-6 md:p-8 max-w-4xl w-full mx-auto space-y-8">
       
-      <!-- Header Banner -->
+      <!-- Header -->
       <div class="space-y-1.5">
         <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-          Contract Diligence & Risk Inspection
+          Upload Your Document
         </h2>
         <p class="text-sm text-[#94A3B8]">
-          Upload or drag-and-drop commercial contracts to evaluate asymmetrical clauses, uncapped indemnities, and statutory misalignments.
+          Upload a legal document to extract key information and analyze it with the Lexora AI Assistant.
         </p>
       </div>
 
       <!-- ======================================================================
-           HTML5 File API + Drag and Drop API Dropzone
+           Upload Dropzone
            ====================================================================== -->
       <div class="bg-[#111827] border border-[#1E293B] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
         
-        <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center justify-between text-xs">
           <span class="font-bold text-slate-300 flex items-center gap-2">
-            <span>📥</span> Document Upload Engine
+            <span>📥</span> Upload Document
           </span>
-          <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
-              ✓ HTML5 File API (Native Web API • No API Key)
-            </span>
-            <span class="text-slate-500 hidden sm:inline">Supports PDF, DOCX, TXT</span>
-          </div>
+          <span class="text-slate-500">Supports PDF, DOCX, TXT, DOC, MD</span>
         </div>
 
         <!-- Dropzone Box -->
@@ -178,58 +173,40 @@
 
           <div class="space-y-1">
             <p class="text-sm font-bold text-white">
-              Drag and drop your contract here, or <span class="text-blue-400 underline">browse files</span>
+              Drag and drop your document here, or <span class="text-blue-400 underline">browse files</span>
             </p>
             <p class="text-xs text-slate-400">
-              Master Services Agreements, Non-Disclosure Agreements, Founder Vesting, DPDP DPAs
+              Contracts, Agreements, Legal Notices, Compliance Documents — up to 25 MB
             </p>
-          </div>
-
-          <div class="inline-flex items-center gap-2 pt-1">
-            <span class="text-[11px] font-semibold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-              Browser-Native File API Active
-            </span>
-            <span class="text-[11px] text-slate-500 font-mono">
-              window.File &amp; window.FileReader
-            </span>
           </div>
         </div>
 
-        <!-- File API Extracted Metadata Preview Card (Hidden by default, shown when file selected) -->
-        <div id="file-metadata-card" class="hidden p-5 sm:p-6 rounded-2xl bg-[#070B14] border border-blue-500/30 space-y-5">
+        <!-- File Metadata Card (Hidden by default, shown when file selected) -->
+        <div id="file-metadata-card" class="hidden space-y-5">
           
+          <!-- Divider -->
+          <div class="border-t border-slate-800"></div>
+
           <!-- Header & Actions -->
-          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div class="flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-3 min-w-0">
               <div class="w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold text-sm shrink-0">
-                <span id="meta-ext">DOCX</span>
+                <span id="meta-ext">DOC</span>
               </div>
               <div class="min-w-0">
-                <div class="flex items-center gap-2">
-                  <h4 id="meta-name" class="text-sm sm:text-base font-bold text-white truncate max-w-md">Contract_Draft.docx</h4>
-                  <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">
-                    File API Validated
-                  </span>
-                </div>
-                <p class="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
-                  <span>Native Browser Stream Loaded</span>
-                  <span>•</span>
-                  <span class="text-blue-400 font-medium">Ready for Diligence Pipeline</span>
+                <h4 id="meta-name" class="text-sm sm:text-base font-bold text-white truncate max-w-md">Document</h4>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  <span class="text-emerald-400 font-medium">✓ File loaded successfully</span>
                 </p>
               </div>
             </div>
 
-            <div class="flex items-center gap-2">
-              <button id="btn-reset-file" onclick="window.lexoraDocs &amp;&amp; window.lexoraDocs.reset()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs border border-slate-700 transition-colors">
-                ✕ Change File
-              </button>
-              <button id="btn-run-analysis" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/25 transition-all flex items-center gap-2">
-                <span>⚡</span> Start AI Diligence
-              </button>
-            </div>
+            <button id="btn-reset-file" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs border border-slate-700 transition-colors">
+              ✕ Remove
+            </button>
           </div>
 
-          <!-- Metadata 4-Grid Breakdown (Name, Type, Size, Last Modified) -->
+          <!-- Metadata Grid: Name, Type, Size, Last Modified -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
             
             <!-- 1. File Name -->
@@ -237,7 +214,7 @@
               <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
                 <span>📝</span> File Name
               </span>
-              <p id="meta-name-card" class="text-white font-mono font-medium truncate">--</p>
+              <p id="meta-name-card" class="text-white font-medium truncate">--</p>
             </div>
 
             <!-- 2. File Type / MIME -->
@@ -266,17 +243,35 @@
 
           </div>
 
-          <!-- Content Preview Snippet Placeholder (Dynamically populated by js/documents.js via FileReader) -->
+          <!-- Content Preview Snippet (Dynamically populated by JS) -->
           <div id="file-content-preview"></div>
 
-          <!-- Analysis Progress Bar -->
-          <div id="analysis-progress-container" class="hidden space-y-2 pt-2 border-t border-slate-800">
-            <div class="flex items-center justify-between text-xs">
-              <span id="analysis-status-text" class="text-blue-400 font-semibold animate-pulse">Extracting statutory clauses...</span>
-              <span id="analysis-percentage" class="text-slate-400 font-mono">0%</span>
+          <!-- ================================================================
+               Continue with AI Assistant CTA
+               ================================================================ -->
+          <div id="doc-assistant-cta" class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-blue-950/40 to-[#0D1321] border border-blue-500/25 space-y-4">
+            
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-lg shrink-0 shadow-lg shadow-blue-600/25">
+                🤖
+              </div>
+              <div class="space-y-1">
+                <h4 class="text-sm font-bold text-white">Analyze with AI Assistant</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  The AI Assistant will read your document and answer any questions you have — identify risks, extract clauses, check compliance, suggest redlines, and more.
+                </p>
+              </div>
             </div>
-            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-              <div id="analysis-progress-bar" class="h-full bg-blue-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <button 
+                id="btn-continue-assistant" 
+                class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-600/25 transition-all flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                Continue with AI Assistant →
+              </button>
+              <span class="text-[11px] text-slate-500">Your document content will be shared with the assistant</span>
             </div>
           </div>
 
@@ -285,133 +280,24 @@
       </div>
 
       <!-- ======================================================================
-           Analyzed Sample Contract: Live Clause Viewer & Redline Inspector
+           Uploaded Documents History (placeholder for future)
            ====================================================================== -->
-      <div class="space-y-4">
+      <div id="doc-history-section" class="space-y-4">
         <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-lg font-bold text-white">Active Document Diligence Workspace</h3>
-            <p class="text-xs text-slate-400">Master_Services_Agreement_Enterprise_Draft_v2.docx (Indian Law Diligence)</p>
-          </div>
-          <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold">
-            3 Attention Points Detected
-          </span>
+          <h3 class="text-base font-bold text-white">Recent Documents</h3>
+          <span id="doc-history-count" class="text-xs text-slate-500">No documents yet</span>
         </div>
 
-        <!-- SaaS Split View Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#111827] border border-[#1E293B] rounded-3xl p-6 sm:p-8">
-          
-          <!-- Left: Clause Viewer (8 cols) -->
-          <div class="lg:col-span-7 space-y-4 pr-0 lg:pr-4 border-b lg:border-b-0 lg:border-r border-[#1E293B] pb-6 lg:pb-0">
-            <div class="flex items-center justify-between text-xs pb-3 border-b border-[#1E293B]">
-              <span class="font-bold text-slate-400 uppercase tracking-wider text-[11px]">Contract Clauses</span>
-              <span class="text-slate-500 text-[11px]">18 Total Clauses Detected</span>
+        <div id="doc-history-list" class="space-y-2">
+          <!-- Empty state -->
+          <div id="doc-empty-state" class="p-8 rounded-2xl bg-[#111827] border border-[#1E293B] text-center space-y-3">
+            <div class="w-14 h-14 rounded-2xl bg-slate-800 text-slate-500 mx-auto flex items-center justify-center text-2xl">
+              📁
             </div>
-
-            <div class="space-y-4 text-xs text-slate-300 leading-relaxed font-mono">
-              
-              <!-- Clause 11.1 -->
-              <div class="p-3.5 rounded-xl bg-[#0D1321] border border-slate-800">
-                <span class="font-bold text-white block mb-1">11.1 Term:</span>
-                This Agreement shall commence on the Effective Date and continue for an initial term of two (2) years unless terminated earlier in accordance with the provisions herein.
-              </div>
-
-              <!-- Clause 11.2 (High Attention) -->
-              <div class="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 space-y-1.5">
-                <div class="flex items-center justify-between font-sans">
-                  <span class="font-bold text-rose-300">11.2 Termination for Convenience:</span>
-                  <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 text-[10px] font-bold">High Attention</span>
-                </div>
-                <p class="text-slate-200">
-                  "Customer may terminate this Agreement at any time without cause upon thirty (30) days written notice. Supplier shall immediately refund all unearned prepaid fees."
-                </p>
-                <p class="font-sans text-[11px] text-rose-400 font-semibold pt-1">
-                  ▲ Risk: Asymmetrical termination rights; no reciprocal exit right or break-fee for Supplier.
-                </p>
-              </div>
-
-              <!-- Clause 14.2 (Medium Attention) -->
-              <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1.5">
-                <div class="flex items-center justify-between font-sans">
-                  <span class="font-bold text-amber-300">14.2 Indemnification & Liability:</span>
-                  <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-bold">Medium Attention</span>
-                </div>
-                <p class="text-slate-200">
-                  "Supplier shall indemnify, defend and hold harmless Customer without limitation against any third-party claims, consequential damages, lost profits, and incidental operational losses..."
-                </p>
-                <p class="font-sans text-[11px] text-amber-400 font-semibold pt-1">
-                  ▲ Risk: Uncapped consequential liability; conflicts with Section 73 of Indian Contract Act 1872.
-                </p>
-              </div>
-
-              <!-- Clause 18.1 (DPDP Review) -->
-              <div class="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30 space-y-1.5">
-                <div class="flex items-center justify-between font-sans">
-                  <span class="font-bold text-blue-300">18.1 Data Privacy & Security:</span>
-                  <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[10px] font-bold">Review</span>
-                </div>
-                <p class="text-slate-200">
-                  "Parties shall safeguard proprietary information and comply with Indian data regulations during the term."
-                </p>
-                <p class="font-sans text-[11px] text-blue-400 font-semibold pt-1">
-                  ℹ Compliance: Requires explicit Data Fiduciary / Processor clauses as mandated under Section 8 of DPDP Act 2023.
-                </p>
-              </div>
-
-            </div>
+            <p class="text-sm text-slate-400">Upload a document above to get started</p>
+            <p class="text-xs text-slate-500">Your uploaded documents will appear here for quick access</p>
           </div>
-
-          <!-- Right: AI Redline Assessment Panel (5 cols) -->
-          <div class="lg:col-span-5 space-y-5">
-            <div class="text-xs pb-3 border-b border-[#1E293B]">
-              <span class="font-bold text-slate-400 uppercase tracking-wider text-[11px]">Recommended Commercial Redlines</span>
-            </div>
-
-            <!-- Redline 1 -->
-            <div class="p-4 rounded-2xl bg-[#0D1321] border border-slate-800 space-y-2.5">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-white">Clause 14.2 — Liability Cap Redline</span>
-                <button class="btn-copy-redline px-2 py-1 rounded bg-[#111827] hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-300 transition-colors flex items-center gap-1" data-redline="Supplier's aggregate liability under Section 14.2 shall be strictly capped at total fees paid during preceding 12 months, excluding speculative or consequential damages.">
-                  <span>📋</span> Copy
-                </button>
-              </div>
-              <div class="p-2.5 rounded-lg bg-[#070B14] border border-slate-800/80 text-[11px] text-emerald-400 font-mono leading-relaxed">
-                "Supplier's aggregate liability under Section 14.2 shall be strictly capped at total fees paid during preceding 12 months, excluding speculative or consequential damages."
-              </div>
-              <p class="text-[11px] text-slate-400 leading-snug">
-                Protects enterprise against open-ended liability. Aligns with standard Indian B2B SaaS norms.
-              </p>
-            </div>
-
-            <!-- Redline 2 -->
-            <div class="p-4 rounded-2xl bg-[#0D1321] border border-slate-800 space-y-2.5">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-white">Clause 11.2 — Reciprocal Notice Exit</span>
-                <button class="btn-copy-redline px-2 py-1 rounded bg-[#111827] hover:bg-slate-800 border border-slate-700 text-[10px] font-bold text-slate-300 transition-colors flex items-center gap-1" data-redline="Either party may terminate this Agreement for convenience upon sixty (60) days prior written notice, subject to settlement of outstanding invoices.">
-                  <span>📋</span> Copy
-                </button>
-              </div>
-              <div class="p-2.5 rounded-lg bg-[#070B14] border border-slate-800/80 text-[11px] text-emerald-400 font-mono leading-relaxed">
-                "Either party may terminate this Agreement for convenience upon sixty (60) days prior written notice, subject to settlement of outstanding invoices."
-              </div>
-              <p class="text-[11px] text-slate-400 leading-snug">
-                Establishes bilateral exit reciprocity and prevents stranded infrastructure costs.
-              </p>
-            </div>
-
-            <!-- Action: Route to Assistant -->
-            <div class="p-4 rounded-2xl bg-blue-950/30 border border-blue-500/30 space-y-2">
-              <span class="text-xs font-bold text-blue-300 block">Need custom negotiation strategy?</span>
-              <p class="text-[11px] text-slate-400">Discuss these redlines with the Lexora AI Assistant to tailor counter-proposals.</p>
-              <a href="assistant.html?q=Help%20me%20draft%20a%20balanced%20liability%20clause%20under%20Indian%20Contract%20Act" class="block w-full py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-center text-xs font-bold text-white transition-colors">
-                Discuss Redlines in Assistant →
-              </a>
-            </div>
-
-          </div>
-
         </div>
-
       </div>
 
     </main>
@@ -440,23 +326,121 @@
         });
       }
 
-      // Copy Redlines via Clipboard API
-      document.querySelectorAll(".btn-copy-redline").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const redlineText = btn.getAttribute("data-redline");
-          copyToClipboard(redlineText, btn);
-        });
-      });
-
-      // Synchronize the extra header name card element if populated
-      window.addEventListener("lexora:file-pipeline", (e) => {
-        if (e.detail && e.detail.event === "document:loaded") {
-          const metaNameCard = document.getElementById("meta-name-card");
-          if (metaNameCard && e.detail.data.metadata) {
-            metaNameCard.textContent = e.detail.data.metadata.name;
+      // Reset file button handler
+      const resetBtn = document.getElementById("btn-reset-file");
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          if (window.lexoraDocs) {
+            window.lexoraDocs.reset();
           }
-        }
+          // Clear sessionStorage document data
+          sessionStorage.removeItem("lexora_doc_content");
+          sessionStorage.removeItem("lexora_doc_name");
+        });
+      }
+
+      // Continue with AI Assistant — stores document content and navigates
+      const continueBtn = document.getElementById("btn-continue-assistant");
+      if (continueBtn) {
+        continueBtn.addEventListener("click", () => {
+          if (!window.lexoraDocs || !window.lexoraDocs.activeFile) {
+            if (typeof showToast === "function") {
+              showToast("Please upload a document first.", "warning");
+            }
+            return;
+          }
+
+          const file = window.lexoraDocs.activeFile;
+          const meta = window.lexoraDocs.activeMetadata;
+          const preview = window.lexoraDocs.activeContentPreview;
+
+          // Store document info in sessionStorage for the assistant to pick up
+          sessionStorage.setItem("lexora_doc_name", meta ? meta.name : file.name);
+
+          if (preview && preview.type === "text" && preview.contentSnippet) {
+            sessionStorage.setItem("lexora_doc_content", preview.contentSnippet);
+          } else if (preview && preview.type === "binary") {
+            sessionStorage.setItem("lexora_doc_content", `[Binary document: ${meta.name} (${meta.formattedSize})]`);
+          }
+
+          // Navigate to assistant with a document-context prompt
+          const docName = meta ? meta.name : file.name;
+          const prompt = `I've uploaded a document: "${docName}". Please analyze it and help me understand its key points.`;
+          window.location.href = `assistant.html?q=${encodeURIComponent(prompt)}&doc=true`;
+        });
+      }
+
+      // Render document history from sessionStorage
+      renderDocHistory();
+    });
+
+    /**
+     * Render recent documents from sessionStorage
+     */
+    function renderDocHistory() {
+      const historyList = document.getElementById("doc-history-list");
+      const emptyState = document.getElementById("doc-empty-state");
+      const countEl = document.getElementById("doc-history-count");
+
+      let docs = [];
+      try {
+        const stored = sessionStorage.getItem("lexora_doc_history");
+        if (stored) docs = JSON.parse(stored);
+      } catch (e) { /* ignore */ }
+
+      if (!docs.length) return;
+
+      if (emptyState) emptyState.classList.add("hidden");
+      if (countEl) countEl.textContent = `${docs.length} document${docs.length > 1 ? "s" : ""}`;
+
+      docs.forEach(doc => {
+        const card = document.createElement("div");
+        card.className = "flex items-center justify-between p-4 rounded-xl bg-[#111827] border border-[#1E293B] hover:border-blue-500/30 transition-colors group";
+        card.innerHTML = `
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-10 h-10 rounded-lg bg-blue-600/15 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold text-[10px] shrink-0">
+              ${doc.extension || "DOC"}
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-white truncate">${doc.name}</p>
+              <p class="text-[11px] text-slate-500">${doc.size || ""} • ${doc.date || ""}</p>
+            </div>
+          </div>
+          <span class="text-[11px] text-slate-500 group-hover:text-blue-400 transition-colors">Uploaded</span>
+        `;
+        historyList.appendChild(card);
       });
+    }
+
+    // Listen for document load events to save to history
+    window.addEventListener("lexora:file-pipeline", (e) => {
+      if (e.detail && e.detail.event === "document:loaded" && e.detail.data.metadata) {
+        const meta = e.detail.data.metadata;
+        
+        // Update the name card element
+        const metaNameCard = document.getElementById("meta-name-card");
+        if (metaNameCard) metaNameCard.textContent = meta.name;
+
+        // Save to document history in sessionStorage
+        let docs = [];
+        try {
+          const stored = sessionStorage.getItem("lexora_doc_history");
+          if (stored) docs = JSON.parse(stored);
+        } catch (e) { /* ignore */ }
+
+        // Prevent duplicates
+        if (!docs.find(d => d.name === meta.name)) {
+          docs.unshift({
+            name: meta.name,
+            extension: meta.extension,
+            size: meta.formattedSize,
+            date: meta.lastModifiedFormatted
+          });
+          // Keep only last 10
+          if (docs.length > 10) docs = docs.slice(0, 10);
+          sessionStorage.setItem("lexora_doc_history", JSON.stringify(docs));
+        }
+      }
     });
   </script>
 </body>
