@@ -153,11 +153,16 @@
            ====================================================================== -->
       <div class="bg-[#111827] border border-[#1E293B] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
         
-        <div class="flex items-center justify-between text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
           <span class="font-bold text-slate-300 flex items-center gap-2">
             <span>📥</span> Document Upload Engine
           </span>
-          <span class="text-slate-500">Supports PDF, DOCX, TXT (Demonstrating HTML5 File API)</span>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+              ✓ HTML5 File API (Native Web API • No API Key)
+            </span>
+            <span class="text-slate-500 hidden sm:inline">Supports PDF, DOCX, TXT</span>
+          </div>
         </div>
 
         <!-- Dropzone Box -->
@@ -165,7 +170,7 @@
           id="contract-dropzone" 
           class="border-2 border-dashed border-slate-700 hover:border-blue-500 rounded-2xl p-8 sm:p-12 text-center bg-[#0D1321] transition-all duration-200 cursor-pointer space-y-3 group"
         >
-          <input type="file" id="file-input" class="hidden" accept=".docx,.pdf,.txt,.doc">
+          <input type="file" id="file-input" class="hidden" accept=".docx,.pdf,.txt,.doc,.md">
           
           <div class="w-16 h-16 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 mx-auto flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
             📄
@@ -180,34 +185,89 @@
             </p>
           </div>
 
-          <div class="inline-block pt-1">
+          <div class="inline-flex items-center gap-2 pt-1">
             <span class="text-[11px] font-semibold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-              Drag & Drop API Active
+              Browser-Native File API Active
+            </span>
+            <span class="text-[11px] text-slate-500 font-mono">
+              window.File &amp; window.FileReader
             </span>
           </div>
         </div>
 
         <!-- File API Extracted Metadata Preview Card (Hidden by default, shown when file selected) -->
-        <div id="file-metadata-card" class="hidden p-5 rounded-2xl bg-[#070B14] border border-blue-500/30 space-y-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold text-sm">
+        <div id="file-metadata-card" class="hidden p-5 sm:p-6 rounded-2xl bg-[#070B14] border border-blue-500/30 space-y-5">
+          
+          <!-- Header & Actions -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold text-sm shrink-0">
                 <span id="meta-ext">DOCX</span>
               </div>
-              <div>
-                <h4 id="meta-name" class="text-sm font-bold text-white truncate max-w-sm">Contract_Draft.docx</h4>
-                <p class="text-xs text-slate-400">
-                  Size: <span id="meta-size" class="font-semibold text-slate-300">142 KB</span> • 
-                  Type: <span id="meta-type" class="text-slate-300">application/vnd</span> • 
-                  Modified: <span id="meta-date" class="text-slate-300">Today</span>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <h4 id="meta-name" class="text-sm sm:text-base font-bold text-white truncate max-w-md">Contract_Draft.docx</h4>
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">
+                    File API Validated
+                  </span>
+                </div>
+                <p class="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
+                  <span>Native Browser Stream Loaded</span>
+                  <span>•</span>
+                  <span class="text-blue-400 font-medium">Ready for Diligence Pipeline</span>
                 </p>
               </div>
             </div>
 
-            <button id="btn-run-analysis" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/25 transition-all flex items-center gap-2">
-              <span>⚡</span> Start AI Diligence
-            </button>
+            <div class="flex items-center gap-2">
+              <button id="btn-reset-file" onclick="window.lexoraDocs &amp;&amp; window.lexoraDocs.reset()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs border border-slate-700 transition-colors">
+                ✕ Change File
+              </button>
+              <button id="btn-run-analysis" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/25 transition-all flex items-center gap-2">
+                <span>⚡</span> Start AI Diligence
+              </button>
+            </div>
           </div>
+
+          <!-- Metadata 4-Grid Breakdown (Name, Type, Size, Last Modified) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            
+            <!-- 1. File Name -->
+            <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
+              <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
+                <span>📝</span> File Name
+              </span>
+              <p id="meta-name-card" class="text-white font-mono font-medium truncate">--</p>
+            </div>
+
+            <!-- 2. File Type / MIME -->
+            <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
+              <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
+                <span>🏷️</span> File Type
+              </span>
+              <p id="meta-type" class="text-slate-200 font-medium truncate">--</p>
+            </div>
+
+            <!-- 3. File Size -->
+            <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
+              <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
+                <span>⚖️</span> File Size
+              </span>
+              <p id="meta-size" class="text-blue-400 font-mono font-bold truncate">--</p>
+            </div>
+
+            <!-- 4. Modified Date -->
+            <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 space-y-1">
+              <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center gap-1">
+                <span>📅</span> Last Modified
+              </span>
+              <p id="meta-date" class="text-slate-200 font-medium truncate">--</p>
+            </div>
+
+          </div>
+
+          <!-- Content Preview Snippet Placeholder (Dynamically populated by js/documents.js via FileReader) -->
+          <div id="file-content-preview"></div>
 
           <!-- Analysis Progress Bar -->
           <div id="analysis-progress-container" class="hidden space-y-2 pt-2 border-t border-slate-800">
@@ -219,6 +279,7 @@
               <div id="analysis-progress-bar" class="h-full bg-blue-500 rounded-full transition-all duration-300" style="width: 0%"></div>
             </div>
           </div>
+
         </div>
 
       </div>
@@ -357,28 +418,17 @@
 
   </div>
 
+  <!-- Application Scripts -->
   <script src="js/app.js"></script>
+  <script src="js/documents.js"></script>
   <script src="js/ambient.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const dropzone = document.getElementById("contract-dropzone");
-      const fileInput = document.getElementById("file-input");
-      const metadataCard = document.getElementById("file-metadata-card");
-      const metaName = document.getElementById("meta-name");
-      const metaSize = document.getElementById("meta-size");
-      const metaType = document.getElementById("meta-type");
-      const metaDate = document.getElementById("meta-date");
-      const metaExt = document.getElementById("meta-ext");
-      const runBtn = document.getElementById("btn-run-analysis");
-      const progressContainer = document.getElementById("analysis-progress-container");
-      const progressBar = document.getElementById("analysis-progress-bar");
-      const statusText = document.getElementById("analysis-status-text");
-      const percentText = document.getElementById("analysis-percentage");
       const sidebar = document.getElementById("app-sidebar");
       const toggleBtn = document.getElementById("sidebar-toggle");
       const backdrop = document.getElementById("sidebar-backdrop");
 
-      // Sidebar mobile drawer
+      // Sidebar mobile drawer toggle
       if (toggleBtn && sidebar && backdrop) {
         toggleBtn.addEventListener("click", () => {
           sidebar.classList.toggle("-translate-x-full");
@@ -390,80 +440,22 @@
         });
       }
 
-      // 1. Setup Drag and Drop API
-      setupDropzone(dropzone, (files) => {
-        if (files && files.length > 0) {
-          handleFileSelected(files[0]);
-        }
-      });
-
-      // 2. Setup File Input Click
-      dropzone.addEventListener("click", () => {
-        fileInput.click();
-      });
-
-      fileInput.addEventListener("change", (e) => {
-        if (e.target.files && e.target.files.length > 0) {
-          handleFileSelected(e.target.files[0]);
-        }
-      });
-
-      // 3. Process File via File API
-      function handleFileSelected(file) {
-        const meta = getFileMetadata(file);
-        if (!meta) return;
-
-        metaName.textContent = meta.name;
-        metaSize.textContent = meta.formattedSize;
-        metaType.textContent = meta.type;
-        metaDate.textContent = meta.lastModified;
-        metaExt.textContent = meta.extension;
-
-        metadataCard.classList.remove("hidden");
-        showToast(`Loaded: ${meta.name} (${meta.formattedSize}) via File API`, "success");
-      }
-
-      // 4. Simulated Analysis with Web Notifications API
-      runBtn.addEventListener("click", () => {
-        runBtn.disabled = true;
-        progressContainer.classList.remove("hidden");
-
-        const steps = [
-          { pct: 25, text: "Parsing contractual clauses and definitions..." },
-          { pct: 50, text: "Scanning liability caps against Indian Contract Act 1872..." },
-          { pct: 75, text: "Checking Data Fiduciary clauses for DPDP Act 2023..." },
-          { pct: 100, text: "Diligence complete! 3 attention points isolated." }
-        ];
-
-        let stepIndex = 0;
-        const interval = setInterval(() => {
-          const s = steps[stepIndex];
-          progressBar.style.width = `${s.pct}%`;
-          percentText.textContent = `${s.pct}%`;
-          statusText.textContent = s.text;
-
-          stepIndex++;
-          if (stepIndex >= steps.length) {
-            clearInterval(interval);
-            runBtn.disabled = false;
-            runBtn.textContent = "✓ Re-run Analysis";
-
-            // Fire Web Notifications API
-            sendAppNotification(
-              "Lexora Document Diligence Complete", 
-              `Analyzed ${metaName.textContent}. 3 attention points identified.`
-            );
-            showToast("Document Diligence completed!", "success");
-          }
-        }, 600);
-      });
-
-      // 5. Copy Redlines via Clipboard API
+      // Copy Redlines via Clipboard API
       document.querySelectorAll(".btn-copy-redline").forEach(btn => {
         btn.addEventListener("click", () => {
           const redlineText = btn.getAttribute("data-redline");
           copyToClipboard(redlineText, btn);
         });
+      });
+
+      // Synchronize the extra header name card element if populated
+      window.addEventListener("lexora:file-pipeline", (e) => {
+        if (e.detail && e.detail.event === "document:loaded") {
+          const metaNameCard = document.getElementById("meta-name-card");
+          if (metaNameCard && e.detail.data.metadata) {
+            metaNameCard.textContent = e.detail.data.metadata.name;
+          }
+        }
       });
     });
   </script>

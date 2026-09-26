@@ -151,12 +151,6 @@
 
       <!-- Right Topbar Controls -->
       <div class="flex items-center gap-4">
-        
-        <!-- Live HTML5 Notification status badge -->
-        <button id="btn-request-notif" class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-[11px] font-medium text-slate-300 transition-colors" title="HTML5 Web Notification status">
-          <span>🔔</span>
-          <span>Web Notifications</span>
-        </button>
 
         <!-- Entitlement Plan Badge -->
         <div class="flex items-center gap-2">
@@ -236,7 +230,7 @@
             <p class="text-xs text-slate-400">Select an engine configured under your membership plan</p>
           </div>
           <a href="membership.html" class="text-xs font-semibold text-blue-400 hover:underline">
-            Manage Entitlements →
+            View Plans →
           </a>
         </div>
 
@@ -349,14 +343,6 @@
         backdrop.addEventListener("click", () => {
           sidebar.classList.add("-translate-x-full");
           backdrop.classList.add("hidden");
-        });
-      }
-
-      // 2. Notification Permission quick button
-      const notifBtn = document.getElementById("btn-request-notif");
-      if (notifBtn) {
-        notifBtn.addEventListener("click", () => {
-          requestNotificationPermission();
         });
       }
 

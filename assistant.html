@@ -365,6 +365,35 @@
         handleSendMessage(initialQuery);
       }
 
+      // Backend API Base URL (auto-resolves for Live Server on port 5500 or Express on port 5000)
+      const API_BASE_URL = (window.location.port === "5000" || window.location.protocol === "https:")
+        ? "" 
+        : "http://localhost:5000";
+
+      // Conversation context buffer for multi-turn reasoning
+      const conversationHistory = [];
+
+      // New Chat Button Handler
+      const btnNewChat = document.getElementById("btn-new-chat");
+      if (btnNewChat) {
+        btnNewChat.addEventListener("click", () => {
+          conversationHistory.length = 0;
+          showToast("New legal inquiry session started", "info");
+          if (assistantInput) assistantInput.focus();
+        });
+      }
+
+      // History item click handlers
+      document.querySelectorAll("#chat-history-list button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const text = btn.textContent.trim();
+          if (assistantInput) {
+            assistantInput.value = text;
+            assistantInput.focus();
+          }
+        });
+      });
+
       // 6. Handle Form Submit
       assistantForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -374,13 +403,41 @@
         handleSendMessage(msg);
       });
 
-      function handleSendMessage(userText) {
+      // Enter / Shift+Enter handling
+      assistantInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          assistantForm.dispatchEvent(new Event("submit"));
+        }
+      });
+
+      /**
+       * Core Chat Message Handler:
+       * Communicates with backend/routes/ai.js -> ai-router.js -> gemini.js
+       */
+      async function handleSendMessage(userText) {
+        // Enforce membership query limit check
+        const currentUser = getCurrentUser();
+        if (currentUser.queriesUsed >= currentUser.queriesLimit) {
+          showToast(`Monthly query quota reached (${currentUser.queriesUsed}/${currentUser.queriesLimit}). Please upgrade your plan.`, "warning");
+          renderQuotaExceededCard();
+          return;
+        }
+
+        // Save to Recent Searches in LocalStorage
+        if (typeof StorageHelper !== "undefined" && StorageHelper.addRecentSearch) {
+          StorageHelper.addRecentSearch(userText);
+        }
+
+        // Selected Lexora AI Engine (Lexora Standard vs Lexora Advanced)
+        const selectedModelId = modelSelect ? modelSelect.value : "lexora-standard";
+
         // Append User Message to Stream
         const userDiv = document.createElement("div");
         userDiv.className = "flex items-start justify-end gap-3";
         userDiv.innerHTML = `
           <div class="bg-blue-600/20 border border-blue-500/30 text-white rounded-2xl rounded-tr-none px-5 py-3.5 max-w-[85%] sm:max-w-[75%] text-sm shadow-sm">
-            <p class="font-medium text-slate-100">${userText}</p>
+            <p class="font-medium text-slate-100">${escapeHtml(userText)}</p>
           </div>
           <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-300 shrink-0">
             You
@@ -389,123 +446,298 @@
         chatStream.appendChild(userDiv);
         chatStream.scrollTop = chatStream.scrollHeight;
 
-        // Simulate AI Thinking / Analysis
+        // Render AI Thinking / Loading Card
         const loadingDiv = document.createElement("div");
-        loadingDiv.className = "flex items-start gap-3";
+        loadingDiv.className = "flex items-start gap-3 animate-fade-in";
         loadingDiv.innerHTML = `
-          <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white shrink-0">L</div>
-          <div class="bg-[#111827] border border-[#1E293B] rounded-2xl rounded-tl-none p-4 text-xs text-blue-400 font-semibold flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
-            Synthesizing statutory Indian sources & precedent paragraphs...
+          <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white shrink-0 shadow-md shadow-blue-600/30">
+            L
+          </div>
+          <div class="bg-[#111827] border border-[#1E293B] rounded-2xl rounded-tl-none p-4 text-xs text-blue-400 font-semibold flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-400 animate-ping"></span>
+            <div class="space-y-0.5">
+              <span class="block text-slate-200 font-bold">Lexora AI Router Active</span>
+              <span class="block text-[11px] text-slate-400 font-normal">Analyzing statutory context &amp; generating legal memo via Gemini...</span>
+            </div>
           </div>
         `;
         chatStream.appendChild(loadingDiv);
         chatStream.scrollTop = chatStream.scrollHeight;
 
-        // Generate response after realistic inference delay
-        setTimeout(() => {
-          chatStream.removeChild(loadingDiv);
+        try {
+          // Backend API Request Flow:
+          // assistant.html -> POST /api/ai/chat -> routes/ai.js -> services/ai-router.js -> services/gemini.js
+          const response = await fetch(`${API_BASE_URL}/api/ai/chat`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              message: userText,
+              modelId: selectedModelId,
+              userPlan: currentUser.plan,
+              history: conversationHistory.slice(-6)
+            })
+          });
 
-          // Update query usage in user profile
-          user.queriesUsed = Math.min(user.queriesLimit, user.queriesUsed + 1);
-          setCurrentUser(user);
+          const data = await response.json().catch(() => null);
 
-          const responseData = generateSimulatedLegalMemo(userText);
+          // Remove loading indicator
+          if (loadingDiv.parentNode) {
+            chatStream.removeChild(loadingDiv);
+          }
 
-          const aiDiv = document.createElement("div");
-          aiDiv.className = "flex items-start gap-3";
-          aiDiv.innerHTML = `
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-xs font-extrabold text-white shrink-0 shadow-md shadow-blue-500/30">
-              L
-            </div>
-            <div class="bg-[#111827] border border-[#1E293B] rounded-2xl rounded-tl-none p-5 max-w-[95%] sm:max-w-[85%] space-y-4 text-sm shadow-xl">
-              <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-3">
+          if (!response.ok || !data || !data.success) {
+            const errInfo = (data && data.error) ? data.error : {
+              code: "HTTP_" + response.status,
+              message: "Unable to complete AI inquiry. Please ensure backend server is running on port 5000."
+            };
+            renderErrorCard(errInfo, userText);
+            return;
+          }
+
+          // Successful response from AI Router & Gemini
+          const responseData = data.data;
+
+          // Increment LocalStorage query counter
+          currentUser.queriesUsed = Math.min(currentUser.queriesLimit, currentUser.queriesUsed + 1);
+          setCurrentUser(currentUser);
+
+          // Track multi-turn context
+          conversationHistory.push({ role: "user", content: userText });
+          conversationHistory.push({ role: "model", content: responseData.body });
+
+          // Render response into existing Lexora card UI
+          renderAiResponseCard(responseData, userText);
+
+          // Trigger native Web Notifications API
+          sendAppNotification(
+            "Lexora Legal Intelligence",
+            `Memorandum ready for: "${userText.slice(0, 45)}..."`
+          );
+
+        } catch (networkErr) {
+          console.error("[Assistant Fetch Error]", networkErr);
+          if (loadingDiv.parentNode) {
+            chatStream.removeChild(loadingDiv);
+          }
+          renderErrorCard({
+            code: "NETWORK_DISCONNECTED",
+            message: `Cannot connect to Lexora AI Backend at ${API_BASE_URL || "http://localhost:5000"}. Please start the backend with 'npm start'.`
+          }, userText);
+        }
+      }
+
+      /**
+       * Render Lexora AI Memorandum Response Card
+       */
+      function renderAiResponseCard(data, originalQuery) {
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "flex items-start gap-3";
+
+        const formattedHtml = formatMarkdownResponse(data.body);
+
+        // Sources pills
+        const sourcesPills = (data.sources || []).map(s => {
+          return `<span class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[10px] font-medium">${escapeHtml(s)}</span>`;
+        }).join(" ");
+
+        // Grounding status badge
+        const isGrounded = data.meta && data.meta.isSourceGrounded;
+        const groundingBadge = isGrounded
+          ? `<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">✓ Verified RAG Corpus Grounded</span>`
+          : `<span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-semibold" title="Generated by Gemini AI; Indian Law RAG retrieval layer is pending integration">Gemini AI Synthesis (Exploratory Legal Research)</span>`;
+
+        aiDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-xs font-extrabold text-white shrink-0 shadow-md shadow-blue-500/30">
+            L
+          </div>
+          <div class="bg-[#111827] border border-[#1E293B] rounded-2xl rounded-tl-none p-5 max-w-[95%] sm:max-w-[85%] space-y-4 text-sm shadow-xl">
+            
+            <!-- Header bar with Title, Model Mode & Copy Action -->
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs border-b border-slate-800 pb-3">
+              <div class="flex items-center gap-2">
                 <span class="font-bold text-blue-400 flex items-center gap-1.5">
-                  <span>🧠</span> ${responseData.title}
+                  <span>🧠</span> ${escapeHtml(data.title || "Lexora Legal Memorandum")}
                 </span>
-                <button class="btn-copy-response px-2.5 py-1 rounded-md bg-[#0D1321] border border-slate-800 hover:border-slate-700 text-[11px] font-semibold text-slate-300 transition-colors flex items-center gap-1">
-                  <span>📋</span> Copy
-                </button>
+                ${groundingBadge}
               </div>
+              <button class="btn-copy-response px-2.5 py-1 rounded-md bg-[#0D1321] border border-slate-800 hover:border-slate-700 text-[11px] font-semibold text-slate-300 transition-colors flex items-center gap-1" title="Copy response via HTML5 Clipboard API">
+                <span>📋</span> Copy
+              </button>
+            </div>
 
-              <div class="chat-response-content space-y-3 text-slate-200 leading-relaxed text-xs sm:text-sm">
-                ${responseData.body}
+            <!-- Formatted Memorandum Content -->
+            <div class="chat-response-content space-y-3 text-slate-200 leading-relaxed text-xs sm:text-sm">
+              ${formattedHtml}
+            </div>
+
+            <!-- Grounded Sources Citation Box & Transparency Disclaimer -->
+            <div class="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-bold text-slate-400">Sources:</span>
+                ${sourcesPills}
               </div>
-
-              <div class="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
-                <div class="flex items-center gap-1.5 flex-wrap">
-                  <span class="font-bold text-slate-400">Sources:</span>
-                  ${responseData.sources.map(s => `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">${s}</span>`).join(" ")}
-                </div>
+              <div class="flex items-center gap-3">
+                <span class="text-[10px] text-slate-500 italic">Pre-RAG Stage</span>
                 <a href="research.html" class="text-blue-400 font-semibold hover:underline">
-                  Research Sections →
+                  Research Bare Acts →
                 </a>
               </div>
             </div>
-          `;
 
-          chatStream.appendChild(aiDiv);
-          chatStream.scrollTop = chatStream.scrollHeight;
+          </div>
+        `;
 
-          // Wire up copy button on new message via HTML5 Clipboard API
-          const newCopyBtn = aiDiv.querySelector(".btn-copy-response");
-          if (newCopyBtn) {
-            newCopyBtn.addEventListener("click", () => {
-              const content = aiDiv.querySelector(".chat-response-content").innerText;
-              copyToClipboard(content, newCopyBtn);
-            });
-          }
+        chatStream.appendChild(aiDiv);
+        chatStream.scrollTop = chatStream.scrollHeight;
 
-          // HTML5 Web Notification demonstration if user asked for a document check
-          sendAppNotification("Lexora Legal Intelligence", `Legal response generated for: "${userText.slice(0, 45)}..."`);
-
-        }, 1200);
+        // Wire HTML5 Clipboard API for new response card
+        const copyBtn = aiDiv.querySelector(".btn-copy-response");
+        if (copyBtn) {
+          copyBtn.addEventListener("click", () => {
+            const content = aiDiv.querySelector(".chat-response-content").innerText;
+            copyToClipboard(content, copyBtn);
+          });
+        }
       }
 
-      function generateSimulatedLegalMemo(prompt) {
-        const lower = prompt.toLowerCase();
+      /**
+       * Render Error Card in Chat Stream
+       */
+      function renderErrorCard(error, originalQuery) {
+        const errDiv = document.createElement("div");
+        errDiv.className = "flex items-start gap-3";
 
-        if (lower.includes("terminate") || lower.includes("severance") || lower.includes("employment")) {
-          return {
-            title: "Employment Law: Restrictive Covenants & Statutory Severance",
-            body: `<p>Under Section 27 of the Indian Contract Act 1872, restrictive covenants post-termination restraining lawful trade or profession are void ab initio (<em>Percept D'Mark v. Zaheer Khan (2006) 4 SCC 227</em>). Contractual in-term restrictions remain binding.</p>
-            <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 text-xs">
-              <strong>Mandatory Compliance:</strong> Calculate accrued leave encashment, gratuity if tenure exceeds 5 years under Payment of Gratuity Act 1972, and deliver formal release documentation upon full and final settlement.
-            </div>`,
-            sources: ["Indian Contract Act 1872 Sec 27", "Industrial Disputes Act 1947 Sec 25F", "Payment of Gratuity Act 1972"]
-          };
+        let troubleshootingTip = "Please verify your backend connection and try again.";
+        if (error.code === "CONFIG_MISSING") {
+          troubleshootingTip = "Open <code>.env</code> in your project root, set <code>GEMINI_API_KEY=your_key</code> from Google AI Studio, and restart the backend server with <code>npm start</code>.";
+        } else if (error.code === "AUTH_ERROR") {
+          troubleshootingTip = "The API key in <code>.env</code> is invalid or unauthorized. Please verify your Google Gemini API key.";
+        } else if (error.code === "RATE_LIMIT") {
+          troubleshootingTip = "Gemini API rate limit was reached. Please wait a few moments before sending another prompt.";
+        } else if (error.code === "HIGH_DEMAND") {
+          troubleshootingTip = "Google Gemini is currently experiencing a temporary server demand spike. Please wait a few seconds and click Retry Inquiry.";
+        } else if (error.code === "NETWORK_DISCONNECTED") {
+          troubleshootingTip = "Run <code>npm start</code> in your terminal to start the Node.js backend on port 5000.";
         }
 
-        if (lower.includes("borrow") || lower.includes("debt") || lower.includes("company") || lower.includes("180")) {
-          return {
-            title: "Corporate Law: Section 180 Borrowing Limits & MCA Compliance",
-            body: `<p>Section 180(1)(c) of the Companies Act 2013 stipulates that borrowing money where the aggregate debt exceeds paid-up capital + free reserves + securities premium requires a prior Special Resolution passed by shareholders in general meeting.</p>
-            <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 text-xs">
-              <strong>MCA Filing Requirement:</strong> File copy of the Special Resolution on Form MGT-14 with the Registrar of Companies (ROC) within 30 days of passage to avoid penalty sanctions.
-            </div>`,
-            sources: ["Companies Act 2013 Sec 180(1)(c)", "Companies (Management and Administration) Rules 2014", "MCA Form MGT-14"]
-          };
-        }
+        errDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-rose-600/30 border border-rose-500/50 flex items-center justify-center text-xs font-bold text-rose-300 shrink-0">
+            ✕
+          </div>
+          <div class="bg-[#111827] border border-rose-500/30 rounded-2xl rounded-tl-none p-5 max-w-[95%] sm:max-w-[85%] space-y-3 text-xs shadow-xl">
+            <div class="flex items-center justify-between text-xs border-b border-rose-500/20 pb-2.5">
+              <span class="font-bold text-rose-400 flex items-center gap-1.5">
+                <span>⚠️</span> Inquiry Generation Halted [${escapeHtml(error.code || "ERROR")}]
+              </span>
+              <span class="text-[10px] text-slate-500">Backend Server Handshake</span>
+            </div>
 
-        if (lower.includes("dpdp") || lower.includes("data") || lower.includes("privacy")) {
-          return {
-            title: "Data Privacy: Data Fiduciary Obligations under DPDP Act 2023",
-            body: `<p>Under Section 8 of the Digital Personal Data Protection Act 2023, a Data Fiduciary must obtain prior verifiable consent through an itemised notice in English or any 8th Schedule constitutional language before processing personal data.</p>
-            <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 text-xs">
-              <strong>Breach Protocols:</strong> Implement reasonable security safeguards. In the event of a breach, immediate notification to the Data Protection Board of India and affected data principals is mandatory under Section 8(6).
-            </div>`,
-            sources: ["DPDP Act 2023 Sec 8", "DPDP Act 2023 Sec 16 Cross-Border Rules", "CERT-In Directions 2022"]
-          };
-        }
+            <p class="text-slate-200 leading-relaxed font-medium">
+              ${escapeHtml(error.message || "An unexpected error occurred while communicating with the AI service.")}
+            </p>
 
-        return {
-          title: "Lexora Statutory Synthesis Memo",
-          body: `<p>Lexora has analyzed your inquiry against indexed Indian statutory frameworks. Relevant statutory provisions have been evaluated with deterministic commercial constraints.</p>
-          <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 text-xs">
-            <strong>Key Consideration:</strong> Review the explicit terms of your commercial agreement against standard Indian contract risk allocations, ensuring mutual liability caps and clear dispute resolution via the Arbitration & Conciliation Act 1996.
-          </div>`,
-          sources: ["Indian Contract Act 1872", "Arbitration & Conciliation Act 1996 Sec 7", "Commercial Courts Act 2015"]
-        };
+            <div class="p-3 rounded-xl bg-[#0D1321] border border-slate-800 text-[11px] text-slate-300 space-y-1">
+              <span class="font-bold text-blue-400 block">💡 Recommended Resolution:</span>
+              <p class="text-slate-400">${troubleshootingTip}</p>
+            </div>
+
+            <div class="pt-2 flex items-center gap-2">
+              <button class="btn-retry-query px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors">
+                ↻ Retry Inquiry
+              </button>
+            </div>
+          </div>
+        `;
+
+        chatStream.appendChild(errDiv);
+        chatStream.scrollTop = chatStream.scrollHeight;
+
+        const retryBtn = errDiv.querySelector(".btn-retry-query");
+        if (retryBtn) {
+          retryBtn.addEventListener("click", () => {
+            errDiv.remove();
+            handleSendMessage(originalQuery);
+          });
+        }
+      }
+
+      /**
+       * Render Quota Exceeded Card
+       */
+      function renderQuotaExceededCard() {
+        const quotaDiv = document.createElement("div");
+        quotaDiv.className = "flex items-start gap-3";
+        quotaDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-amber-600/30 border border-amber-500/50 flex items-center justify-center text-xs font-bold text-amber-300 shrink-0">
+            ▲
+          </div>
+          <div class="bg-[#111827] border border-amber-500/30 rounded-2xl rounded-tl-none p-5 max-w-[95%] sm:max-w-[85%] space-y-3 text-xs shadow-xl">
+            <span class="font-bold text-amber-400 flex items-center gap-1.5">
+              <span>🔒</span> Monthly AI Inquiries Exhausted
+            </span>
+            <p class="text-slate-300 leading-relaxed">
+              You have utilized all allocated AI inquiries under your current plan. To unlock additional inference capacity and access <strong>Lexora Advanced</strong>, consider upgrading your membership.
+            </p>
+            <div class="pt-1">
+              <a href="membership.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors">
+                Explore Membership Upgrades →
+              </a>
+            </div>
+          </div>
+        `;
+        chatStream.appendChild(quotaDiv);
+        chatStream.scrollTop = chatStream.scrollHeight;
+      }
+
+      /**
+       * Markdown Formatter for AI output
+       */
+      function formatMarkdownResponse(markdown) {
+        if (!markdown || typeof markdown !== "string") return "";
+
+        let html = markdown
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+
+        // Headers
+        html = html.replace(/^### (.*$)/gim, '<h4 class="font-bold text-white text-xs sm:text-sm mt-3.5 mb-1.5">$1</h4>');
+        html = html.replace(/^## (.*$)/gim, '<h3 class="font-extrabold text-blue-400 text-sm mt-4 mb-2 border-b border-slate-800/80 pb-1">$1</h3>');
+        html = html.replace(/^# (.*$)/gim, '<h2 class="font-extrabold text-white text-base mt-4 mb-2">$1</h2>');
+
+        // Bold & Italic
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
+        html = html.replace(/\*(.*?)\*/g, '<em class="text-slate-300">$1</em>');
+
+        // Code inline
+        html = html.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-[#0D1321] border border-slate-800 font-mono text-[11px] text-blue-300">$1</code>');
+
+        // Bullet lists
+        html = html.replace(/^\s*[-*]\s+(.*$)/gim, '<li class="ml-4 list-disc text-slate-300 my-1">$1</li>');
+
+        // Numbered lists
+        html = html.replace(/^\s*(\d+)\.\s+(.*$)/gim, '<li class="ml-4 list-decimal text-slate-300 my-1"><span class="font-bold text-slate-200">$1.</span> $2</li>');
+
+        // Paragraphs
+        const blocks = html.split(/\n\s*\n/);
+        return blocks.map(block => {
+          block = block.trim();
+          if (!block) return "";
+          if (block.startsWith("<h") || block.startsWith("<li")) return block;
+          return `<p class="leading-relaxed text-slate-200">${block.replace(/\n/g, "<br>")}</p>`;
+        }).join("\n");
+      }
+
+      function escapeHtml(str) {
+        if (!str) return "";
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
       }
     });
   </script>
